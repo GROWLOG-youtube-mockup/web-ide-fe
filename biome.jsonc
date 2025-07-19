@@ -1,0 +1,195 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.1.2/schema.json",
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on",
+        // 파일을 저장할 때 임포트 구문을 자동으로 정리하도록 설정합니다.
+        "recommended": true,
+        "useSortedAttributes": "on",
+        "useSortedKeys": "on",
+        "useSortedProperties": "on"
+      }
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    // 줄 끝 문자를 'LF'(\n)로 통일합니다. (Unix/macOS 표준)
+    "lineEnding": "lf",
+    "lineWidth": 100
+  },
+  "javascript": {
+    "formatter": {
+      // 화살표 함수의 파마리터 괄호를 필요에 따라 사용합니다.
+      "arrowParentheses": "asNeeded",
+      "enabled": true,
+      // JSX 속성에도 큰따옴표를 사용합니다.
+      "jsxQuoteStyle": "double",
+      // 문자열에 큰따옴표(")를 사용합니다.
+      "quoteStyle": "double",
+      // 세미콜론을 필요에 따라 사용합니다.
+      "semicolons": "asNeeded",
+      // 후행 쉼표(Trailing Commas)를 'es5' 표준에 맞춰 사용합니다.
+      "trailingCommas": "es5"
+    },
+    // 코드 내에서 선언 없이 사용되는 전역 변수들을 Linter에 알려줍니다. (noUndeclaredVariables 오류 방지)
+    "globals": [
+      "process",
+      "module",
+      "require",
+      "describe",
+      "it",
+      "expect",
+      "jest",
+      "beforeEach",
+      "afterEach"
+    ],
+    // 최신 React 환경에 맞춰 JSX 런타임을 자동으로 감지합니다.
+    "jsxRuntime": "transparent"
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      // 웹 접근성(a11y) 관련 규칙 그룹입니다.
+      "a11y": {
+        // 이미지 태그에 'alt' 속성을 사용하도록 강제합니다.
+        "useAltText": "error",
+        // 'button' 태그에 'type' 속성을 명시하도록 강제합니다.
+        "useButtonType": "error",
+        // 제목 태그(h1, h2 등)가 비어있지 않도록 강제합니다.
+        "useHeadingContent": "error",
+        // 클릭 이벤트가 있는 요소에 키보드 이벤트도 함께 사용하도록 권장합니다.
+        "useKeyWithClickEvents": "warn"
+      },
+      // 코드 복잡도 관리에 대한 규칙 그룹입니다.
+      "complexity": {
+        // 특정 타입(예: Function, {})의 사용을 금지합니다.
+        "noBannedTypes": "error",
+        // 불필요한 JSX Fragment (<>...</>) 사용을 금지합니다.
+        "noUselessFragments": "error"
+      },
+      // 코드의 정확성과 관련된 규칙 그룹입니다. (버그 방지)
+      "correctness": {
+        // 선언되지 않은 변수 사용을 에러로 처리합니다.
+        "noUndeclaredVariables": "error",
+        // 사용하지 않는 함수 파라미터를 에러로 처리합니다.
+        "noUnusedFunctionParameters": "error",
+        // 사용하지 않는 임포트를 에러로 처리합니다.
+        "noUnusedImports": "error",
+        // 사용하지 않는 라벨을 에러로 처리합니다.
+        "noUnusedLabels": "error",
+        // 사용하지 않는 변수를 에러로 처리합니다.
+        "noUnusedVariables": "error",
+        // React Hooks의 의존성 배열이 완전한지 검사합니다.(필요시 biome-ignore 설정)
+        "useExhaustiveDependencies": "error"
+      },
+      // 실험적이거나 새로운 규칙들의 그룹입니다.
+      "nursery": {
+        // 클래스 이름을 자동으로 정렬하도록 권장합니다. (주로 Tailwind CSS와 함께 사용)
+        "useSortedClasses": {
+          "fix": "safe",
+          "level": "warn",
+          // 'clsx' 함수를 사용하는 경우에도 정렬하도록 설정합니다.
+          "options": {
+            "functions": ["clsx"]
+          }
+        }
+      },
+      "recommended": true,
+      // 코드 스타일에 관련된 규칙 그룹입니다.
+      "style": {
+        // 불필요한 else 구문을 사용하지 않도록 경고합니다.
+        "noUselessElse": "warn",
+        // 배열 타입을 항상 'shorthand' (T[]) 형식으로 일관되게 사용하도록 강제합니다.
+        "useConsistentArrayType": {
+          "level": "error",
+          "options": {
+            "syntax": "shorthand"
+          }
+        }, // 변수: camelCase, 클래스, 함수: PascalCase 등의 네이밍 컨벤션을 엄격하게 검사합니다.
+        // 파일명의 형식을 'kebab-case' 로 강제합니다.
+        "useFilenamingConvention": {
+          "level": "error",
+          "options": {
+            "filenameCases": ["kebab-case"]
+          }
+        },
+        // 'import type'을 사용하도록 권장합니다. (타입만 가져올 때)
+        "useImportType": "warn",
+        "useNamingConvention": {
+          "level": "error",
+          "options": {
+            "strictCase": true
+          }
+        }
+      },
+      // 에러는 아니지만 의심스럽거나 버그를 유발할 수 있는 코드에 대한 규칙 그룹입니다.
+      "suspicious": {
+        // 배열의 인덱스를 React 컴포넌트의 key로 사용하는 것을 금지합니다.
+        "noArrayIndexKey": "error",
+        // JSX 속성이 중복으로 사용되는 것을 방지합니다.
+        "noDuplicateJsxProps": "error",
+        // 'any' 타입 사용을 금지하여 타입 안정성을 높입니다.
+        "noExplicitAny": "error"
+      }
+    }
+  },
+  "overrides": [
+    {
+      // 1. shadcn/ui 예외 처리
+      "includes": ["src/components/ui/**/*.tsx"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useFilenamingConvention": {
+              "level": "error",
+              "options": {
+                "filenameCases": ["kebab-case"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      // 2. 컴포넌트와 페이지는 'PascalCase'
+      "includes": ["src/components/**/*.tsx", "src/pages/**/*.tsx"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useFilenamingConvention": {
+              "level": "error",
+              "options": {
+                "filenameCases": ["PascalCase"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      // 3. 훅은 'camelCase'
+      "includes": ["src/hooks/**/*.ts", "src/hooks/**/*.tsx"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useFilenamingConvention": {
+              "level": "error",
+              "options": {
+                "filenameCases": ["camelCase"]
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "vcs": {
+    "clientKind": "git",
+    "enabled": true,
+    // '.gitignore' 파일에 명시된 파일들을 Biome의 처리 대상에서 제외합니다.
+    "useIgnoreFile": true
+  }
+}

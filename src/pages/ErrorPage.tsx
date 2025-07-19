@@ -11,11 +11,11 @@ export function ErrorPage() {
           {error?.message || "알 수 없는 오류가 발생했습니다."}
         </p>
         <button
-          type="button"
+          className="rounded-md bg-primary px-4 py-2 text-primary-foreground hover:bg-primary/90"
           onClick={() => {
             window.location.href = "/"
           }}
-          className="rounded-md bg-primary px-4 py-2 text-primary-foreground hover:bg-primary/90"
+          type="button"
         >
           홈으로 돌아가기
         </button>

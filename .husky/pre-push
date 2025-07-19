@@ -1,1 +1,1 @@
-npm run biome:ci
+pnpm biome:ci

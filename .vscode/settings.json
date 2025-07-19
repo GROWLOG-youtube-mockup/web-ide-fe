@@ -1,0 +1,30 @@
+{
+  "[javascript][typescript][javascriptreact][typescriptreact]": {
+    "editor.codeActionsOnSave": {
+      "source.action.useSortedAttributes.biome": "explicit",
+      "source.action.useSortedKeys.biome": "explicit",
+      "source.action.useSortedProperties.biome": "explicit",
+      "source.fixAll.biome": "explicit",
+      "source.organizeImports.biome": "explicit"
+    },
+    "editor.defaultFormatter": "biomejs.biome",
+    "editor.formatOnSave": true
+  },
+  "[json][jsonc]": {
+    "editor.codeActionsOnSave": {
+      "source.action.useSortedAttributes.biome": "explicit",
+      "source.action.useSortedKeys.biome": "explicit",
+      "source.action.useSortedProperties.biome": "explicit",
+      "source.fixAll.biome": "explicit",
+      "source.organizeImports.biome": "explicit"
+    },
+    "editor.defaultFormatter": "biomejs.biome",
+    "editor.formatOnSave": true
+  },
+  "editor.rulers": [100],
+  "editor.wordWrap": "off",
+  // 워크스페이스(프로젝트)에 설치된 TypeScript 버전을 사용하도록 권장합니다.
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  // 자동 임포트 시 '../../' 같은 상대 경로 대신 tsconfig.json의 경로 별칭(@/components)을 사용하도록 설정합니다.
+  "typescript.preferences.importModuleSpecifier": "non-relative"
+}

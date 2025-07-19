@@ -4,9 +4,9 @@ import { HomePage } from "@/pages/HomePage"
 
 export const router = createBrowserRouter([
   {
-    path: "/",
     element: <HomePage />,
     errorElement: <ErrorPage />,
+    path: "/",
   },
 ])
 
