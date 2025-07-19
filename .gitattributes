@@ -1,0 +1,19 @@
+# Husky hooks should always use LF line endings
+.husky/* text eol=lf
+
+# Source code
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+
+# Config files
+*.config.js text eol=lf
+*.config.ts text eol=lf
+biome.json text eol=lf
+package.json text eol=lf
+tsconfig.json text eol=lf

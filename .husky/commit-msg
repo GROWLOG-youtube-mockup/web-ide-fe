@@ -1,0 +1,33 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# run commitlint; capture its exit code
+npx --no -- commitlint --edit "$1"
+status=$?
+
+if [ $status -ne 0 ]; then
+  echo ""
+  echo "🚫 커밋 메시지 형식이 올바르지 않습니다!"
+  echo ""
+  echo "커밋 메시지는 Conventional Commits 형식을 따라주세요:"
+  echo ""
+  echo "  <type>[scope]: <description>"
+  echo ""
+  echo "  build:    빌드 시스템 변경 (예: Gradle, npm)"
+  echo "  chore:    기타 잡일(문서·설정 변경 등)"
+  echo "  ci:       CI 설정·스크립트 수정"
+  echo "  docs:     문서 변경"
+  echo "  feat:     새로운 기능 추가"
+  echo "  fix:      버그 수정"
+  echo "  perf:     성능 개선"
+  echo "  refactor: 코드 리팩토링(기능 변경 없음)"
+  echo "  revert:   이전 커밋 되돌리기"
+  echo "  style:    코드 포맷·스타일(기능 변경 아님)"
+  echo "  test:     테스트 추가·수정"
+  echo ""
+  echo "예시) feat(auth): 로그인 기능 추가"
+  echo ""
+  exit $status
+fi
+
+echo "✅ Valid commit message. Thanks!"

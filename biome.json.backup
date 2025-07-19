@@ -6,7 +6,8 @@
     "useIgnoreFile": true
   },
   "files": {
-    "ignoreUnknown": false
+    "ignoreUnknown": false,
+    "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.json"]
   },
   "formatter": {
     "enabled": true,
@@ -64,24 +65,5 @@
     "formatter": {
       "trailingCommas": "none"
     }
-  },
-  "overrides": [
-    {
-      "includes": [
-        "*.config.js",
-        "*.config.cjs",
-        "*.config.ts",
-        "dist/**",
-        "build/**",
-        "node_modules/**",
-        "coverage/**"
-      ],
-      "linter": {
-        "enabled": false
-      },
-      "formatter": {
-        "enabled": false
-      }
-    }
-  ]
+  }
 }
