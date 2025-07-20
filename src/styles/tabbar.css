@@ -1,0 +1,153 @@
+/* styles/tabbar.css */
+
+.tab-bar {
+  display: flex;
+  min-height: 36px;
+  overflow: hidden;
+  background: #f8f8f8;
+  border-bottom: 1px solid #ddd;
+}
+
+.tabs-container {
+  display: flex;
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+}
+
+.tabs-container::-webkit-scrollbar {
+  height: 4px;
+}
+
+.tabs-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tabs-container::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 2px;
+}
+
+.tab {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  min-width: 120px;
+  max-width: 200px;
+  user-select: none;
+  background: #f0f0f0;
+  border-right: 1px solid #ddd;
+}
+
+.tab.active {
+  background: white;
+  border-bottom: 2px solid #007acc;
+}
+
+.tab.dragging {
+  opacity: 0.5;
+}
+
+.tab-button {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 0;
+  padding: 8px 8px 8px 12px;
+  font-family: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+.tab-button:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.tab-button:focus {
+  outline: 2px solid #007acc;
+  outline-offset: -2px;
+}
+
+.tab.active .tab-button {
+  background: transparent;
+}
+
+.tab-icon {
+  flex-shrink: 0;
+  margin-right: 6px;
+  font-size: 12px;
+}
+
+.tab-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tab-close {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin: 6px 6px 6px 0;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+}
+
+.tab-close:hover {
+  color: #000;
+  background: #e0e0e0;
+}
+
+.tab-close:focus {
+  outline: 2px solid #007acc;
+  outline-offset: -2px;
+}
+
+.tab-actions {
+  display: flex;
+  align-items: center;
+  background: #f8f8f8;
+  border-left: 1px solid #ddd;
+}
+
+.tab-action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin: 2px;
+  color: #666;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+}
+
+.tab-action-button:hover {
+  color: #000;
+  background: #e0e0e0;
+}
+
+.tab-action-button:focus {
+  outline: 2px solid #007acc;
+  outline-offset: -2px;
+}
+
+/* 빈 상태 */
+.tab-bar:empty {
+  display: none;
+}
