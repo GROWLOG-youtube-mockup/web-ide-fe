@@ -1,60 +1,65 @@
-//CollaborativeEditor.tsx(5:56최신버전 잠시 방치)
+// CollaborativeEditor.tsx
 
 import { getYjsProviderForRoom } from "@liveblocks/yjs"
 import { Editor } from "@monaco-editor/react"
 import type { editor } from "monaco-editor"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect } from "react"
 import { MonacoBinding } from "y-monaco"
 import type { Awareness } from "y-protocols/awareness.js"
 import { Cursors } from "@/components/Editor/Cursors"
 import { useRoom } from "@/config/liveblocks.config"
+import { useEditorStore } from "@/stores/editor-store"
+import { useUserStore } from "@/stores/user-store"
 
-// Collaborative text editor with simple rich text, live cursors, and live avatars
 export function CollaborativeEditor() {
-  const [editorRef, setEditorRef] = useState<editor.IStandaloneCodeEditor>()
   const room = useRoom()
   const yProvider = getYjsProviderForRoom(room)
+  const { userInfo, getUserAsJsonObject, initializeUser } = useUserStore()
+  const { editorRef, setEditorRef } = useEditorStore()
 
-  // 🔥핵심: 사용자 정보 설정
+  // 🔥 컴포넌트 마운트 시 바로 사용자 초기화
   useEffect(() => {
-    const userInfo = {
-      color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-      id: Math.random().toString(36).substr(2, 9),
-      name: `User-${Math.random().toString(36).substr(2, 5)}`,
+    if (!userInfo) {
+      const newUser = initializeUser()
+      console.log("👤 User initialized:", newUser)
     }
+  }, [userInfo, initializeUser])
 
-    yProvider.awareness.setLocalStateField("user", userInfo)
-    console.log("👤 User info set:", userInfo)
-  }, [yProvider])
-
+  // 사용자 정보를 Yjs에 설정
   useEffect(() => {
-    let binding: MonacoBinding
-
-    if (editorRef) {
-      const yDoc = yProvider.getYDoc()
-      const yText = yDoc.getText("monaco")
-
-      // Attach Yjs to Monaco
-      binding = new MonacoBinding(
-        yText,
-        editorRef.getModel() as editor.ITextModel,
-        new Set([editorRef]),
-        yProvider.awareness as unknown as Awareness //타입 에러 clientid 때문에 이중 단언으로 일단 해결
-      )
+    const jsonUserInfo = getUserAsJsonObject()
+    if (jsonUserInfo) {
+      yProvider.awareness.setLocalStateField("user", jsonUserInfo)
+      console.log("👤 User info set to yProvider:", jsonUserInfo)
     }
+  }, [yProvider, getUserAsJsonObject])
 
-    return () => {
-      binding?.destroy()
-    }
+  // Monaco 바인딩
+  useEffect(() => {
+    if (!editorRef) return
+    // 🎯 핵심: Monaco를 Liveblocks 룸에 연결
+    const binding = new MonacoBinding(
+      yProvider
+        .getYDoc()
+        .getText("monaco"), // 룸 데이터
+      editorRef.getModel() as editor.ITextModel, // 에디터
+      new Set([editorRef]),
+      yProvider.awareness as unknown as Awareness
+    )
+
+    return () => binding.destroy()
   }, [editorRef, yProvider])
 
-  const handleOnMount = useCallback((e: editor.IStandaloneCodeEditor) => {
-    setEditorRef(e)
-  }, [])
+  const handleOnMount = useCallback(
+    (editor: editor.IStandaloneCodeEditor) => {
+      console.log("🎯 Editor mounted and ready!")
+      setEditorRef(editor) // 자동으로 isEditorReady = true로 설정됨
+    },
+    [setEditorRef]
+  )
 
   return (
     <div style={{ height: "100vh", position: "relative" }}>
-      {/* 커서 스타일 컴포넌트 추가 */}
       <Cursors yProvider={yProvider} />
 
       <Editor

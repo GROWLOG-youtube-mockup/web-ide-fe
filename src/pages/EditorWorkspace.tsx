@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom"
 import { CollaborativeEditor } from "@/components/Editor/CollaborativeEditor"
 import { FileExplorer } from "@/components/Editor/FileExplorer"
 import { TabBar } from "@/components/Editor/TabBar"
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/Resizable"
 
 interface FileTab {
   fileId: string
