@@ -9,4 +9,10 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    fs: {
+      // Monaco Editor CSS 파일 접근을 위해서만 추가
+      strict: false,
+    },
+  },
 })
