@@ -84,6 +84,26 @@ export function FileExplorer({ onFileClick }: Props) {
   useEffect(() => {
     // 프로젝트 ID 설정 (개발용 하드코딩)
     const hardcodedProjectId = projectId || "test-project-123"
+    // 🆕 하드코딩된 파일 트리 데이터 (개발용 하드코딩)
+    const mockFileTree = [
+      {
+        children: [
+          {
+            id: 2,
+            path: "/a.html",
+            type: "file" as const,
+          },
+          {
+            id: 3,
+            path: "/a2.html",
+            type: "file" as const,
+          },
+        ],
+        id: 1,
+        path: "/",
+        type: "folder" as const,
+      },
+    ]
 
     // 기존 WebSocket 연결 정리
     if (wsRef.current) {
@@ -140,6 +160,10 @@ export function FileExplorer({ onFileClick }: Props) {
      */
     ws.onerror = error => {
       console.error("📡 WebSocket 에러:", error)
+
+      // 🆕 에러 시 하드코딩 데이터만 추가
+      console.log("🔄 하드코딩 데이터로 fallback")
+      setFileTree(mockFileTree)
       setWsStatus("disconnected")
       setLoading(false)
     }
