@@ -69,6 +69,9 @@ export const FigmaIcons = {
   folderInput2: "http://localhost:3845/assets/4e2af0293a2f7965d6494b7206f7febe241559af.svg",
   folderInput3: "http://localhost:3845/assets/c75adfe5828ecd5a9403251062a9c93fd22bd454.svg",
 
+  // 합쳐진 folder input 아이콘 (완전한 버전)
+  folderInputMerged: "/src/assets/folder-input.svg",
+
   // Navigation Panel - 특수 아이콘들 (Live Share, Folder Input 등)
   liveShare: "http://localhost:3845/assets/ba6b38725b527fa168bc4e3877b71fe5c42a0a40.svg",
   logOut1: "http://localhost:3845/assets/4a76ec6d9d1c12f54e05471670cf97ba4d75096f.svg",
@@ -94,6 +97,7 @@ export const icons = {
   folderInput1: FigmaIcons.folderInput1,
   folderInput2: FigmaIcons.folderInput2,
   folderInput3: FigmaIcons.folderInput3,
+  folderInputMerged: FigmaIcons.folderInputMerged,
 
   // Navigation Panel icons
   liveShare: FigmaIcons.liveShare,
