@@ -26,12 +26,12 @@ export const NavigationPanel = () => {
           />
         </div>
 
-        {/* Folder Input Icon - 합쳐진 아이콘 */}
+        {/* Project List Icon - 프로젝트 목록 아이콘 */}
         <div className="flex items-center justify-center">
           <img
             alt="프로젝트 목록"
             className={`${ICON_SIZES.lg} text-zinc-600`}
-            src={FigmaIcons.folderInputMerged}
+            src={FigmaIcons.projectList}
           />
         </div>
       </div>

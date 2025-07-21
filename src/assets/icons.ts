@@ -69,14 +69,14 @@ export const FigmaIcons = {
   folderInput2: "http://localhost:3845/assets/4e2af0293a2f7965d6494b7206f7febe241559af.svg",
   folderInput3: "http://localhost:3845/assets/c75adfe5828ecd5a9403251062a9c93fd22bd454.svg",
 
-  // 합쳐진 folder input 아이콘 (완전한 버전)
-  folderInputMerged: "/src/assets/folder-input.svg",
-
   // Navigation Panel - 특수 아이콘들 (Live Share, Folder Input 등)
   liveShare: "http://localhost:3845/assets/ba6b38725b527fa168bc4e3877b71fe5c42a0a40.svg",
   logOut1: "http://localhost:3845/assets/4a76ec6d9d1c12f54e05471670cf97ba4d75096f.svg",
   logOut2: "http://localhost:3845/assets/655cbc1d404341184aaec34efbe86c463c09c7b3.svg",
   logOut3: "http://localhost:3845/assets/8ffa3aa4b162f8a315ea7a6d42618590bdbfbe24.svg",
+
+  // 프로젝트 리스트 아이콘 (완전한 버전)
+  projectList: "/src/assets/folder-input.svg",
 } as const
 
 // 하위 호환성을 위한 레거시 icons 객체 (기존 코드에서 사용 중인 경우)
@@ -97,7 +97,6 @@ export const icons = {
   folderInput1: FigmaIcons.folderInput1,
   folderInput2: FigmaIcons.folderInput2,
   folderInput3: FigmaIcons.folderInput3,
-  folderInputMerged: FigmaIcons.folderInputMerged,
 
   // Navigation Panel icons
   liveShare: FigmaIcons.liveShare,
@@ -105,4 +104,5 @@ export const icons = {
   logOut1: FigmaIcons.logOut1,
   logOut2: FigmaIcons.logOut2,
   logOut3: FigmaIcons.logOut3,
+  projectList: FigmaIcons.projectList,
 } as const
