@@ -1,5 +1,5 @@
 import { CodeEditor } from "@/components/ide/CodeEditor"
-import { Sidebar } from "@/components/ide/Sidebar"
+import { Sidebar } from "@/components/ide/sidebar/Sidebar"
 import { TopBar } from "@/components/ide/TopBar"
 
 interface IdeLayoutProps {
