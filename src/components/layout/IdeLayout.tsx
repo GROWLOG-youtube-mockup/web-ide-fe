@@ -1,6 +1,5 @@
 import { CodeEditor } from "@/components/ide/CodeEditor"
-import { FileExplorer } from "@/components/ide/FileExplorer"
-import { NavigationPanel } from "@/components/ide/NavigationPanel"
+import { Sidebar } from "@/components/ide/Sidebar"
 import { TopBar } from "@/components/ide/TopBar"
 
 interface IdeLayoutProps {
@@ -18,14 +17,7 @@ export const IdeLayout = ({
 
       {/* Main Content */}
       <div className="flex h-[850px] flex-1">
-        {/* File Explorer Sidebar */}
-        <div className="flex w-[343px]">
-          <NavigationPanel />
-          <FileExplorer />
-          {/* Resize Handle */}
-          <div className="w-2 bg-zinc-400"></div>
-        </div>
-
+        <Sidebar />
         <CodeEditor content={content} />
       </div>
     </div>

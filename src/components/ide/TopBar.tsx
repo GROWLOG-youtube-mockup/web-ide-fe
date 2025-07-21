@@ -8,7 +8,10 @@ export const TopBar = ({ projectName = "Growlog IDE" }: TopBarProps) => {
   const LogOutIcon = LucideIcons.logOut
 
   return (
-    <div className="flex h-[50px] items-center border-zinc-400 border-b-2 bg-zinc-200">
+    <div
+      className="flex h-[50px] items-center bg-zinc-200"
+      style={{ boxShadow: "inset 0 -2px 0 0 rgb(161 161 170)" }}
+    >
       <div className="flex w-full items-center justify-between px-4 py-1">
         {/* Logo and Menu */}
         <div className="flex items-center gap-3">

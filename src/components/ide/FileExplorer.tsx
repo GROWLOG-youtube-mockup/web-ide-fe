@@ -4,7 +4,10 @@ export const FileExplorer = () => {
   return (
     <div className="flex flex-1 flex-col bg-zinc-200">
       {/* Files Header */}
-      <div className="flex h-8 items-center justify-between border-zinc-400 border-b-2 bg-zinc-300 px-1 py-2">
+      <div
+        className="flex h-8 items-center justify-between bg-zinc-300 px-1 py-2"
+        style={{ boxShadow: "inset 0 -2px 0 0 rgb(161 161 170)" }}
+      >
         <div className="flex items-center">
           <LucideIcons.chevronDown className={`${ICON_SIZES.xl} text-zinc-800`} />
           <span className="font-semibold text-sm text-zinc-800">MONACO</span>
@@ -39,7 +42,7 @@ export const FileExplorer = () => {
           </div>
 
           {/* Level 2 - Nested */}
-          <div className="space-y-1 border-zinc-400 border-l-2 pl-4">
+          <div className="space-y-1 pl-4" style={{ borderLeft: "2px solid rgb(161 161 170)" }}>
             <div className="flex items-center pl-1">
               <LucideIcons.chevronRight className={`${ICON_SIZES.lg} text-black`} />
               <LucideIcons.folder className={`${ICON_SIZES.sm} mr-1 text-black`} />
@@ -53,7 +56,7 @@ export const FileExplorer = () => {
             </div>
 
             {/* Level 3 - More nested */}
-            <div className="space-y-1 border-zinc-400 border-l-2 pl-4">
+            <div className="space-y-1 pl-4" style={{ borderLeft: "2px solid rgb(161 161 170)" }}>
               <div className="flex items-center pl-1">
                 <LucideIcons.chevronRight className={`${ICON_SIZES.lg} text-black`} />
                 <LucideIcons.folder className={`${ICON_SIZES.sm} mr-1 text-black`} />
@@ -71,7 +74,10 @@ export const FileExplorer = () => {
       </div>
 
       {/* Chat Header */}
-      <div className="flex h-8 items-center border-zinc-400 border-y-2 bg-zinc-300 px-3 py-2">
+      <div
+        className="flex h-8 items-center bg-zinc-300 px-3 py-2"
+        style={{ boxShadow: "inset 0 2px 0 0 rgb(161 161 170), inset 0 -2px 0 0 rgb(161 161 170)" }}
+      >
         <LucideIcons.chevronDown className={`${ICON_SIZES.lg} text-black`} />
         <span className="font-semibold text-black/80 text-sm">채팅방(3)</span>
       </div>
