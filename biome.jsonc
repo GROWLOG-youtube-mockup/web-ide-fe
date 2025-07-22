@@ -138,15 +138,15 @@
   },
   "overrides": [
     {
-      // 1. shadcn/ui 예외 처리
-      "includes": ["src/components/ui/**/*.tsx"],
+      // 1. 컴포넌트는 'kebab-case' 또는 'PascalCase'
+      "includes": ["src/components/**/*.tsx"],
       "linter": {
         "rules": {
           "style": {
             "useFilenamingConvention": {
               "level": "error",
               "options": {
-                "filenameCases": ["kebab-case"]
+                "filenameCases": ["kebab-case", "PascalCase"]
               }
             }
           }
@@ -154,8 +154,8 @@
       }
     },
     {
-      // 2. 컴포넌트와 페이지는 'PascalCase'
-      "includes": ["src/components/**/*.tsx", "src/pages/**/*.tsx"],
+      // 2. 페이지는 'PascalCase'
+      "includes": ["src/pages/**/*.tsx"],
       "linter": {
         "rules": {
           "style": {
@@ -179,6 +179,22 @@
               "level": "error",
               "options": {
                 "filenameCases": ["camelCase"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      // 4. data 폴더는 camelCase 허용
+      "includes": ["src/data/**/*.ts", "src/data/**/*.tsx"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useFilenamingConvention": {
+              "level": "error",
+              "options": {
+                "filenameCases": ["camelCase", "kebab-case"]
               }
             }
           }
