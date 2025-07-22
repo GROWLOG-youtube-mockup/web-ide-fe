@@ -34,7 +34,7 @@ export const IdeLayout = ({
             </ViewManager>
           </ResizablePanel>
 
-          <ResizableHandle className="w-2 bg-zinc-200 hover:bg-zinc-300" />
+          <ResizableHandle className="bg-zinc-200 transition-all duration-150 hover:scale-x-500 hover:bg-zinc-300" />
 
           <ResizablePanel>
             <CodeEditor content={content} />

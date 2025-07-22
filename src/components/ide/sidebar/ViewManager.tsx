@@ -28,13 +28,13 @@ export const ViewManager = ({
 }: ViewManagerProps) => {
   return (
     <Collapsible
-      className="group/collapsible h-full w-full min-w-0 overflow-hidden bg-zinc-50"
+      className="group/collapsible h-full min-w-0 overflow-hidden"
       defaultOpen={defaultOpen}
     >
       <CollapsibleTrigger asChild>
         <Button
           className={cn(
-            "h-auto w-full justify-start border-zinc-200 border-b bg-zinc-50 px-3 py-2",
+            "h-auto w-full cursor-pointer justify-start border-zinc-200 border-b bg-zinc-50 px-3 py-2",
             "rounded-none font-medium text-sm"
           )}
           variant="ghost"

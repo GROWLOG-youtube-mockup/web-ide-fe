@@ -15,10 +15,7 @@ const EmptyFileMessage = () => (
 
 /** 루트 폴더를 제외한 노드들을 반환 */
 const getVisibleNodes = (nodes: FileTreeNode[]): FileTreeNode[] => {
-  const shouldHideRoot =
-    nodes.length === 1 && nodes[0].type === "folder" && Boolean(nodes[0].children)
-
-  return shouldHideRoot ? (nodes[0].children ?? []) : nodes
+  return nodes[0].children ?? []
 }
 
 /**
@@ -33,10 +30,10 @@ export const FileExplorerTree = ({ nodes, onFileClick }: FileExplorerTreeProps) 
   }
 
   return (
-    <>
+    <div className="flex h-full flex-col gap-1">
       {getVisibleNodes(nodes).map(node => (
         <FileExplorerNode key={node.path} node={node} onFileClick={onFileClick} />
       ))}
-    </>
+    </div>
   )
 }

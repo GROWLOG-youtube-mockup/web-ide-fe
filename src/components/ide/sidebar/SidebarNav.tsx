@@ -2,6 +2,7 @@ import { FilesIcon, FolderInputIcon, SearchIcon, SettingsIcon, Share2Icon } from
 import type { MouseEventHandler, ReactNode } from "react"
 import { useState } from "react"
 import { Button } from "@/components/ui/Button"
+import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 
 type NavItem = "files" | "search" | "share" | "folder" | "settings"
@@ -16,12 +17,11 @@ const NavButton = ({ children, onClick, isActive = false }: NavButtonProps) => {
   return (
     <Button
       className={cn(
-        "h-10 w-10 cursor-pointer bg-zinc-50 shadow-none",
+        "h-10 w-10 cursor-pointer bg-transparent shadow-none",
         isActive && "bg-zinc-200",
         !isActive && "hover:bg-zinc-200"
       )}
       onClick={onClick}
-      size="default"
     >
       {children}
     </Button>
@@ -43,37 +43,43 @@ export const SidebarNav = () => {
   }
 
   return (
-    <nav
-      className="flex w-14 flex-col justify-between bg-zinc-50 p-2"
-      style={{ boxShadow: "inset -2px 0 0 0 rgb(161 161 170)" }}
-    >
-      <div className="flex flex-col gap-2">
-        <NavButton isActive={activeNavItem === "files"} onClick={() => handleNavItemClick("files")}>
-          <FilesIcon className="size-6" />
-        </NavButton>
-        <NavButton
-          isActive={activeNavItem === "search"}
-          onClick={() => handleNavItemClick("search")}
-        >
-          <SearchIcon className="size-6" />
-        </NavButton>
-        <NavButton isActive={activeNavItem === "share"} onClick={() => handleNavItemClick("share")}>
-          <Share2Icon className="size-6" />
-        </NavButton>
-        <NavButton
-          isActive={activeNavItem === "folder"}
-          onClick={() => handleNavItemClick("folder")}
-        >
-          <FolderInputIcon className="size-6" />
-        </NavButton>
-      </div>
+    <>
+      <nav className="flex w-14 flex-col justify-between bg-zinc-100 p-2">
+        <div className="flex flex-col gap-2">
+          <NavButton
+            isActive={activeNavItem === "files"}
+            onClick={() => handleNavItemClick("files")}
+          >
+            <FilesIcon className="size-6" />
+          </NavButton>
+          <NavButton
+            isActive={activeNavItem === "search"}
+            onClick={() => handleNavItemClick("search")}
+          >
+            <SearchIcon className="size-6" />
+          </NavButton>
+          <NavButton
+            isActive={activeNavItem === "share"}
+            onClick={() => handleNavItemClick("share")}
+          >
+            <Share2Icon className="size-6" />
+          </NavButton>
+          <NavButton
+            isActive={activeNavItem === "folder"}
+            onClick={() => handleNavItemClick("folder")}
+          >
+            <FolderInputIcon className="size-6" />
+          </NavButton>
+        </div>
 
-      <NavButton
-        isActive={activeNavItem === "settings"}
-        onClick={() => handleNavItemClick("settings")}
-      >
-        <SettingsIcon className="size-6" />
-      </NavButton>
-    </nav>
+        <NavButton
+          isActive={activeNavItem === "settings"}
+          onClick={() => handleNavItemClick("settings")}
+        >
+          <SettingsIcon className="size-6" />
+        </NavButton>
+      </nav>
+      <Separator className="bg-zinc-200" orientation="vertical" />
+    </>
   )
 }

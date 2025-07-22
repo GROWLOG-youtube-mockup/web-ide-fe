@@ -60,7 +60,7 @@ export const FileExplorerNode = ({ node, onFileClick }: FileExplorerNodeProps) =
         <CollapsibleTrigger asChild>
           <Button
             className={cn(
-              "h-6 w-full cursor-pointer justify-start gap-1 p-0 font-normal text-sm",
+              "h-6 w-full cursor-pointer justify-start gap-1.5 p-0 font-normal text-sm",
               "hover:bg-zinc-200"
             )}
             size="sm"
