@@ -1,5 +1,8 @@
 // Lucide React 아이콘 import (shadcn/ui)
 import {
+  AlertCircle, // 경고 원 아이콘
+  Bookmark, // 북마크 아이콘 (pin 대안)
+  Check, // 체크 아이콘 (save 대안)
   ChevronDown,
   ChevronRight,
   ChevronUp,
@@ -8,10 +11,16 @@ import {
   Folder,
   FolderOpen,
   LogOut,
+  Minus, // 마이너스 아이콘
+  MoreHorizontal, // 점 3개 메뉴 아이콘
+  Pin, // 고정 아이콘 (또는 Bookmark 사용)
   Plus,
   RefreshCw,
+  // 새로 추가할 아이콘들(에디터와 탭용)
+  Save, // 저장 아이콘
   Search,
   Settings,
+  Star, // 별 아이콘 (pin 대안)
   X,
 } from "lucide-react"
 
@@ -26,6 +35,9 @@ export const ICON_SIZES = {
 
 // Lucide React 아이콘들 (shadcn/ui에서 사용 가능)
 export const LucideIcons = {
+  alertCircle: AlertCircle, // 경고 원
+  bookmark: Bookmark, // 북마크 (pin 대안)
+  check: Check, // 체크 (save 대안)
   // File Explorer
   chevronDown: ChevronDown,
   chevronRight: ChevronRight,
@@ -40,10 +52,17 @@ export const LucideIcons = {
   folderOpen: FolderOpen,
   // Top Bar
   logOut: LogOut,
+  minus: Minus, // 마이너스
+  moreHorizontal: MoreHorizontal, // 점 3개 메뉴
+  pin: Pin, // 고정 (기본)
   plus: Plus,
   refreshCw: RefreshCw,
+
+  // 새로 추가하는 아이콘들(에디터와 탭용)
+  save: Save, // 저장
   search: Search,
   settings: Settings,
+  star: Star, // 별 (pin 대안)
 
   // Code Editor
   x: X, // close icon
