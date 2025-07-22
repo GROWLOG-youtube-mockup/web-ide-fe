@@ -1,5 +1,5 @@
 /* FileExplorer.css */
-/** biome-ignore-all assist/source/useSortedProperties: <explanation> */
+
 .file-explorer {
   height: 100%;
   background-color: #f4f4f5;
@@ -8,15 +8,11 @@
 
 .explorer-header {
   padding: 12px;
-    background-color: #e4e4e7;
+  background-color: #e4e4e7;
   border-bottom: 1px solid #d4d4d8;
-  
-  
 }
 
 .explorer-header h3 {
-  
-    
   font-size: 14px;
   font-weight: 500;
   color: rgba(0, 0, 0, 0.8);
@@ -32,21 +28,18 @@
 }
 
 .file-node {
-
-    width: 100%;
-
-    padding: 8px;
-
-            font-size: 14px;
-  text-align: left;
-        color: rgba(0, 0, 0, 0.8);
-  border-radius: 4px;
   display: flex;
-  align-items: center;
   gap: 8px;
+  align-items: center;
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.8);
+  text-align: left;
+  cursor: pointer;
   background: none;
   border: none;
-  cursor: pointer;
+  border-radius: 4px;
 }
 
 .file-node:hover {
@@ -58,18 +51,19 @@
 }
 
 .folder-children {
+  padding-left: 8px;
   margin-left: 16px;
   border-left: 1px solid #d4d4d8;
-  padding-left: 8px;
 }
 
 .tree-container > .tree-node + .tree-node {
   margin-top: 4px;
 }
 
-.loading, .empty-tree {
+.loading,
+.empty-tree {
   padding: 16px;
-  text-align: center;
-  color: rgba(0, 0, 0, 0.6);
   font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+  text-align: center;
 }
