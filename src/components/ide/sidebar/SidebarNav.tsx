@@ -1,11 +1,14 @@
 import { FilesIcon, FolderInputIcon, SearchIcon, SettingsIcon, Share2Icon } from "lucide-react"
 import type { MouseEventHandler, ReactNode } from "react"
-import { useState } from "react"
 import { Button } from "@/components/ui/Button"
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
+import type { NavItem } from "../../../stores/sidebar-store"
 
-type NavItem = "files" | "search" | "share" | "folder" | "settings"
+interface SidebarNavProps {
+  activeView: NavItem
+  onViewChange: (view: NavItem) => void
+}
 
 interface NavButtonProps {
   children: ReactNode
@@ -34,38 +37,29 @@ const NavButton = ({ children, onClick, isActive = false }: NavButtonProps) => {
  * 파일 탐색기, 검색, 공유, 설정과 같은 다양한 IDE 기능을 위한 액션 버튼들을 포함합니다.
  * 상단에 주요 액션들, 하단에 보조 액션들을 배치하는 수직 레이아웃을 사용합니다.
  */
-export const SidebarNav = () => {
-  const [activeNavItem, setActiveNavItem] = useState<NavItem>("files")
-
+export const SidebarNav = ({ activeView, onViewChange }: SidebarNavProps) => {
   const handleNavItemClick = (item: NavItem) => {
-    setActiveNavItem(item)
-    console.log(`${item} clicked`)
+    onViewChange(item)
   }
 
   return (
     <>
       <nav className="flex w-14 flex-col justify-between bg-zinc-100 p-2">
         <div className="flex flex-col gap-2">
-          <NavButton
-            isActive={activeNavItem === "files"}
-            onClick={() => handleNavItemClick("files")}
-          >
+          <NavButton isActive={activeView === "files"} onClick={() => handleNavItemClick("files")}>
             <FilesIcon className="size-6" />
           </NavButton>
           <NavButton
-            isActive={activeNavItem === "search"}
+            isActive={activeView === "search"}
             onClick={() => handleNavItemClick("search")}
           >
             <SearchIcon className="size-6" />
           </NavButton>
-          <NavButton
-            isActive={activeNavItem === "share"}
-            onClick={() => handleNavItemClick("share")}
-          >
+          <NavButton isActive={activeView === "share"} onClick={() => handleNavItemClick("share")}>
             <Share2Icon className="size-6" />
           </NavButton>
           <NavButton
-            isActive={activeNavItem === "folder"}
+            isActive={activeView === "folder"}
             onClick={() => handleNavItemClick("folder")}
           >
             <FolderInputIcon className="size-6" />
@@ -73,12 +67,13 @@ export const SidebarNav = () => {
         </div>
 
         <NavButton
-          isActive={activeNavItem === "settings"}
+          isActive={activeView === "settings"}
           onClick={() => handleNavItemClick("settings")}
         >
           <SettingsIcon className="size-6" />
         </NavButton>
       </nav>
+
       <Separator className="bg-zinc-200" orientation="vertical" />
     </>
   )

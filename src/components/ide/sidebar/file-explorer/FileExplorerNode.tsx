@@ -3,7 +3,7 @@ import type { MouseEventHandler } from "react"
 import { useState } from "react"
 import { Button } from "@/components/ui/Button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import type { FileTreeNode } from "@/data/mockFileTree"
+import type { FileTreeNode } from "@/data/mock-file-tree"
 import { cn } from "@/lib/utils"
 
 interface FileExplorerNodeProps {

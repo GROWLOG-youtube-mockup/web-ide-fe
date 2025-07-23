@@ -1,4 +1,4 @@
-import type { FileTreeNode } from "@/data/mockFileTree"
+import type { FileTreeNode } from "@/data/mock-file-tree"
 import { FileExplorerNode } from "./FileExplorerNode"
 
 interface FileExplorerTreeProps {
