@@ -1,10 +1,10 @@
 import { FigmaIcons, ICON_SIZES, LucideIcons } from "@/assets/icons"
 
 interface TopBarProps {
-  projectName?: string
+  serviceName?: string
 }
 
-export const TopBar = ({ projectName = "Growlog IDE" }: TopBarProps) => {
+export const TopBar = ({ serviceName = "Growlog IDE" }: TopBarProps) => {
   const LogOutIcon = LucideIcons.logOut
 
   return (
@@ -15,7 +15,7 @@ export const TopBar = ({ projectName = "Growlog IDE" }: TopBarProps) => {
       <div className="flex w-full items-center justify-between px-4 py-1">
         {/* Logo and Menu */}
         <div className="flex items-center gap-3">
-          <div className="font-semibold text-black/80 text-xl tracking-tight">{projectName}</div>
+          <div className="font-semibold text-black/80 text-xl tracking-tight">{serviceName}</div>
           <div className="flex rounded-md bg-zinc-200 px-[5px] py-1">
             <div className="px-3 py-1.5 font-medium text-black/70 text-sm">파일(F)</div>
             <div className="px-3 py-1.5 font-medium text-black/70 text-sm">편집(E)</div>

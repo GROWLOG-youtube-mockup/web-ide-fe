@@ -21,11 +21,7 @@ interface ViewManagerProps {
  * 파일 탐색기, 검색 결과 등 다양한 콘텐츠 타입을 담을 수 있는 접을 수 있는 컨테이너를 제공합니다.
  * 크기 조절 가능한 너비와 스크롤 가능한 콘텐츠 영역을 특징으로 합니다.
  */
-export const ViewManager = ({
-  title = "Files",
-  defaultOpen = true,
-  children,
-}: ViewManagerProps) => {
+export const ViewManager = ({ title, defaultOpen = true, children }: ViewManagerProps) => {
   return (
     <Collapsible
       className="group/collapsible h-full min-w-0 overflow-hidden"
@@ -39,7 +35,7 @@ export const ViewManager = ({
           )}
           variant="ghost"
         >
-          <span className="flex-1 truncate text-left">{title}</span>
+          <span className="flex-1 truncate text-left uppercase">{title}</span>
           <ChevronDown className="ml-2 transition-transform group-data-[state=open]/collapsible:rotate-180" />
         </Button>
       </CollapsibleTrigger>

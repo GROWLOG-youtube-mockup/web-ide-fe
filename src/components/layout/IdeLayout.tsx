@@ -7,18 +7,13 @@ import { TopBar } from "@/components/ide/TopBar"
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
 import { mockFileTree } from "@/data/mock-file-tree"
 
-interface IdeLayoutProps {
-  /** 상단 바에 표시할 프로젝트 이름 */
-  projectName?: string
-  /** 코드 에디터에 표시할 초기 콘텐츠 */
-  content?: string
-}
-
 const PlaceholderPanel = ({ message }: { message: string }) => (
   <div className="p-4 text-gray-500">{message}</div>
 )
 
-export const IdeLayout = ({ projectName = "Growlog IDE", content = "content" }: IdeLayoutProps) => {
+export const IdeLayout = () => {
+  const projectTitle = "Project Title"
+
   const handleFileClick = useCallback((path: string) => {
     console.log("File clicked:", path)
     // TODO: 파일 열기 로직 추가
@@ -26,7 +21,7 @@ export const IdeLayout = ({ projectName = "Growlog IDE", content = "content" }: 
 
   return (
     <div className="flex h-screen w-full flex-col">
-      <TopBar projectName={projectName} />
+      <TopBar />
       <main className="flex flex-1">
         <Sidebar.Root>
           <Sidebar.Nav>
@@ -44,7 +39,7 @@ export const IdeLayout = ({ projectName = "Growlog IDE", content = "content" }: 
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel defaultSize={20} maxSize={45} minSize={0}>
               <Sidebar.Content>
-                <Sidebar.Panel id="files" title="Files">
+                <Sidebar.Panel id="files" title={projectTitle}>
                   <FileExplorerTree nodes={mockFileTree} onFileClick={handleFileClick} />
                 </Sidebar.Panel>
 
@@ -73,7 +68,7 @@ export const IdeLayout = ({ projectName = "Growlog IDE", content = "content" }: 
             <ResizableHandle className="bg-zinc-200 transition-all duration-150 hover:scale-x-500 hover:bg-zinc-300" />
 
             <ResizablePanel>
-              <CodeEditor content={content} />
+              <CodeEditor />
             </ResizablePanel>
           </ResizablePanelGroup>
         </Sidebar.Root>
