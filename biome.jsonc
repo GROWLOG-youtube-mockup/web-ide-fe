@@ -121,6 +121,15 @@
         "useNamingConvention": {
           "level": "error",
           "options": {
+            "conventions": [
+              {
+                // Compound 컴포넌트의 이름은 'PascalCase'로 강제합니다.
+                "formats": ["camelCase", "PascalCase"],
+                "selector": {
+                  "kind": "objectLiteralProperty"
+                }
+              }
+            ],
             "strictCase": true
           }
         }
@@ -179,22 +188,6 @@
               "level": "error",
               "options": {
                 "filenameCases": ["camelCase"]
-              }
-            }
-          }
-        }
-      }
-    },
-    {
-      // 4. data 폴더는 camelCase 허용
-      "includes": ["src/data/**/*.ts", "src/data/**/*.tsx"],
-      "linter": {
-        "rules": {
-          "style": {
-            "useFilenamingConvention": {
-              "level": "error",
-              "options": {
-                "filenameCases": ["camelCase", "kebab-case"]
               }
             }
           }
