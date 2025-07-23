@@ -1,4 +1,5 @@
-import { AlertDialog } from "@/components/AlertDialog"
+import { AlertDialog } from "@/components/common/AlertDialog"
+import { FormSection } from "@/components/common/FormSection"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 
@@ -36,13 +37,10 @@ export default function ProfileEditPage() {
             </div>
           </div>
 
-          {/* Form Fields */}
+          {/* Form Fields (공통 컴포넌트 적용) */}
           <div className="flex w-full flex-col gap-2.5">
             {/* Email Section */}
-            <div className="flex w-full flex-col gap-1.5">
-              <label className="font-semibold text-[10.667px] text-zinc-950" htmlFor="email">
-                Email
-              </label>
+            <FormSection htmlFor="email" label="Email">
               <Input
                 className="h-[35px] rounded-[5.368px] border-[0.667px] border-zinc-200 px-[13px] font-medium text-[10.667px] text-zinc-400"
                 disabled
@@ -50,47 +48,32 @@ export default function ProfileEditPage() {
                 type="email"
                 value="jaeyeopme@gmail.com"
               />
-            </div>
+            </FormSection>
 
             {/* Password Section */}
-            <div className="flex w-full flex-col gap-1.5">
-              <label
-                className="font-semibold text-[10.667px] text-zinc-950"
-                htmlFor="currentPassword"
-              >
-                Password
-              </label>
-              <div className="flex w-full flex-col gap-[3px]">
-                <p className="font-normal text-[9.333px] text-zinc-500 leading-[13.333px]">
-                  Must be at least 8 characters long, including both letters and numbers.
-                </p>
-                <div className="flex flex-col gap-1.5">
-                  <Input
-                    className="h-[30px] rounded-[5.368px] border-[0.667px] border-zinc-200 px-[13px] font-medium text-[10.667px] text-zinc-500 placeholder:text-zinc-500"
-                    id="currentPassword"
-                    placeholder="Enter your current password"
-                    type="password"
-                  />
-                  <Input
-                    className="h-[30px] rounded-[5.333px] border-[0.667px] border-zinc-200 px-[13px] font-medium text-[10.667px] text-zinc-500 placeholder:text-zinc-500"
-                    placeholder="Enter your new password"
-                    type="password"
-                  />
-                </div>
+            <FormSection
+              description="Must be at least 8 characters long, including both letters and numbers."
+              htmlFor="currentPassword"
+              label="Password"
+            >
+              <div className="flex flex-col gap-1.5">
+                <Input
+                  className="h-[30px] rounded-[5.368px] border-[0.667px] border-zinc-200 px-[13px] font-medium text-[10.667px] text-zinc-500 placeholder:text-zinc-500"
+                  id="currentPassword"
+                  placeholder="Enter your current password"
+                  type="password"
+                />
+                <Input
+                  className="h-[30px] rounded-[5.333px] border-[0.667px] border-zinc-200 px-[13px] font-medium text-[10.667px] text-zinc-500 placeholder:text-zinc-500"
+                  placeholder="Enter your new password"
+                  type="password"
+                />
               </div>
-            </div>
+            </FormSection>
 
             {/* Name Section */}
-            <div className="flex w-full flex-col gap-1.5">
-              <label className="font-semibold text-[10.667px] text-zinc-950" htmlFor="name">
-                Name
-              </label>
-              <Input
-                className="h-[35px] rounded-[5.368px] border-[0.667px] border-zinc-200 px-[13px] font-medium text-[10.667px] text-zinc-500"
-                id="name"
-                value="jaeyeopme"
-              />
-              <div className="flex w-full items-center justify-end">
+            <FormSection
+              action={
                 <AlertDialog
                   cancelText="Cancel"
                   confirmText="Delete"
@@ -120,8 +103,16 @@ export default function ProfileEditPage() {
                     />
                   </div>
                 </AlertDialog>
-              </div>
-            </div>
+              }
+              htmlFor="name"
+              label="Name"
+            >
+              <Input
+                className="h-[35px] rounded-[5.368px] border-[0.667px] border-zinc-200 px-[13px] font-medium text-[10.667px] text-zinc-500"
+                id="name"
+                value="jaeyeopme"
+              />
+            </FormSection>
           </div>
 
           {/* Bottom Section */}

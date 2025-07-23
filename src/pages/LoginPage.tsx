@@ -1,3 +1,4 @@
+import { FormSection } from "@/components/common/FormSection"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 
@@ -27,38 +28,35 @@ export default function LoginPage() {
             <img alt="" className="h-px w-full" src={imgDivider} />
           </div>
 
-          {/* Form Fields */}
+          {/* Form Fields (공통 컴포넌트 적용) */}
           <div className="flex w-full flex-col gap-2.5">
             {/* Email Section */}
-            <div className="flex w-full flex-col gap-1.5">
-              <label className="font-semibold text-[10.667px] text-zinc-950" htmlFor="email">
-                Email
-              </label>
+            <FormSection htmlFor="email" label="Email">
               <Input
                 className="h-[35px] rounded-[5.368px] border-[0.667px] border-zinc-200 px-[13px] font-medium text-[10.667px] text-zinc-500 placeholder:text-zinc-500"
                 id="email"
                 placeholder="Enter your email"
                 type="email"
               />
-            </div>
+            </FormSection>
 
             {/* Password Section */}
-            <div className="flex w-full flex-col gap-1.5">
-              <div className="flex w-full items-center justify-between">
-                <label className="font-semibold text-[10.667px] text-zinc-950" htmlFor="password">
-                  Password
-                </label>
+            <FormSection
+              action={
                 <span className="cursor-pointer font-medium text-[9.333px] text-zinc-500">
                   Forgot your password?
                 </span>
-              </div>
+              }
+              htmlFor="password"
+              label="Password"
+            >
               <Input
                 className="h-[35px] rounded-[5.333px] border-[0.667px] border-zinc-200 px-[13px] font-medium text-[10.667px] text-zinc-500 placeholder:text-zinc-500"
                 id="password"
                 placeholder="Enter your password"
                 type="password"
               />
-            </div>
+            </FormSection>
           </div>
 
           {/* Bottom Section */}
