@@ -7,10 +7,7 @@ interface IdeLayoutProps {
   content?: string
 }
 
-export const IdeLayout = ({
-  projectName = "Growlog IDE",
-  content = "hello world",
-}: IdeLayoutProps) => {
+export const IdeLayout = ({ projectName = "Growlog IDE" }: IdeLayoutProps) => {
   return (
     <div className="flex h-full w-full flex-col">
       <TopBar projectName={projectName} />
@@ -18,7 +15,7 @@ export const IdeLayout = ({
       {/* Main Content */}
       <div className="flex h-[850px] flex-1">
         <Sidebar />
-        <CodeEditor content={content} />
+        <CodeEditor />
       </div>
     </div>
   )
