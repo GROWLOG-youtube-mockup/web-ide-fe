@@ -1,10 +1,11 @@
 import type { LucideIcon } from "lucide-react"
+import { ChevronDown } from "lucide-react"
 import type { MouseEventHandler, ReactNode } from "react"
 import { Button } from "@/components/ui/Button"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 import { type NavItem, useSidebarStore } from "../../../stores/sidebar-store"
-import { ViewManager } from "./ViewManager"
 
 interface SidebarRootProps {
   children: ReactNode
@@ -94,9 +95,23 @@ const SidebarPanel = ({ id, title, children }: PanelProps) => {
   }
 
   return (
-    <ViewManager defaultOpen={true} title={title}>
-      {children}
-    </ViewManager>
+    <Collapsible className="group/collapsible h-full min-w-0 overflow-hidden" defaultOpen={true}>
+      <CollapsibleTrigger asChild>
+        <Button
+          className={cn(
+            "h-auto w-full cursor-pointer justify-start border-zinc-200 border-b bg-zinc-50 px-3 py-2",
+            "rounded-none font-medium text-sm"
+          )}
+          variant="ghost"
+        >
+          <span className="flex-1 truncate text-left uppercase">{title}</span>
+          <ChevronDown className="ml-2 transition-transform group-data-[state=open]/collapsible:rotate-180" />
+        </Button>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="flex-1 overflow-hidden">
+        <div className="h-full overflow-y-auto px-0 py-2">{children}</div>
+      </CollapsibleContent>
+    </Collapsible>
   )
 }
 
