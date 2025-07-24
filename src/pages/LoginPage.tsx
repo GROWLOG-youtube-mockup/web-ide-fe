@@ -1,8 +1,7 @@
+import { dividerSvg } from "@/assets/icons"
 import { FormSection } from "@/components/common/FormSection"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
-
-const imgDivider = "http://localhost:3845/assets/ff535bc62866ed4ed8837c1a47b2949e7461b0f3.svg"
 
 export default function LoginPage() {
   return (
@@ -25,7 +24,7 @@ export default function LoginPage() {
 
           {/* Divider */}
           <div className="w-full">
-            <img alt="" className="h-px w-full" src={imgDivider} />
+            <img alt="divider" className="h-px w-full" src={dividerSvg} />
           </div>
 
           {/* Form Fields (공통 컴포넌트 적용) */}

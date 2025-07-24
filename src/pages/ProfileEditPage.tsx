@@ -1,10 +1,10 @@
+import { dividerSvg } from "@/assets/icons"
 import { AlertDialog } from "@/components/common/AlertDialog"
 import { FormSection } from "@/components/common/FormSection"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 
 const imgAvatar = "http://localhost:3845/assets/93a68586aba6dbdd0995dad680ca4c4b2159375f.png"
-const imgDivider = "http://localhost:3845/assets/9813750d2c6daa3e03347ae7a9b8cb5ebb96a15d.svg"
 
 export default function ProfileEditPage() {
   return (
@@ -27,7 +27,7 @@ export default function ProfileEditPage() {
 
           {/* Divider */}
           <div className="w-full">
-            <img alt="" className="h-3 w-full" src={imgDivider} />
+            <img alt="divider" className="h-3 w-full" src={dividerSvg} />
           </div>
 
           {/* Avatar */}
