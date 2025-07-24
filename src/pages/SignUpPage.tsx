@@ -4,27 +4,27 @@ import { FormSection } from "@/components/common/FormSection"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
-import { AUTH_STYLES } from "@/lib/auth-styles"
+import { AUTH_LAYOUT, AUTH_STYLES } from "@/lib/auth-styles"
 
 export default function SignUpPage() {
   return (
-    <div className="relative flex h-full min-h-screen w-full items-center justify-center bg-white">
+    <div className={AUTH_LAYOUT.container}>
       {/* Main Content Container */}
-      <div className="flex w-[310px] flex-col items-center gap-5">
+      <div className={AUTH_LAYOUT.main}>
         {/* Header */}
-        <div className="flex w-full flex-col gap-[6.667px]">
+        <div className={AUTH_LAYOUT.header}>
           <h1 className={AUTH_STYLES.title}>Sign up</h1>
           <p className={AUTH_STYLES.subtitle}>Enter your information to sign up!</p>
         </div>
 
         {/* Divider */}
-        <div className="w-full">
+        <div className={AUTH_LAYOUT.divider}>
           <img alt="divider" className="h-px w-full" src={dividerSvg} />
         </div>
 
         {/* Avatar (shadcn/ui) */}
-        <div className="flex items-center justify-center">
-          <div className="flex h-28 w-[110px] items-center justify-center">
+        <div className={AUTH_LAYOUT.avatarWrapper}>
+          <div className={AUTH_LAYOUT.avatarInner}>
             <Avatar className="h-full w-full">
               <AvatarImage alt="avatar" src="https://github.com/shadcn.png" />
               <AvatarFallback>U</AvatarFallback>
@@ -32,12 +32,12 @@ export default function SignUpPage() {
           </div>
         </div>
 
-        {/* Form Fields (공통 컴포넌트 적용) */}
-        <div className="flex w-full flex-col gap-2.5">
+        {/* Form Fields */}
+        <div className={AUTH_LAYOUT.section}>
           {/* Email Section */}
           <FormSection htmlFor="email" label="Email">
-            <div className="flex w-full flex-col gap-1.5">
-              <div className="flex h-[30px] gap-1.5">
+            <div className="flex w-full flex-col gap-2">
+              <div className="flex h-[35px] gap-1.5">
                 <div className="relative flex-1">
                   <Input
                     className={clsx(AUTH_STYLES.field, AUTH_STYLES.focus)}
@@ -48,7 +48,7 @@ export default function SignUpPage() {
                 </div>
                 <Button className={clsx(AUTH_STYLES.btnSm, AUTH_STYLES.btnPri)}>Send code</Button>
               </div>
-              <div className="flex h-[30px] gap-1.5">
+              <div className="flex h-[35px] gap-1.5">
                 <div className="relative flex-1">
                   <Input
                     className={clsx(AUTH_STYLES.field, AUTH_STYLES.focus)}
@@ -85,7 +85,7 @@ export default function SignUpPage() {
         </div>
 
         {/* Bottom Section */}
-        <div className="flex w-full flex-col items-center gap-5 pt-0 pb-5">
+        <div className={AUTH_LAYOUT.bottom}>
           {/* Sign Up Button */}
           <Button className={AUTH_STYLES.signupBtn}>Sign Up</Button>
 
