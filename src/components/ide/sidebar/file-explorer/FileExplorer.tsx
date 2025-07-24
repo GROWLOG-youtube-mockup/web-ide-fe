@@ -1,16 +1,35 @@
 import { ChevronRight, File, Folder, FolderOpen } from "lucide-react"
-import type { MouseEventHandler } from "react"
-import { useState } from "react"
+import type { MouseEventHandler, ReactNode } from "react"
 import { Button } from "@/components/ui/Button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import type { FileTreeNode } from "@/data/mock-file-tree"
 import { cn } from "@/lib/utils"
+import { useFileExplorerStore } from "@/stores/file-explorer-store"
+
+interface FileExplorerRootProps {
+  children: ReactNode
+}
+
+interface FileExplorerTreeProps {
+  nodes: FileTreeNode[]
+}
 
 interface FileExplorerNodeProps {
-  /** 파일 또는 폴더 노드 데이터 */
   node: FileTreeNode
-  /** 파일 클릭 시 호출되는 콜백 함수 */
-  onFileClick?: (path: string) => void
+}
+
+const FileExplorerRoot = ({ children }: FileExplorerRootProps) => {
+  return <div>{children}</div>
+}
+
+const FileExplorerTree = ({ nodes }: FileExplorerTreeProps) => {
+  return (
+    <div className="space-y-0">
+      {nodes.map(node => (
+        <FileExplorer.Node key={node.path} node={node} />
+      ))}
+    </div>
+  )
 }
 
 /**
@@ -22,22 +41,24 @@ interface FileExplorerNodeProps {
  * - 중첩된 자식 요소 렌더링
  * - 호버 상태 및 애니메이션
  */
-export const FileExplorerNode = ({ node, onFileClick }: FileExplorerNodeProps) => {
-  const { name, path, type, defaultExpanded = false, children } = node
-  const [isExpanded, setIsExpanded] = useState(defaultExpanded)
+const FileExplorerNode = ({ node }: FileExplorerNodeProps) => {
+  const { name, path, type, defaultExpanded, children } = node
+  const { folderExpanded, setFolderExpanded, selectedItemInExplorer, openFileInEditor } =
+    useFileExplorerStore()
 
   // 계산된 속성들
   const isFolder: boolean = type === "folder"
   const hasChildren: boolean = Boolean(children?.length)
-  const isFolderWithChildren: boolean = isFolder && hasChildren
+  const isExpanded = folderExpanded[path] ?? defaultExpanded
+  const isSelected = selectedItemInExplorer === path
 
   // 이벤트 핸들러
   const handleClick: MouseEventHandler<HTMLButtonElement> = () => {
-    if (type === "file" && onFileClick) {
-      onFileClick(path)
-    } else if (isFolderWithChildren) {
-      setIsExpanded(prev => !prev)
+    if (isFolder) {
+      setFolderExpanded(path, !isExpanded)
+      return
     }
+    openFileInEditor(path)
   }
 
   // 렌더링 함수들
@@ -54,13 +75,13 @@ export const FileExplorerNode = ({ node, onFileClick }: FileExplorerNodeProps) =
   }
 
   // 접을 수 있는 폴더 렌더링
-  if (isFolderWithChildren) {
+  if (isFolder) {
     return (
-      <Collapsible defaultOpen={defaultExpanded} onOpenChange={setIsExpanded} open={isExpanded}>
+      <Collapsible onOpenChange={expanded => setFolderExpanded(path, expanded)} open={isExpanded}>
         <CollapsibleTrigger asChild className="ml-4">
           <Button
             className={cn(
-              "h-6 w-full cursor-pointer justify-start gap-1.5 p-0 font-normal text-sm",
+              "h-6 w-full cursor-pointer justify-start gap-1.5 font-normal text-sm",
               "hover:bg-zinc-200"
             )}
             size="sm"
@@ -78,21 +99,22 @@ export const FileExplorerNode = ({ node, onFileClick }: FileExplorerNodeProps) =
         </CollapsibleTrigger>
         <CollapsibleContent className="ml-4">
           {children?.map(child => (
-            <FileExplorerNode key={child.path} node={child} onFileClick={onFileClick} />
+            <FileExplorer.Node key={child.path} node={child} />
           ))}
         </CollapsibleContent>
       </Collapsible>
     )
   }
 
-  // 파일 또는 빈 폴더 렌더링
+  // 파일 렌더링
   return (
     <div className="ml-4 flex items-center">
       <div className="h-4 w-4 flex-shrink-0" />
       <Button
         className={cn(
-          "ml-5 h-6 w-full cursor-pointer justify-start gap-1.5 font-normal text-sm",
-          "hover:bg-zinc-200"
+          "h-6 w-full cursor-pointer justify-start gap-1.5 font-normal text-sm",
+          "hover:bg-zinc-200",
+          isSelected && "bg-zinc-200"
         )}
         onClick={handleClick}
         size="sm"
@@ -103,4 +125,10 @@ export const FileExplorerNode = ({ node, onFileClick }: FileExplorerNodeProps) =
       </Button>
     </div>
   )
+}
+
+export const FileExplorer = {
+  Node: FileExplorerNode,
+  Root: FileExplorerRoot,
+  Tree: FileExplorerTree,
 }
