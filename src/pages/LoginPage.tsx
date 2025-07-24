@@ -3,26 +3,26 @@ import { dividerSvg } from "@/assets/icons"
 import { FormSection } from "@/components/common/FormSection"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
-import { AUTH_STYLES } from "@/lib/auth-styles"
+import { AUTH_LAYOUT, AUTH_STYLES } from "@/lib/auth-styles"
 
 export default function LoginPage() {
   return (
-    <div className="relative flex h-full min-h-screen w-full items-center justify-center bg-white">
+    <div className={AUTH_LAYOUT.container}>
       {/* Main Content Container */}
-      <div className="flex w-[310px] flex-col items-center gap-5">
+      <div className={AUTH_LAYOUT.main}>
         {/* Header */}
-        <div className="flex w-full flex-col gap-[6.667px]">
+        <div className={AUTH_LAYOUT.header}>
           <h1 className={AUTH_STYLES.title}>Sign In</h1>
           <p className={AUTH_STYLES.subtitle}>Enter your username and password to sign in!</p>
         </div>
 
         {/* Divider */}
-        <div className="w-full">
+        <div className={AUTH_LAYOUT.divider}>
           <img alt="divider" className="h-px w-full" src={dividerSvg} />
         </div>
 
         {/* Form Fields */}
-        <div className="flex w-full flex-col gap-2.5">
+        <div className={AUTH_LAYOUT.section}>
           {/* Email Section */}
           <FormSection htmlFor="email" label="Email">
             <Input
@@ -53,7 +53,7 @@ export default function LoginPage() {
         </div>
 
         {/* Bottom Section */}
-        <div className="flex w-full flex-col items-center gap-5 pt-0 pb-5">
+        <div className={AUTH_LAYOUT.bottom}>
           {/* Sign In Button */}
           <Button className={AUTH_STYLES.signupBtn}>Sign in</Button>
 
