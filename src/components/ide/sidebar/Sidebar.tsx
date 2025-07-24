@@ -1,6 +1,7 @@
 import type { LucideIcon } from "lucide-react"
-import { ChevronDown } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 import type { MouseEventHandler, ReactNode } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/Button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Separator } from "@/components/ui/separator"
@@ -19,6 +20,7 @@ interface NavItemProps {
 interface PanelProps {
   id: NavItem
   title: string
+  defaultExpanded?: boolean
   children: ReactNode
 }
 
@@ -87,25 +89,31 @@ const SidebarContent = ({ children }: { children: ReactNode }) => {
   return <div className="flex-1">{children}</div>
 }
 
-const SidebarPanel = ({ id, title, children }: PanelProps) => {
+const SidebarPanel = ({ id, title, defaultExpanded = false, children }: PanelProps) => {
   const activeView = useSidebarStore(state => state.activeView)
+  const [isExpanded, setIsExpanded] = useState(defaultExpanded)
 
   if (activeView !== id) {
     return null
   }
 
   return (
-    <Collapsible className="group/collapsible h-full min-w-0 overflow-hidden" defaultOpen={true}>
+    <Collapsible
+      className="group/collapsible h-full min-w-0 overflow-hidden"
+      onOpenChange={setIsExpanded}
+      open={isExpanded}
+    >
       <CollapsibleTrigger asChild>
         <Button
+          // ml-1 h-6 w-full cursor-pointer justify-start gap-1.5 font-normal text-sm
           className={cn(
-            "h-auto w-full cursor-pointer justify-start border-zinc-200 border-b bg-zinc-50 px-3 py-2",
-            "rounded-none font-medium text-sm"
+            "h-auto w-full cursor-pointer items-center justify-start border-zinc-200 border-b bg-zinc-50 px-3 py-2",
+            "gap-1.5 rounded-none font-medium text-sm"
           )}
           variant="ghost"
         >
-          <span className="flex-1 truncate text-left uppercase">{title}</span>
-          <ChevronDown className="ml-2 transition-transform group-data-[state=open]/collapsible:rotate-180" />
+          <ChevronRight className={cn("transition-transform", isExpanded && "rotate-90")} />
+          <span className="truncate text-left uppercase">{title}</span>
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent className="flex-1 overflow-hidden">

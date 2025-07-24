@@ -39,7 +39,7 @@ export const IdeLayout = () => {
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel defaultSize={20} maxSize={45} minSize={0}>
               <Sidebar.Content>
-                <Sidebar.Panel id="files" title={projectTitle}>
+                <Sidebar.Panel defaultExpanded={true} id="files" title={projectTitle}>
                   <FileExplorerTree nodes={mockFileTree} onFileClick={handleFileClick} />
                 </Sidebar.Panel>
 

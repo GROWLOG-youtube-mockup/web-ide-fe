@@ -57,7 +57,7 @@ export const FileExplorerNode = ({ node, onFileClick }: FileExplorerNodeProps) =
   if (isFolderWithChildren) {
     return (
       <Collapsible defaultOpen={defaultExpanded} onOpenChange={setIsExpanded} open={isExpanded}>
-        <CollapsibleTrigger asChild>
+        <CollapsibleTrigger asChild className="ml-4">
           <Button
             className={cn(
               "h-6 w-full cursor-pointer justify-start gap-1.5 p-0 font-normal text-sm",
@@ -76,12 +76,10 @@ export const FileExplorerNode = ({ node, onFileClick }: FileExplorerNodeProps) =
             <span className="flex-1 truncate text-left">{name}</span>
           </Button>
         </CollapsibleTrigger>
-        <CollapsibleContent>
-          <div className="ml-4">
-            {children?.map(child => (
-              <FileExplorerNode key={child.path} node={child} onFileClick={onFileClick} />
-            ))}
-          </div>
+        <CollapsibleContent className="ml-4">
+          {children?.map(child => (
+            <FileExplorerNode key={child.path} node={child} onFileClick={onFileClick} />
+          ))}
         </CollapsibleContent>
       </Collapsible>
     )
@@ -89,11 +87,11 @@ export const FileExplorerNode = ({ node, onFileClick }: FileExplorerNodeProps) =
 
   // 파일 또는 빈 폴더 렌더링
   return (
-    <div className="flex items-center">
+    <div className="ml-4 flex items-center">
       <div className="h-4 w-4 flex-shrink-0" />
       <Button
         className={cn(
-          "ml-1 h-6 w-full cursor-pointer justify-start gap-1.5 font-normal text-sm",
+          "ml-5 h-6 w-full cursor-pointer justify-start gap-1.5 font-normal text-sm",
           "hover:bg-zinc-200"
         )}
         onClick={handleClick}
