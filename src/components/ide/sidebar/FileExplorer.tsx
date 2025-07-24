@@ -1,21 +1,15 @@
 import { ICON_SIZES, LucideIcons } from "@/assets/icons"
-import { FileExplorerHeader } from "@/components/ide/editor-part/FileExplorerHeader"
+// import { FileExplorerHeader } from "@/components/ide/editor-part/FileExplorerHeader";
 import { FileTree } from "@/components/ide/editor-part/FileTree"
-import { useFileTree } from "@/hooks/useFileTree"
 
 export const FileExplorer = () => {
-  const { fileTree, loading, wsStatus, wsRef } = useFileTree()
-
   return (
     <div className="FileExplorer flex flex-1 flex-col bg-zinc-200">
       {/* Files Header */}
-
-      <FileExplorerHeader wsStatus={wsStatus} />
+      {/*todo : <FileExplorerHeader />*/}
 
       {/* File Tree */}
-      <div className="filetree flex-1 px-1 py-2">
-        <FileTree fileTree={fileTree} loading={loading} wsRef={wsRef} />
-      </div>
+      <FileTree />
 
       {/* Chat Header */}
       <div
