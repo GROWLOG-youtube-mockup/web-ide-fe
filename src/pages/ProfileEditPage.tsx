@@ -5,27 +5,27 @@ import { FormSection } from "@/components/common/FormSection"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
-import { AUTH_STYLES } from "@/lib/auth-styles"
+import { AUTH_LAYOUT, AUTH_STYLES } from "@/lib/auth-styles"
 
 export default function ProfileEditPage() {
   return (
-    <div className="relative flex h-full min-h-screen w-full items-center justify-center bg-white">
+    <div className={AUTH_LAYOUT.container}>
       {/* Main Content Container */}
-      <div className="flex w-[310px] flex-col items-center gap-5">
+      <div className={AUTH_LAYOUT.main}>
         {/* Header */}
-        <div className="flex w-full flex-col gap-[6.667px]">
+        <div className={AUTH_LAYOUT.header}>
           <h1 className={AUTH_STYLES.title}>Profile</h1>
           <p className={AUTH_STYLES.subtitle}>This is how others will see you on the site.</p>
         </div>
 
         {/* Divider */}
-        <div className="w-full">
+        <div className={AUTH_LAYOUT.divider}>
           <img alt="divider" className="h-px w-full" src={dividerSvg} />
         </div>
 
         {/* Avatar (shadcn/ui) */}
-        <div className="flex items-center justify-center">
-          <div className="flex h-28 w-[110px] items-center justify-center">
+        <div className={AUTH_LAYOUT.avatarWrapper}>
+          <div className={AUTH_LAYOUT.avatarInner}>
             <Avatar className="h-full w-full">
               <AvatarImage alt="avatar" src="https://github.com/shadcn.png" />
               <AvatarFallback>U</AvatarFallback>
@@ -34,7 +34,7 @@ export default function ProfileEditPage() {
         </div>
 
         {/* Form Fields */}
-        <div className="flex w-full flex-col gap-2.5">
+        <div className={AUTH_LAYOUT.section}>
           {/* Email Section */}
           <FormSection htmlFor="email" label="Email">
             <Input
@@ -108,7 +108,7 @@ export default function ProfileEditPage() {
         </div>
 
         {/* Bottom Section */}
-        <div className="flex w-full flex-col items-center gap-5">
+        <div className={AUTH_LAYOUT.bottom}>
           {/* Update Profile Button */}
           <Button className={AUTH_STYLES.signupBtn}>Update Profile</Button>
         </div>
