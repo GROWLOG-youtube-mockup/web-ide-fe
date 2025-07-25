@@ -14,9 +14,9 @@ export const IdeLayout = () => {
   const projectTitle = "Project Title"
 
   return (
-    <div className="flex h-screen w-full flex-col">
+    <div className="flex h-full flex-col">
       <TopBar />
-      <main className="flex flex-1">
+      <main className="flex min-h-0 flex-1">
         <Sidebar.Tabs>
           <Sidebar.TabsGroup>
             <Sidebar.Tab icon={FilesIcon} id="files" />
@@ -31,27 +31,25 @@ export const IdeLayout = () => {
 
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel defaultSize={20} maxSize={45} minSize={0}>
-            <Sidebar.Panels>
-              <Sidebar.Panel id="files" title={projectTitle}>
-                <FileExplorer.Tree nodes={mockFileTree} />
-              </Sidebar.Panel>
+            <Sidebar.Panel id="files" title={projectTitle}>
+              <FileExplorer.Tree nodes={mockFileTree} />
+            </Sidebar.Panel>
 
-              <Sidebar.Panel id="search" title="Search">
-                <PlaceholderPanel message="Search panel coming soon..." />
-              </Sidebar.Panel>
+            <Sidebar.Panel id="search" title="Search">
+              <PlaceholderPanel message="Search panel coming soon..." />
+            </Sidebar.Panel>
 
-              <Sidebar.Panel id="share" title="Share">
-                <PlaceholderPanel message="Share panel coming soon..." />
-              </Sidebar.Panel>
+            <Sidebar.Panel id="share" title="Share">
+              <PlaceholderPanel message="Share panel coming soon..." />
+            </Sidebar.Panel>
 
-              <Sidebar.Panel id="projects" title="Projects">
-                <PlaceholderPanel message="Projects panel coming soon..." />
-              </Sidebar.Panel>
+            <Sidebar.Panel id="projects" title="Projects">
+              <PlaceholderPanel message="Projects panel coming soon..." />
+            </Sidebar.Panel>
 
-              <Sidebar.Panel id="settings" title="Settings">
-                <PlaceholderPanel message="Settings panel coming soon..." />
-              </Sidebar.Panel>
-            </Sidebar.Panels>
+            <Sidebar.Panel id="settings" title="Settings">
+              <PlaceholderPanel message="Settings panel coming soon..." />
+            </Sidebar.Panel>
           </ResizablePanel>
 
           <ResizableHandle className="bg-zinc-200 transition-all duration-150 hover:scale-x-500 hover:bg-zinc-300" />

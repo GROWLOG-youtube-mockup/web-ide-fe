@@ -3,9 +3,10 @@ import { ChevronRight } from "lucide-react"
 import type { MouseEventHandler, ReactNode } from "react"
 import { Button } from "@/components/ui/Button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { Separator } from "@/components/ui/separator"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { SidebarSeparator } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
-import { type NavItem, useSidebarStore } from "../../../stores/sidebar-store"
+import { type NavItem, useSidebarStore } from "@/stores/sidebar-store"
 
 interface SidebarTabProps {
   id: NavItem
@@ -44,11 +45,13 @@ const SidebarTabButton = ({ children, onClick, isActive = false }: SidebarTabBut
   )
 }
 
-const SidebarTabs = ({ children }: { children: ReactNode }) => {
+const SidebarTabs = ({ children }: { className?: string; children: ReactNode }) => {
   return (
     <>
-      <nav className="flex w-14 flex-col justify-between bg-zinc-100 p-2">{children}</nav>
-      <Separator className="bg-zinc-200" orientation="vertical" />
+      <nav className={cn("flex h-full w-14 flex-col justify-between bg-zinc-100 p-2")}>
+        {children}
+      </nav>
+      <SidebarSeparator className="mx-0 bg-zinc-200" orientation="vertical" />
     </>
   )
 }
@@ -74,10 +77,6 @@ const SidebarTab = ({ id, icon: Icon }: SidebarTabProps) => {
   )
 }
 
-const SidebarPanels = ({ children }: { children: ReactNode }) => {
-  return <div className="flex-1">{children}</div>
-}
-
 const SidebarPanel = ({ id, title, children }: SidebarPanelProps) => {
   const { activePanel, sectionExpanded, setSectionExpanded } = useSidebarStore()
   const isExpanded = sectionExpanded[id]
@@ -88,14 +87,14 @@ const SidebarPanel = ({ id, title, children }: SidebarPanelProps) => {
 
   return (
     <Collapsible
-      className="group/collapsible h-full min-w-0 overflow-hidden"
+      className="group/collapsible flex h-full flex-1 flex-col"
       onOpenChange={expanded => setSectionExpanded(id, expanded)}
       open={isExpanded}
     >
       <CollapsibleTrigger asChild>
         <Button
           className={cn(
-            "h-auto w-full cursor-pointer items-center justify-start border-zinc-200 border-b bg-zinc-50 px-3 py-2",
+            "w-full cursor-pointer items-center justify-start border-zinc-200 border-b bg-zinc-50 px-3 py-2",
             "gap-1.5 rounded-none font-medium text-sm"
           )}
           variant="ghost"
@@ -104,8 +103,9 @@ const SidebarPanel = ({ id, title, children }: SidebarPanelProps) => {
           <span className="truncate text-left uppercase">{title}</span>
         </Button>
       </CollapsibleTrigger>
-      <CollapsibleContent className="flex-1 overflow-hidden">
-        <div className="h-full overflow-y-auto px-0 py-2">{children}</div>
+
+      <CollapsibleContent className="min-h-0 flex-1 overflow-auto">
+        <ScrollArea className="h-full w-full">{children}</ScrollArea>
       </CollapsibleContent>
     </Collapsible>
   )
@@ -113,7 +113,6 @@ const SidebarPanel = ({ id, title, children }: SidebarPanelProps) => {
 
 export const Sidebar = {
   Panel: SidebarPanel,
-  Panels: SidebarPanels,
   Tab: SidebarTab,
   Tabs: SidebarTabs,
   TabsGroup: SidebarTabsGroup,

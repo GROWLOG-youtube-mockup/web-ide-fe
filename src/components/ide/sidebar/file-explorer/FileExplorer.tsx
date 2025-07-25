@@ -1,14 +1,10 @@
 import { ChevronRight, File, Folder, FolderOpen } from "lucide-react"
-import type { MouseEventHandler, ReactNode } from "react"
+import type { MouseEventHandler } from "react"
 import { Button } from "@/components/ui/Button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import type { FileTreeNode } from "@/data/mock-file-tree"
 import { cn } from "@/lib/utils"
 import { useFileExplorerStore } from "@/stores/file-explorer-store"
-
-interface FileExplorerRootProps {
-  children: ReactNode
-}
 
 interface FileExplorerTreeProps {
   nodes: FileTreeNode[]
@@ -18,17 +14,13 @@ interface FileExplorerNodeProps {
   node: FileTreeNode
 }
 
-const FileExplorerRoot = ({ children }: FileExplorerRootProps) => {
-  return <div>{children}</div>
-}
-
 const FileExplorerTree = ({ nodes }: FileExplorerTreeProps) => {
   return (
-    <div className="space-y-0">
+    <>
       {nodes.map(node => (
         <FileExplorer.Node key={node.path} node={node} />
       ))}
-    </div>
+    </>
   )
 }
 
@@ -129,6 +121,5 @@ const FileExplorerNode = ({ node }: FileExplorerNodeProps) => {
 
 export const FileExplorer = {
   Node: FileExplorerNode,
-  Root: FileExplorerRoot,
   Tree: FileExplorerTree,
 }
