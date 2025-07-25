@@ -68,43 +68,41 @@ export default function ProfileEditPage() {
           </FormSection>
 
           {/* Name Section */}
-          <FormSection
-            action={
-              <AlertDialog
-                cancelText="Cancel"
-                confirmText="Delete"
-                description="Once deleted, the data cannot be recovered."
-                onCancel={() => {
-                  // TODO: 취소 로직 구현
-                  console.log("Account deletion cancelled")
-                }}
-                onConfirm={() => {
-                  // TODO: 계정 삭제 로직 구현
-                  console.log("Account deletion confirmed")
-                }}
-                showCloseButton={false}
-                title="Delete account"
-                trigger={
-                  <span className="cursor-pointer font-semibold text-[9px] text-red-500">
-                    Delete your account
-                  </span>
-                }
-                variant="destructive"
-              >
-                <div className="h-[35px] w-full rounded-[5.333px] bg-[#ffffff]">
-                  <Input
-                    className={clsx(AUTH_STYLES.field, "h-full w-full rounded-[5.333px]")}
-                    placeholder="Enter your password"
-                    type="password"
-                  />
-                </div>
-              </AlertDialog>
-            }
-            htmlFor="name"
-            label="Name"
-          >
+          <FormSection htmlFor="name" label="Name">
             <Input className={AUTH_STYLES.field} id="name" value="jaeyeopme" />
           </FormSection>
+
+          {/* Delete Account Section */}
+
+          <AlertDialog
+            cancelText="Cancel"
+            confirmText="Delete"
+            description="Once deleted, the data cannot be recovered."
+            onCancel={() => {
+              // TODO: 취소 로직 구현
+              console.log("Account deletion cancelled")
+            }}
+            onConfirm={() => {
+              // TODO: 계정 삭제 로직 구현
+              console.log("Account deletion confirmed")
+            }}
+            showCloseButton={false}
+            title="Delete account"
+            trigger={
+              <span className="cursor-pointer text-right font-semibold text-[9px] text-red-500">
+                Delete your account
+              </span>
+            }
+            variant="destructive"
+          >
+            <div className="h-[35px] w-full rounded-[5.333px] bg-[#ffffff]">
+              <Input
+                className={clsx(AUTH_STYLES.field, "h-full w-full rounded-[5.333px]")}
+                placeholder="Enter your password"
+                type="password"
+              />
+            </div>
+          </AlertDialog>
         </div>
 
         {/* Bottom Section */}
