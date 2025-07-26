@@ -20,12 +20,14 @@ export const useUserStore = create<UserStore>((set, get) => ({
   },
 
   initializeUser: () => {
+    // TODO: 실제 로그인된 사용자 정보를 가져와야 함
+    // 현재는 임시 데이터로 하드코딩
     const userInfo: UserInfo = {
-      color: `#${Math.floor(Math.random() * 16777215).toString(16)}`, // 랜덤 HEX 색상
-      id: Math.random().toString(36).substr(2, 9), // 랜덤 9자리 ID
-      name: "유저1", // 기본 사용자명
+      color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+      id: "userData.email", // 실제로는 로그인한 사용자의 이메일
+      name: "userData.name", // 실제로는 로그인한 사용자의 닉네임
     }
-    set({ userInfo }) // 스토어에 저장
+    set({ userInfo })
   },
   userInfo: null,
 }))
