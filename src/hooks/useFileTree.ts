@@ -2,10 +2,10 @@ import { selectionFeature, syncDataLoaderFeature, type TreeInstance } from "@hea
 import { useTree } from "@headless-tree/react"
 import { useMemo } from "react"
 import { mockFileTree } from "@/data/mock-file-tree"
-import { folderExpansionFeature } from "@/lib/folder-expansion"
-import { openFileInEditorFeature } from "@/lib/open-file-feature"
+import { expandFolderFeature } from "@/lib/expand-folder-feature"
+import { openFileFeature } from "@/lib/open-file-feature"
 import { convertToTreeData, createFileTreeDataLoader, getRootItemIds } from "@/lib/tree-utils"
-import { useFileExplorerStore } from "@/stores/file-explorer-store"
+import { useFileTreeStore } from "@/stores/file-tree-store"
 import type { FileData } from "@/types/file-explorer"
 
 export const useFileTree = () => {
@@ -13,8 +13,8 @@ export const useFileTree = () => {
   const dataLoader = useMemo(() => createFileTreeDataLoader(treeData), [treeData])
   const rootIds = useMemo(() => getRootItemIds(treeData), [treeData])
 
-  // Zustand에서 저장된 확장 상태 가져오기
-  const { expandedItems } = useFileExplorerStore()
+  // zustand에서 저장된 확장 상태 가져오기
+  const { expandedItems } = useFileTreeStore()
 
   const initialExpandedItems = useMemo(() => {
     return expandedItems.length > 0 ? expandedItems : [rootIds[0]]
@@ -26,8 +26,8 @@ export const useFileTree = () => {
       syncDataLoaderFeature,
       selectionFeature,
       // Custom Features
-      folderExpansionFeature,
-      openFileInEditorFeature,
+      expandFolderFeature,
+      openFileFeature,
     ],
     getItemName: item => String(item.getItemData().name || ""),
     initialState: {

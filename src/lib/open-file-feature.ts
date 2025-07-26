@@ -1,21 +1,27 @@
 import type { FeatureImplementation } from "@headless-tree/core"
-import { useFileExplorerStore } from "@/stores/file-explorer-store"
+import { useEditorTabsStore } from "@/stores/editor-tabs-store"
 import type { FileData } from "@/types/file-explorer"
 
-export const openFileInEditorFeature: FeatureImplementation<FileData> = {
+/**
+ * 파일 클릭 시 에디터 탭에서 열기 기능을 제공하는 headless-tree feature
+ *
+ * @remarks
+ * - 파일 노드 클릭 시 자동으로 에디터 탭에서 파일 열기
+ * - 폴더는 영향받지 않으며 기존 확장/축소 동작 유지
+ * - 이전 feature들의 onClick 이벤트와 함께 동작
+ */
+export const openFileFeature: FeatureImplementation<FileData> = {
   itemInstance: {
     getProps: ({ item, prev }) => {
       const itemData: FileData = item.getItemData()
-      const isFile = itemData.type === "file"
 
       return {
-        ...prev?.(), // 이전 feature들의 props 유지
+        ...prev?.(),
+
         onClick: (e: MouseEvent) => {
-          // 이전 feature들의 onClick 실행
           prev?.()?.onClick?.(e)
 
-          // 파일인 경우 자동으로 열기
-          if (isFile) {
+          if (itemData.type === "file") {
             item.openFile()
           }
         },
@@ -24,7 +30,7 @@ export const openFileInEditorFeature: FeatureImplementation<FileData> = {
     openFile: ({ item }) => {
       const itemData: FileData = item.getItemData()
       if (itemData.type === "file") {
-        const { openFileInEditor } = useFileExplorerStore.getState()
+        const { openFileInEditor } = useEditorTabsStore.getState()
         openFileInEditor(itemData.path)
       }
     },

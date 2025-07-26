@@ -78,8 +78,8 @@ const SidebarTab = ({ id, icon: Icon }: SidebarTabProps) => {
 }
 
 const SidebarPanel = ({ id, title, children }: SidebarPanelProps) => {
-  const { activePanel, sectionExpanded, setSectionExpanded } = useSidebarStore()
-  const isExpanded = sectionExpanded[id]
+  const { activePanel, expandedPanel, setExpandedPanel } = useSidebarStore()
+  const isExpanded = expandedPanel[id]
 
   if (activePanel !== id) {
     return null
@@ -88,7 +88,7 @@ const SidebarPanel = ({ id, title, children }: SidebarPanelProps) => {
   return (
     <Collapsible
       className="group/collapsible flex h-full flex-1 flex-col"
-      onOpenChange={expanded => setSectionExpanded(id, expanded)}
+      onOpenChange={expanded => setExpandedPanel(id, expanded)}
       open={isExpanded}
     >
       <CollapsibleTrigger asChild>
