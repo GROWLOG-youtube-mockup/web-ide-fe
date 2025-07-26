@@ -20,30 +20,30 @@ export const loginFormSchema = z.object({
 // 타입 추출
 export type LoginFormData = z.infer<typeof loginFormSchema>
 
-// 검증 결과 타입
-export interface ValidationResult {
-  isValid: boolean
-  message: string | null
+// 폼 에러 상태 타입
+export interface FormErrors {
+  email: string
+  password: string
 }
 
-// 실시간 검증 정의
-const createValidator =
-  (schema: z.ZodString) =>
-  (value: string, isSubmit = false): ValidationResult => {
-    if (!isSubmit && !value.trim()) {
-      return { isValid: true, message: null }
-    }
+// 스키마 매핑 (더 직접적이고 간결함)
+const fieldSchemas = {
+  email: emailSchema,
+  password: passwordSchema,
+} as const
 
-    const result = schema.safeParse(value)
-    return {
-      isValid: result.success,
-      message: result.success ? null : result.error.issues[0].message,
-    }
+// 필드 검증 (실시간/제출시 공통 사용) - 단일 검증 함수로 통합
+export const validateField = (field: keyof FormErrors, value: string, isSubmit = false): string => {
+  // 실시간 검증 시 빈 값은 에러로 처리하지 않음
+  if (!isSubmit && !value.trim()) {
+    return ""
   }
 
-// 검증
-export const validateEmail = createValidator(emailSchema)
-export const validatePassword = createValidator(passwordSchema)
+  const schema = fieldSchemas[field]
+  const result = schema.safeParse(value)
+
+  return result.success ? "" : result.error.issues[0].message
+}
 
 // 전체 폼 검증 (제출 시 사용)
 export const validateLoginForm = (email: string, password: string) => {
