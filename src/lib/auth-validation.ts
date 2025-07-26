@@ -1,80 +1,67 @@
-// 인증 관련 검증 타입 정의
+import { z } from "zod"
+
+// Zod 스키마 정의
+export const emailSchema = z.string().min(1, "Enter your email").email("Not a valid email format")
+
+export const passwordSchema = z
+  .string()
+  .min(1, "Enter your password")
+  .min(8, "Password must be at least 8 char")
+  .max(16, "Password can be up to 16 char")
+  .regex(/[a-zA-Z]/, "Must contain English char")
+  .regex(/[0-9]/, "Must contain number")
+  .regex(/[!@#$%^&*(),.?":{}|<>]/, "Must contain special char")
+
+export const loginFormSchema = z.object({
+  email: emailSchema,
+  password: passwordSchema,
+})
+
+// 타입 추출
+export type LoginFormData = z.infer<typeof loginFormSchema>
+
+// 검증 결과 타입
 export interface ValidationResult {
   isValid: boolean
   message: string | null
 }
 
-// 이메일 검증
-export const validateEmail = (email: string, isSubmit = false): ValidationResult => {
-  const trimmed = email.trim()
+// 실시간 검증 정의
+const createValidator =
+  (schema: z.ZodString) =>
+  (value: string, isSubmit = false): ValidationResult => {
+    if (!isSubmit && !value.trim()) {
+      return { isValid: true, message: null }
+    }
 
-  // 제출 시에만
-  if (isSubmit && !trimmed) {
-    return { isValid: false, message: "Enter your email" }
+    const result = schema.safeParse(value)
+    return {
+      isValid: result.success,
+      message: result.success ? null : result.error.issues[0].message,
+    }
   }
 
-  // 빈 값은 형식 검증에서 제외
-  if (!trimmed) {
-    return { isValid: true, message: null }
-  }
+// 검증
+export const validateEmail = createValidator(emailSchema)
+export const validatePassword = createValidator(passwordSchema)
 
-  // 형식 검증
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailRegex.test(trimmed)) {
-    return { isValid: false, message: "Not a valid e-mail format" }
-  }
-
-  return { isValid: true, message: null }
-}
-// 비밀번호 검증
-export const validatePassword = (password: string, isSubmit = false): ValidationResult => {
-  const trimmed = password.trim()
-
-  // 제출 시에만 필수 입력 검증
-  if (isSubmit && !trimmed) {
-    return { isValid: false, message: "Enter your password" }
-  }
-
-  // 빈 값은 형식 검증에서 제외
-  if (!trimmed) {
-    return { isValid: true, message: null }
-  }
-
-  // 형식 검증
-  if (trimmed.length < 6) {
-    return { isValid: false, message: "Password must be at least 8 char" }
-  }
-
-  if (trimmed.length > 16) {
-    return { isValid: false, message: "Password can be up to 16 char" }
-  }
-
-  // 영문자
-  if (!/[a-zA-Z]/.test(trimmed)) {
-    return { isValid: false, message: "Must contain English char" }
-  }
-
-  // 숫자
-  if (!/[0-9]/.test(trimmed)) {
-    return { isValid: false, message: "Must contain English number" }
-  }
-
-  // 특수문자
-  if (!/[!@#$%^&*(),.?":{}|<>]/.test(trimmed)) {
-    return { isValid: false, message: "Must contain special char" }
-  }
-
-  return { isValid: true, message: null }
-}
-
-// 로그인 폼 전체 검증 (제출 시 사용)
+// 전체 폼 검증 (제출 시 사용)
 export const validateLoginForm = (email: string, password: string) => {
-  const emailResult = validateEmail(email, true)
-  const passwordResult = validatePassword(password, true)
+  const result = loginFormSchema.safeParse({ email, password })
 
+  if (result.success) {
+    return {
+      email: null,
+      isValid: true,
+      password: null,
+    }
+  }
+
+  // 에러 메시지 추출
+  const fieldErrors = result.error.flatten().fieldErrors
   return {
-    email: emailResult.message,
-    isValid: emailResult.isValid && passwordResult.isValid,
-    password: passwordResult.message,
+    email: fieldErrors.email?.[0] || null,
+    isValid: false,
+    password: fieldErrors.password?.[0] || null,
   }
 }
