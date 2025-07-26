@@ -2,53 +2,69 @@ import { create } from "zustand"
 import { devtools, persist } from "zustand/middleware"
 
 interface FileExplorerState {
-  // Folder expanded states - 파일 탐색기에서 폴더가 열려있는지 상태
-  folderExpanded: Record<string, boolean>
-  setFolderExpanded: (path: string, expanded: boolean) => void
-  toggleFolderExpanded: (path: string) => void
-
-  // 파일 탐색기에서 파일이 선택되었는지 상태
-  selectedItemInExplorer: string | null
-  setSelectedItemInExplorer: (path: string | null) => void
-
-  // 파일을 에디터에서 여는 함수
+  // 에디터에서 열린 파일들 관리 (나머지는 headless-tree가 처리)
+  openedFiles: string[]
+  activeFile: string | null
   openFileInEditor: (filePath: string) => void
+  closeFile: (filePath: string) => void
+  setActiveFile: (filePath: string) => void
 }
 
 export const useFileExplorerStore = create<FileExplorerState>()(
   devtools(
     persist(
-      (set): FileExplorerState => ({
-        folderExpanded: {},
+      (set, get): FileExplorerState => ({
+        activeFile: null,
 
-        openFileInEditor: (filePath: string) => {
-          set({ selectedItemInExplorer: filePath })
+        closeFile: (filePath: string) => {
+          const { openedFiles, activeFile } = get()
+          const newOpenedFiles = openedFiles.filter(file => file !== filePath)
 
-          // TODO: 에디터 스토어와 연동
-          console.log("Opening file in editor:", filePath)
+          // 닫힌 파일이 활성 파일이면 다른 파일로 전환
+          const newActiveFile =
+            activeFile === filePath
+              ? newOpenedFiles.length > 0
+                ? newOpenedFiles[newOpenedFiles.length - 1]
+                : null
+              : activeFile
+
+          set({
+            activeFile: newActiveFile,
+            openedFiles: newOpenedFiles,
+          })
         },
-        selectedItemInExplorer: null,
+        openedFiles: [],
 
-        setFolderExpanded: (path: string, expanded: boolean) =>
-          set(state => ({
-            folderExpanded: { ...state.folderExpanded, [path]: expanded },
-          })),
+        // 파일 에디터 관리
+        openFileInEditor: (filePath: string) => {
+          const { openedFiles } = get()
 
-        setSelectedItemInExplorer: (path: string | null) => set({ selectedItemInExplorer: path }),
+          // 이미 열린 파일이면 활성화만
+          if (openedFiles.includes(filePath)) {
+            set({ activeFile: filePath })
+          } else {
+            // 새 파일 추가하고 활성화
+            set({
+              activeFile: filePath,
+              openedFiles: [...openedFiles, filePath],
+            })
+          }
+          console.log("Opening file in editor:", filePath)
+          console.log("Opened files in editor:", get().openedFiles)
+        },
 
-        toggleFolderExpanded: (path: string) =>
-          set(state => ({
-            folderExpanded: {
-              ...state.folderExpanded,
-              [path]: !state.folderExpanded[path],
-            },
-          })),
+        setActiveFile: (filePath: string) => {
+          const { openedFiles } = get()
+          if (openedFiles.includes(filePath)) {
+            set({ activeFile: filePath })
+          }
+        },
       }),
       {
         name: "file-explorer-store",
         partialize: state => ({
-          folderExpanded: state.folderExpanded,
-          selectedItemInExplorer: state.selectedItemInExplorer,
+          activeFile: state.activeFile,
+          openedFiles: state.openedFiles,
         }),
       }
     ),

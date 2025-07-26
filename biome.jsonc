@@ -108,7 +108,7 @@
           "options": {
             "syntax": "shorthand"
           }
-        }, // 변수: camelCase, 클래스, 함수: PascalCase 등의 네이밍 컨벤션을 엄격하게 검사합니다.
+        },
         // 파일명의 형식을 'kebab-case' 로 강제합니다.
         "useFilenamingConvention": {
           "level": "error",
@@ -119,18 +119,24 @@
         // 'import type'을 사용하도록 권장합니다. (타입만 가져올 때)
         "useImportType": "warn",
         "useNamingConvention": {
-          "level": "error",
+          "level": "warn",
           "options": {
             "conventions": [
               {
-                // Compound 컴포넌트의 이름은 'PascalCase'로 강제합니다.
-                "formats": ["camelCase", "PascalCase"],
+                // 변수는 camelCase, PascalCase, CONSTANT_CASE 모두 허용
+                "formats": ["camelCase", "PascalCase", "CONSTANT_CASE"],
+                "selector": {
+                  "kind": "variable"
+                }
+              },
+              {
+                // 객체 프로퍼티는 모든 케이스 허용 (PascalCase: 컴파운드 패턴)
+                "formats": ["camelCase", "PascalCase", "CONSTANT_CASE"],
                 "selector": {
                   "kind": "objectLiteralProperty"
                 }
               }
-            ],
-            "strictCase": true
+            ]
           }
         }
       },
@@ -190,6 +196,22 @@
                 "filenameCases": ["camelCase"]
               }
             }
+          }
+        }
+      }
+    },
+    {
+      // 4. UI 컴포넌트는 네이밍 컨벤션과 unused 규칙 무시 (외부 라이브러리 호환성)
+      "includes": ["src/components/ui/**/*.ts", "src/components/ui/**/*.tsx"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedFunctionParameters": "off",
+            "noUnusedImports": "off",
+            "noUnusedVariables": "off"
+          },
+          "style": {
+            "useNamingConvention": "off"
           }
         }
       }

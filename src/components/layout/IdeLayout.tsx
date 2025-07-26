@@ -1,10 +1,9 @@
 import { FilesIcon, FolderInputIcon, SearchIcon, SettingsIcon, Share2Icon } from "lucide-react"
 import { CodeEditor } from "@/components/ide/CodeEditor"
-import { FileExplorer } from "@/components/ide/sidebar/file-explorer/FileExplorer"
-import { Sidebar } from "@/components/ide/sidebar/Sidebar"
 import { TopBar } from "@/components/ide/TopBar"
+import { FileExplorer } from "@/components/sidebar/file-explorer/FileExplorer"
+import { Sidebar } from "@/components/sidebar/Sidebar"
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
-import { mockFileTree } from "@/data/mock-file-tree"
 
 const PlaceholderPanel = ({ message }: { message: string }) => (
   <div className="p-4 text-gray-500">{message}</div>
@@ -32,7 +31,7 @@ export const IdeLayout = () => {
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel defaultSize={20} maxSize={45} minSize={0}>
             <Sidebar.Panel id="files" title={projectTitle}>
-              <FileExplorer.Tree nodes={mockFileTree} />
+              <FileExplorer />
             </Sidebar.Panel>
 
             <Sidebar.Panel id="search" title="Search">
