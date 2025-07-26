@@ -16,6 +16,12 @@ export const AUTH_STYLES = {
   divider: "h-px w-full",
   error: "border-red-500 text-red-500 bg-red-50 placeholder:text-red-400",
 
+  // 에러 필드 스타일
+  errorField: "bg-red-50 border-red-500 !border-red-500",
+
+  // 에러 메시지
+  errorMessage: "mb-1 text-red-500 text-[10px]",
+
   // 필드
   field:
     "h-full rounded-[5.368px] border-[0.667px] border-zinc-200 px-[13px] font-medium text-[10.667px] text-zinc-500 placeholder:text-zinc-500 h-[35px]",
