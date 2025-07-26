@@ -21,7 +21,8 @@ export const openFileFeature: FeatureImplementation<FileData> = {
         onClick: (e: MouseEvent) => {
           prev?.()?.onClick?.(e)
 
-          if (itemData.type === "file") {
+          // 다중 선택을 방해하지 않도록 Ctrl/Cmd 키가 눌린 경우 파일 열기 스킵
+          if (itemData.type === "file" && !e.ctrlKey && !e.metaKey) {
             item.openFile()
           }
         },

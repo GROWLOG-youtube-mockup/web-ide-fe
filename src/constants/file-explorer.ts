@@ -1,4 +1,5 @@
 export const TREE_STYLES = {
+  DRAG_TARGET: "bg-blue-50",
   FOCUS_BG: "focus:outline-1 outline-offset-1",
   HOVER_BG: "hover:bg-zinc-200",
   ICON_SIZE: "h-4 w-4",
