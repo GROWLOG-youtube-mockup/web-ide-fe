@@ -7,7 +7,7 @@ import type {
   passwordSchema,
   signUpFormSchema,
   verificationCodeSchema,
-} from "@/lib/auth-validation"
+} from "@/lib/auth-schemas"
 
 // Zod 스키마에서 타입 추출
 export type LoginFormData = z.infer<typeof loginFormSchema>
