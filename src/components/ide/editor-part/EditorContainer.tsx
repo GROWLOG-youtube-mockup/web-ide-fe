@@ -2,16 +2,15 @@
 import { ClientSideSuspense } from "@liveblocks/react/suspense"
 import { Editor } from "@monaco-editor/react"
 import { useState } from "react"
-// import { Cursors } from "@/components/ide/editor-part/Cusors";
+//import { Cursors } from "@/components/ide/editor-part/Cursors";
 import { useCollaborativeEditor } from "@/hooks/editor/useCollaborativeEditor"
 import { LiveblocksProvider, RoomProvider, useRoom } from "@/liveblocks.config"
 import { useFileTabStore } from "@/stores/editor-file-store"
 
 const CollaborativeEditor = ({ filePath }: { filePath: string }) => {
   const room = useRoom()
-  const { handleOnMount, isLoading } =
-    //이후 커서 표시를 위해 yProvider 사용할 예정
-    useCollaborativeEditor(filePath)
+  //이후 커서 표시를 위해 yProvider 사용할 예정 const { handleOnMount, isLoading, yProvider } =
+  const { handleOnMount, isLoading } = useCollaborativeEditor(filePath)
   const expectedRoomId = `room-${filePath}`
 
   if (room.id !== expectedRoomId) {
