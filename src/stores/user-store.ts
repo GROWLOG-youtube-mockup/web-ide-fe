@@ -5,6 +5,7 @@ export interface UserInfo {
   id: string // 사용자 고유 식별자
   name: string // 사용자 표시 이름
   color: string // 협업시 커서/하이라이트 색상
+  role?: string // 편집 등 권한
 }
 
 interface UserStore {
@@ -26,6 +27,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
       color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
       id: "userData.email", // 실제로는 로그인한 사용자의 이메일
       name: "userData.name", // 실제로는 로그인한 사용자의 닉네임
+      role: "editor", // 편집과 읽기 권한 여부
     }
     set({ userInfo })
   },
