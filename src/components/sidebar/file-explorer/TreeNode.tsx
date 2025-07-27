@@ -36,28 +36,19 @@ export const TreeNode = ({ item }: TreeNodeProps): React.ReactElement => {
   const itemData = item.getItemData()
   const itemProps = item.getProps()
 
-  // headless-tree가 제공하는 상태들
   const isFolder = itemData.type === "folder"
   const isExpanded = item.isExpanded()
   const isSelected = item.isSelected()
-  const hasChildren = Boolean(itemData.children && itemData.children.length > 0)
+  const hasChildren = Boolean(itemData.children?.length)
   const level = item.getItemMeta().level
   const isDragTarget = item.isDragTarget()
 
-  // 부모 체인에서 드래그 타겟 폴더 찾기
-  const findDragTargetFolder = (currentItem: typeof item): boolean => {
-    let parent = currentItem.getParent()
-    while (parent) {
-      if (parent.isDragTarget() && parent.getItemData().type === "folder") {
-        return true
-      }
-      parent = parent.getParent()
-    }
-    return false
-  }
-
-  // 드롭 영역 여부: 현재가 드래그 타겟 폴더이거나 부모 중에 드래그 타겟 폴더가 있는 경우
-  const isInDropZone = (isDragTarget && isFolder) || findDragTargetFolder(item)
+  const dragTarget = item.getTree().getDragTarget()
+  const isInDropZone = (() => {
+    if (isSelected) return false
+    if (isDragTarget) return true
+    return dragTarget && item.isDescendentOf(dragTarget.item.getId())
+  })()
 
   return (
     <li
@@ -68,7 +59,7 @@ export const TreeNode = ({ item }: TreeNodeProps): React.ReactElement => {
         TREE_STYLES.NODE_HEIGHT,
         TREE_STYLES.HOVER_BG,
         isSelected && TREE_STYLES.SELECTED_BG,
-        isInDropZone && TREE_STYLES.DRAG_TARGET
+        isInDropZone && TREE_STYLES.DRAG_TARGET_BG
       )}
       style={{
         ...itemProps.style,
