@@ -47,6 +47,12 @@ export const useFileTreeStore = create<FileTreeStore>()(
       }),
       {
         name: "file-tree-store",
+        partialize: state => ({
+          treeState: {
+            ...state.treeState,
+            selectedItems: undefined, // selected 상태는 persist에서 제외
+          },
+        }),
       }
     ),
     { name: "file-tree-store" }
