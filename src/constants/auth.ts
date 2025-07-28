@@ -31,6 +31,8 @@ export const VALIDATION = {
     verification: {
       invalid: "Invalid verification code",
       required: "Please verify your email first",
+      sendFail: "이메일 전송에 실패했습니다.",
+      verifyFail: "인증 코드가 올바르지 않습니다.",
     },
   },
 } as const
@@ -48,7 +50,7 @@ export const DEFAULT_ERRORS = {
 } as const
 
 // 이메일 인증 초기 상태
-export const DEFAULT_EMAIL_VERIFICATION = {
+export const DEFAULT_EMAIL_VERIFY = {
   isLoading: false,
   isSent: false,
   isVerified: false,

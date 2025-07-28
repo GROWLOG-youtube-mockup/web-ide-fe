@@ -43,6 +43,15 @@ export const signUpFormSchema = z.object({
   verificationCode: verificationCodeSchema,
 })
 
+// 프로필 편집용 스키마
+export const profileEditFormSchema = z.object({
+  currentPassword: loginPasswordSchema,
+  deletePassword: loginPasswordSchema,
+  email: emailSchema,
+  name: nameSchema,
+  newPassword: passwordSchema,
+})
+
 // 스키마 매핑
 const fieldSchemas = {
   email: emailSchema,
