@@ -1,39 +1,19 @@
 import { clsx } from "clsx"
-import { dividerSvg } from "@/assets/icons"
 import { AlertDialog } from "@/components/common/AlertDialog"
+import { AuthHeader } from "@/components/common/AuthHeader"
 import { FormSection } from "@/components/common/FormSection"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
+import { ProfileAvatar } from "@/components/common/ProfileAvatar"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
-import { AUTH_LAYOUT, AUTH_STYLES } from "@/lib/auth-styles"
+import { AUTH_LAYOUT, AUTH_STYLES } from "@/constants/auth-styles"
 
 export default function ProfileEditPage() {
   return (
     <div className={AUTH_LAYOUT.container}>
-      {/* Main Content Container */}
       <div className={AUTH_LAYOUT.main}>
-        {/* Header */}
-        <div className={AUTH_LAYOUT.header}>
-          <h1 className={AUTH_STYLES.title}>Profile</h1>
-          <p className={AUTH_STYLES.subtitle}>This is how others will see you on the site.</p>
-        </div>
+        <AuthHeader subtitle="This is how others will see you on the site." title="Profile" />
+        <ProfileAvatar />
 
-        {/* Divider */}
-        <div className={AUTH_LAYOUT.divider}>
-          <img alt="divider" className="h-px w-full" src={dividerSvg} />
-        </div>
-
-        {/* Avatar (shadcn/ui) */}
-        <div className={AUTH_LAYOUT.avatarWrapper}>
-          <div className={AUTH_LAYOUT.avatarInner}>
-            <Avatar className="h-full w-full">
-              <AvatarImage alt="avatar" src="https://github.com/shadcn.png" />
-              <AvatarFallback>U</AvatarFallback>
-            </Avatar>
-          </div>
-        </div>
-
-        {/* Form Fields */}
         <div className={AUTH_LAYOUT.section}>
           {/* Email Section */}
           <FormSection htmlFor="email" label="Email">
