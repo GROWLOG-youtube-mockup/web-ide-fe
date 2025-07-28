@@ -2,22 +2,11 @@ import { useState } from "react"
 import { useFormContext } from "react-hook-form"
 import { DEFAULT_EMAIL_VERIFY, DEV_CONFIG, VALIDATION } from "@/constants/auth"
 import { emailSchema, verificationCodeSchema } from "@/lib/auth-schemas"
-import type { EmailVerificationState } from "@/types/auth"
-
-interface UseEmailVerificationProps {
-  emailName: string
-  codeName: string
-}
-
-interface UseEmailVerificationReturn {
-  // 상태
-  emailSent: boolean
-  emailVerified: boolean
-  isLoading: boolean
-  // 핸들러
-  handleSendEmailCode: () => Promise<void>
-  handleVerifyEmailCode: () => Promise<void>
-}
+import type {
+  EmailVerificationState,
+  UseEmailVerificationProps,
+  UseEmailVerificationReturn,
+} from "@/types/auth"
 
 export function useEmailVerification({
   emailName,
@@ -74,7 +63,7 @@ export function useEmailVerification({
   }
 
   return {
-    // 상태 (Travel Product FE 스타일로 단순화)
+    // 상태
     emailSent: state.isSent,
     emailVerified: state.isVerified,
     // 핸들러

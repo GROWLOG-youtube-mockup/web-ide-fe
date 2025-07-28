@@ -51,9 +51,9 @@ export const DEFAULT_ERRORS = {
 
 // 이메일 인증 초기 상태
 export const DEFAULT_EMAIL_VERIFY = {
+  emailSent: false,
+  emailVerified: false,
   isLoading: false,
-  isSent: false,
-  isVerified: false,
 } as const
 
 // 개발/테스트 설정

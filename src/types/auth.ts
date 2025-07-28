@@ -29,3 +29,19 @@ export interface EmailVerifyProps {
   codePlaceholder?: string
   disabled?: boolean
 }
+
+// 이메일 인증 훅 타입
+export interface UseEmailVerificationProps {
+  emailName: string
+  codeName: string
+}
+
+export interface UseEmailVerificationReturn {
+  // 상태
+  emailSent: boolean
+  emailVerified: boolean
+  isLoading: boolean
+  // 핸들러
+  handleSendEmailCode: () => Promise<void>
+  handleVerifyEmailCode: () => Promise<void>
+}
