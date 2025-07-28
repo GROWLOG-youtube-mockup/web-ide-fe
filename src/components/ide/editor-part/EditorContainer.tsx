@@ -2,15 +2,15 @@
 import { ClientSideSuspense } from "@liveblocks/react/suspense"
 import { Editor } from "@monaco-editor/react"
 import { useState } from "react"
-//import { Cursors } from "@/components/ide/editor-part/Cursors";
+import { Cursors } from "@/components/ide/editor-part/Cursors"
 import { useCollaborativeEditor } from "@/hooks/editor/useCollaborativeEditor"
 import { LiveblocksProvider, RoomProvider, useRoom } from "@/liveblocks.config"
 import { useFileTabStore } from "@/stores/editor-file-store"
 
 const CollaborativeEditor = ({ filePath }: { filePath: string }) => {
   const room = useRoom()
-  //이후 커서 표시를 위해 yProvider 사용할 예정 const { handleOnMount, isLoading, yProvider } =
-  const { handleOnMount, isLoading } = useCollaborativeEditor(filePath)
+
+  const { handleOnMount, isLoading, yProvider } = useCollaborativeEditor(filePath)
   const expectedRoomId = `room-${filePath}`
 
   if (room.id !== expectedRoomId) {
@@ -29,7 +29,7 @@ const CollaborativeEditor = ({ filePath }: { filePath: string }) => {
 
   return (
     <div className="relative h-full">
-      {/*todo : <Cursors yProvider={yProvider} />*/}
+      <Cursors yProvider={yProvider} />
       {isLoading && (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/80">
           <div className="flex items-center gap-2">
