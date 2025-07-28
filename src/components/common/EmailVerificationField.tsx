@@ -3,24 +3,7 @@ import clsx from "clsx"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { AUTH_STYLES } from "@/constants/auth-styles"
-
-interface EmailVerificationFieldProps {
-  email: string
-  verificationCode: string
-  errors: {
-    email?: string
-    verificationCode?: string
-  }
-  emailVerification: {
-    isLoading: boolean
-    isSent: boolean
-    isVerified: boolean
-  }
-  onEmailChange: (value: string) => void
-  onCodeChange: (value: string) => void
-  onSendCode: () => void
-  onVerifyCode: () => void
-}
+import type { EmailVerificationFieldProps } from "@/types/auth"
 
 export function EmailVerificationField({
   email,

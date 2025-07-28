@@ -31,3 +31,21 @@ export interface EmailVerificationState {
   isSent: boolean
   isVerified: boolean
 }
+
+// 이메일 인증 필드 에러 타입
+export interface EmailVerificationErrors {
+  email?: string
+  verificationCode?: string
+}
+
+// 이메일 인증 필드 Props 타입
+export interface EmailVerificationFieldProps {
+  email: string
+  verificationCode: string
+  errors: EmailVerificationErrors
+  emailVerification: EmailVerificationState
+  onEmailChange: (value: string) => void
+  onCodeChange: (value: string) => void
+  onSendCode: () => void
+  onVerifyCode: () => void
+}
