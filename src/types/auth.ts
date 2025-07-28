@@ -19,3 +19,13 @@ export interface EmailVerificationState {
   isSent: boolean
   isVerified: boolean
 }
+
+// 이메일 인증 필드 컴포넌트 Props 타입
+export interface EmailVerifyProps {
+  emailName: string
+  codeName: string
+  emailLabel?: string
+  emailPlaceholder?: string
+  codePlaceholder?: string
+  disabled?: boolean
+}
