@@ -1,6 +1,15 @@
 import type { LucideIcon } from "lucide-react"
-import { ChevronRight } from "lucide-react"
+import {
+  ChevronRight,
+  FilesIcon,
+  FolderInputIcon,
+  SearchIcon,
+  SettingsIcon,
+  Share2Icon,
+} from "lucide-react"
 import type { MouseEventHandler, ReactNode } from "react"
+import { FileExplorer } from "@/components/sidebar/file-explorer/FileExplorer"
+import { FileExplorerActions } from "@/components/sidebar/file-explorer/FileExplorerActions"
 import { Button } from "@/components/ui/Button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -22,6 +31,11 @@ interface SidebarPanelProps {
   id: NavItem
   title: string
   children: ReactNode
+  actions?: ReactNode
+}
+
+interface SidebarProps {
+  projectTitle: string
 }
 
 interface SidebarTabButtonProps {
@@ -45,7 +59,7 @@ const SidebarTabButton = ({ children, onClick, isActive = false }: SidebarTabBut
   )
 }
 
-const SidebarTabs = ({ children }: { className?: string; children: ReactNode }) => {
+const SidebarTabs = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <nav className={cn("flex h-full w-14 flex-col justify-between bg-zinc-100 p-2")}>
@@ -77,8 +91,9 @@ const SidebarTab = ({ id, icon: Icon }: SidebarTabProps) => {
   )
 }
 
-const SidebarPanel = ({ id, title, children }: SidebarPanelProps) => {
+const SidebarPanel = ({ id, title, children, actions }: SidebarPanelProps) => {
   const { activePanel, expandedPanel, setExpandedPanel } = useSidebarStore()
+
   const isExpanded = expandedPanel[id]
 
   if (activePanel !== id) {
@@ -91,18 +106,23 @@ const SidebarPanel = ({ id, title, children }: SidebarPanelProps) => {
       onOpenChange={expanded => setExpandedPanel(id, expanded)}
       open={isExpanded}
     >
-      <CollapsibleTrigger asChild>
-        <Button
-          className={cn(
-            "w-full cursor-pointer items-center justify-start border-zinc-200 border-b bg-zinc-50 px-3 py-2",
-            "gap-1.5 rounded-none font-medium text-sm"
-          )}
-          variant="ghost"
-        >
-          <ChevronRight className={cn("transition-transform", isExpanded && "rotate-90")} />
-          <span className="truncate text-left uppercase">{title}</span>
-        </Button>
-      </CollapsibleTrigger>
+      <div className="flex flex-col">
+        <CollapsibleTrigger asChild>
+          <div
+            className={cn(
+              "flex w-full cursor-pointer items-center justify-between border-zinc-200 border-b bg-zinc-50 px-3 py-2",
+              "gap-1.5 font-medium text-sm hover:bg-zinc-100"
+            )}
+          >
+            <div className="flex items-center gap-1.5">
+              <ChevronRight className={cn("transition-transform", isExpanded && "rotate-90")} />
+              <span className="truncate text-left uppercase">{title}</span>
+            </div>
+
+            {actions && <div className="flex items-center gap-1">{actions}</div>}
+          </div>
+        </CollapsibleTrigger>
+      </div>
 
       <CollapsibleContent className="min-h-0 flex-1 overflow-auto">
         <ScrollArea className="h-full w-full">{children}</ScrollArea>
@@ -111,9 +131,56 @@ const SidebarPanel = ({ id, title, children }: SidebarPanelProps) => {
   )
 }
 
-export const Sidebar = {
-  Panel: SidebarPanel,
-  Tab: SidebarTab,
-  Tabs: SidebarTabs,
-  TabsGroup: SidebarTabsGroup,
+const PlaceholderPanel = ({ message }: { message: string }) => (
+  <div className="p-4 text-gray-500">{message}</div>
+)
+
+/**
+ * IDE 전체 사이드바를 관리하는 컴포넌트
+ *
+ * @param projectTitle - 파일 탐색기 패널에 표시될 프로젝트 제목
+ *
+ * @remarks
+ * - 사이드바 탭들과 패널들의 전체 구성을 담당
+ * - 재사용 가능한 Sidebar 컴포넌트들을 조합하여 IDE에 특화된 사이드바 구성
+ */
+export const Sidebar = ({ projectTitle }: SidebarProps) => {
+  return (
+    <div className="flex h-full">
+      <SidebarTabs>
+        <SidebarTabsGroup>
+          <SidebarTab icon={FilesIcon} id="files" />
+          <SidebarTab icon={SearchIcon} id="search" />
+          <SidebarTab icon={Share2Icon} id="share" />
+          <SidebarTab icon={FolderInputIcon} id="projects" />
+        </SidebarTabsGroup>
+        <SidebarTabsGroup position="bottom">
+          <SidebarTab icon={SettingsIcon} id="settings" />
+        </SidebarTabsGroup>
+      </SidebarTabs>
+
+      <div className="flex-1">
+        <SidebarPanel actions={<FileExplorerActions />} id="files" title={projectTitle}>
+          <FileExplorer />
+        </SidebarPanel>
+        <SidebarPanel id="search" title="Search">
+          <PlaceholderPanel message="Search panel coming soon..." />
+        </SidebarPanel>
+        <SidebarPanel id="share" title="Share">
+          <PlaceholderPanel message="Share panel coming soon..." />
+        </SidebarPanel>
+        <SidebarPanel id="projects" title="Projects">
+          <PlaceholderPanel message="Projects panel coming soon..." />
+        </SidebarPanel>
+        <SidebarPanel id="settings" title="Settings">
+          <PlaceholderPanel message="Settings panel coming soon..." />
+        </SidebarPanel>
+      </div>
+    </div>
+  )
 }
+
+Sidebar.Panel = SidebarPanel
+Sidebar.Tab = SidebarTab
+Sidebar.Tabs = SidebarTabs
+Sidebar.TabsGroup = SidebarTabsGroup

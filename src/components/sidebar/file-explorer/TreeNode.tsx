@@ -2,6 +2,7 @@ import { ChevronRight, File, Folder, FolderOpen } from "lucide-react"
 import type React from "react"
 import { ICON_STYLES, TREE_STYLES } from "@/constants/file-explorer"
 import { cn } from "@/lib/utils"
+import { useEditorTabsStore } from "@/stores/editor-tabs-store"
 import type { TreeNodeProps } from "@/types/file-explorer"
 
 const renderExpandIcon = (isFolder: boolean, isExpanded: boolean) => {
@@ -33,6 +34,8 @@ const renderFileIcon = (isFolder: boolean, hasChildren: boolean, isExpanded: boo
 }
 
 export const TreeNode = ({ item }: TreeNodeProps): React.ReactElement => {
+  const { openFileInEditor } = useEditorTabsStore()
+
   const itemData = item.getItemData()
   const itemProps = item.getProps()
 
@@ -50,6 +53,24 @@ export const TreeNode = ({ item }: TreeNodeProps): React.ReactElement => {
     return dragTarget && item.isDescendentOf(dragTarget.item.getId())
   })()
 
+  const handleClick = (e: React.MouseEvent) => {
+    itemProps.onClick?.(e as React.MouseEvent<HTMLLIElement>)
+
+    // 다중 선택을 방해하지 않도록 Ctrl/Cmd 키가 눌린 경우 파일 열기 스킵
+    if (itemData.type === "file" && !e.ctrlKey && !e.metaKey) {
+      openFileInEditor(itemData.path)
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    itemProps.onKeyDown?.(e as React.KeyboardEvent<HTMLLIElement>)
+
+    if ((e.key === "Enter" || e.key === " ") && itemData.type === "file") {
+      e.preventDefault()
+      openFileInEditor(itemData.path)
+    }
+  }
+
   return (
     <li
       {...itemProps}
@@ -61,6 +82,8 @@ export const TreeNode = ({ item }: TreeNodeProps): React.ReactElement => {
         isSelected && TREE_STYLES.SELECTED_BG,
         isInDropZone && TREE_STYLES.DRAG_TARGET_BG
       )}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
       style={{
         ...itemProps.style,
         paddingLeft: `${level * TREE_STYLES.INDENT_SIZE}px`,
