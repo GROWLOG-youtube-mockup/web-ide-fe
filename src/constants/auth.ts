@@ -10,6 +10,7 @@ export const VALIDATION = {
   },
   messages: {
     constraints: {
+      nameMax: "Name can be up to 20 char",
       nameMin: "Name must be at least 2 char",
       passwordLetter: "Must contain English char",
       passwordMax: "Password can be up to 16 char",

@@ -20,6 +20,7 @@ export const nameSchema = z
   .string()
   .min(1, messages.required.name)
   .min(limits.name.min, messages.constraints.nameMin)
+  .max(limits.name.max, messages.constraints.nameMax)
 
 export const verificationCodeSchema = z
   .string()
