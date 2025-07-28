@@ -7,6 +7,7 @@ const { limits, messages } = VALIDATION
 // Zod 스키마 정의
 export const emailSchema = z.string().min(1, messages.required.email).email(messages.format.email)
 
+// 회원가입용 복잡한 패스워드 스키마 (보안 정책 적용)
 export const passwordSchema = z
   .string()
   .min(1, messages.required.password)
@@ -27,15 +28,18 @@ export const verificationCodeSchema = z
   .min(1, messages.required.verificationCode)
   .length(limits.verificationCode.length, messages.format.verificationCode)
 
+// 로그인용 단순 패스워드 스키마 (형식 검사 없음)
+export const loginPasswordSchema = z.string().min(1, messages.required.password)
+
 export const loginFormSchema = z.object({
   email: emailSchema,
-  password: passwordSchema,
+  password: loginPasswordSchema, // 단순한 필수값 검사만
 })
 
 export const signUpFormSchema = z.object({
   email: emailSchema,
   name: nameSchema,
-  password: passwordSchema,
+  password: passwordSchema, // 회원가입시에만 복잡한 검증 적용
   verificationCode: verificationCodeSchema,
 })
 
