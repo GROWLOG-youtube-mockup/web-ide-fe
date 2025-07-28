@@ -15,19 +15,18 @@ export function EmailVerificationField({
   onSendCode,
   onVerifyCode,
 }: EmailVerificationFieldProps) {
-  const hasErrors = errors.email || errors.verificationCode
-
   return (
-    <div className={clsx("flex w-full flex-col", !hasErrors && "gap-2")}>
+    <div
+      className={clsx(
+        "flex w-full flex-col",
+        !(errors.email || errors.verificationCode) && "gap-2"
+      )}
+    >
       {/* Email Input Row */}
       <div className="flex h-[35px] gap-1.5">
         <div className="flex-1">
           <Input
-            className={clsx(
-              AUTH_STYLES.field,
-              AUTH_STYLES.focus,
-              errors.email && AUTH_STYLES.errorField
-            )}
+            className={clsx(AUTH_STYLES.field, errors.email && AUTH_STYLES.errorField)}
             id="email"
             onChange={e => onEmailChange(e.target.value)}
             placeholder="Enter your email"
@@ -54,11 +53,7 @@ export function EmailVerificationField({
       <div className={clsx("flex h-[35px] gap-1.5", errors.verificationCode && "mt-2")}>
         <div className="flex-1">
           <Input
-            className={clsx(
-              AUTH_STYLES.field,
-              AUTH_STYLES.focus,
-              errors.verificationCode && AUTH_STYLES.errorField
-            )}
+            className={clsx(AUTH_STYLES.field, errors.verificationCode && AUTH_STYLES.errorField)}
             disabled={!emailVerification.isSent}
             onChange={e => onCodeChange(e.target.value)}
             placeholder="Enter your code"

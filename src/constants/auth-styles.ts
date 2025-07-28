@@ -22,10 +22,9 @@ export const AUTH_STYLES = {
   // 에러 메시지
   errorMessage: "mb-1 text-red-500 text-[10px]",
 
-  // 필드
+  // 필드 (기본 + 포커스 스타일 통합)
   field:
-    "h-full rounded-[5.368px] border-[0.667px] border-zinc-200 px-[13px] font-medium text-[10.667px] text-zinc-500 placeholder:text-zinc-500 h-[35px]",
-  focus: "focus:border-zinc-900 focus:ring-2 focus:ring-zinc-200",
+    "h-full rounded-[5.368px] border-[0.667px] border-zinc-200 px-[13px] font-medium text-[10.667px] text-zinc-500 placeholder:text-zinc-500 h-[35px] focus:border-zinc-900 focus:ring-2 focus:ring-zinc-200",
   help: "text-[9px] text-zinc-400",
 
   // 기타
