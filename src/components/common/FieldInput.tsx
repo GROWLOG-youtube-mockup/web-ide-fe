@@ -1,16 +1,7 @@
 import clsx from "clsx"
 import { Input } from "@/components/ui/Input"
 import { AUTH_STYLES } from "@/constants/auth-styles"
-
-interface FieldInputProps {
-  id: string
-  type?: string
-  placeholder: string
-  value: string
-  error?: string
-  onChange: (value: string) => void
-  disabled?: boolean
-}
+import type { FieldInputProps } from "@/types/auth"
 
 export function FieldInput({
   id,
@@ -24,7 +15,7 @@ export function FieldInput({
   return (
     <div className="flex flex-col">
       <Input
-        className={clsx(AUTH_STYLES.field, AUTH_STYLES.focus, error && AUTH_STYLES.errorField)}
+        className={clsx(AUTH_STYLES.field, error && AUTH_STYLES.errorField)}
         disabled={disabled}
         id={id}
         onChange={e => onChange(e.target.value)}
