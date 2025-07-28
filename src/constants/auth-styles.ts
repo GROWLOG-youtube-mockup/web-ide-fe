@@ -20,7 +20,7 @@ export const AUTH_STYLES = {
   errorField: "bg-red-50 border-red-500 !border-red-500",
 
   // 에러 메시지
-  errorMessage: "mb-1 text-red-500 text-[10px]",
+  errorMessage: "mb-0.5 text-red-500 text-[10px]",
 
   // 필드 (기본 + 포커스 스타일 통합)
   field:
@@ -50,6 +50,6 @@ export const AUTH_LAYOUT = {
   container: "relative flex h-full min-h-screen w-full items-center justify-center bg-white",
   divider: "w-full",
   header: "flex w-full flex-col gap-[6.667px]",
-  main: "flex w-[310px] flex-col items-center gap-5",
-  section: "flex w-full flex-col gap-2.5",
+  main: "flex w-[310px] flex-col items-center gap-4",
+  section: "flex w-full flex-col",
 }
