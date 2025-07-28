@@ -20,7 +20,7 @@ interface FileTreeStore {
    * - React useState와 동일한 시그니처
    * - zustand persist 미들웨어를 통해 localStorage에 자동 저장
    */
-  setState: (
+  setTreeState: (
     updaterOrValue:
       | Partial<TreeState<FileData>>
       | ((prev: Partial<TreeState<FileData>>) => Partial<TreeState<FileData>>)
@@ -43,7 +43,7 @@ export const useFileTreeStore = create<FileTreeStore>()(
       (set, _get): FileTreeStore => ({
         treeState: { expandedItems: ["/"] }, // 기본적으로 루트 폴더 확장
 
-        setState: updaterOrValue => set(state => updateTreeState(state, updaterOrValue)),
+        setTreeState: updaterOrValue => set(state => updateTreeState(state, updaterOrValue)),
       }),
       {
         name: "file-tree-store",

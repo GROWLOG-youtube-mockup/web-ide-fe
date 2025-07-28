@@ -1,3 +1,4 @@
+import type { ItemInstance } from "@headless-tree/core"
 import type { LucideIcon } from "lucide-react"
 import {
   CopyMinusIcon,
@@ -9,6 +10,8 @@ import {
 import type { MouseEvent } from "react"
 import { Button } from "@/components/ui/Button"
 import { useFileTree } from "@/hooks/useFileTree"
+import { fileSystemService } from "@/lib/file-system-service"
+import type { FileData } from "@/types/file-explorer"
 
 interface ActionButtonProps {
   icon: LucideIcon
@@ -46,22 +49,55 @@ const ActionButton = ({ icon: Icon, title, onClick }: ActionButtonProps) => (
  * - SidebarPanel의 actions prop으로 사용됨
  */
 export const FileExplorerActions = () => {
-  const { collapseAll, expandAll } = useFileTree()
+  const { tree, collapseAll, expandAll } = useFileTree()
 
-  // 액션 핸들러들
+  /**
+   * 현재 포커스되거나 선택된 항목을 기반으로 대상 폴더 경로를 가져옵니다.
+   * 우선순위: 포커스된 항목 > 선택된 항목 > 루트
+   */
+  const getTargetFolderPath = (): string => {
+    const getFolderPathForItem = (item: ItemInstance<FileData>): string => {
+      const itemData = item.getItemData()
+      if (itemData.type === "folder") {
+        return itemData.path
+      }
+      // 포커스되거나 선택된 항목이 파일이면 부모 폴더 경로 반환
+      const pathParts = itemData.path.split("/")
+      pathParts.pop() // 파일명 제거
+      return pathParts.join("/") || "/"
+    }
+
+    // 1. 포커스된 항목 확인
+    const focusedItem = tree.getFocusedItem()
+    if (focusedItem) {
+      return getFolderPathForItem(focusedItem)
+    }
+
+    // 2. 선택된 항목 확인
+    const selectedItems = tree.getSelectedItems()
+    if (selectedItems.length > 0) {
+      const selectedItem = selectedItems[0]
+      return getFolderPathForItem(selectedItem)
+    }
+
+    // 3. 기본값: 루트
+    return "/"
+  }
+
   const handleAddFile = () => {
-    console.log("Add file clicked")
-    // TODO: 파일 추가 로직 구현
+    const targetPath = getTargetFolderPath()
+    const defaultFileName = "new-file.txt"
+    fileSystemService.createFile(targetPath, defaultFileName)
   }
 
   const handleAddFolder = () => {
-    console.log("Add folder clicked")
-    // TODO: 폴더 추가 로직 구현
+    const targetPath = getTargetFolderPath()
+    const defaultFolderName = "new-folder"
+    fileSystemService.createFolder(targetPath, defaultFolderName)
   }
 
   const handleRefresh = () => {
-    console.log("파일 트리 새로고침")
-    // TODO: 파일 트리 새로고침 로직 구현
+    fileSystemService.refreshTree()
   }
 
   return (
