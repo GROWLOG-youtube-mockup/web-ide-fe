@@ -1,22 +1,29 @@
+import { zodResolver } from "@hookform/resolvers/zod"
+import { FormProvider, useForm } from "react-hook-form"
+import { AuthFormField } from "@/components/common/AuthFormField"
 import { AuthHeader } from "@/components/common/AuthHeader"
 import { EmailVerificationField } from "@/components/common/EmailVerificationField"
-import { FieldInput } from "@/components/common/FieldInput"
-import { FormSection } from "@/components/common/FormSection"
 import { ProfileAvatar } from "@/components/common/ProfileAvatar"
 import { Button } from "@/components/ui/Button"
 import { AUTH_LAYOUT, AUTH_STYLES } from "@/constants/auth-styles"
-import { useSignUpForm } from "@/hooks/useSignUpForm"
+import { signUpFormSchema } from "@/lib/auth-schemas"
+import type { SignUpFormData } from "@/types/auth"
 
 export default function SignUpPage() {
-  const {
-    formData,
-    errors,
-    emailVerification,
-    handleInputChange,
-    handleSendVerificationCode,
-    handleVerifyCode,
-    handleSubmit,
-  } = useSignUpForm()
+  const form = useForm<SignUpFormData>({
+    defaultValues: {
+      email: "",
+      name: "",
+      password: "",
+      verificationCode: "",
+    },
+    resolver: zodResolver(signUpFormSchema),
+  })
+
+  const onSubmit = (data: SignUpFormData) => {
+    console.log("회원가입 처리:", data)
+    // TODO: 실제 회원가입 API 호출
+  }
 
   return (
     <div className={AUTH_LAYOUT.container}>
@@ -24,48 +31,28 @@ export default function SignUpPage() {
         <AuthHeader subtitle="Enter your information to sign up!" title="Sign up" />
         <ProfileAvatar />
 
-        <form className={AUTH_LAYOUT.section} onSubmit={handleSubmit}>
-          <FormSection htmlFor="email" label="Email">
-            <EmailVerificationField
-              email={formData.email}
-              emailVerification={emailVerification}
-              errors={{ email: errors.email, verificationCode: errors.verificationCode }}
-              onCodeChange={value => handleInputChange("verificationCode", value)}
-              onEmailChange={value => handleInputChange("email", value)}
-              onSendCode={handleSendVerificationCode}
-              onVerifyCode={handleVerifyCode}
-              verificationCode={formData.verificationCode}
-            />
-          </FormSection>
+        <FormProvider {...form}>
+          <form className={AUTH_LAYOUT.section} onSubmit={form.handleSubmit(onSubmit)}>
+            <EmailVerificationField codeName="verificationCode" emailName="email" />
 
-          <FormSection
-            description="Must be at least 8 characters long, including both letters and numbers."
-            htmlFor="password"
-            label="Password"
-          >
-            <FieldInput
-              error={errors.password}
-              id="password"
-              onChange={value => handleInputChange("password", value)}
+            <AuthFormField
+              description="Must be at least 8 characters long, including both letters and numbers."
+              label="Password"
+              name="password"
               placeholder="Enter your password"
               type="password"
-              value={formData.password}
             />
-          </FormSection>
 
-          <FormSection htmlFor="name" label="Name">
-            <FieldInput
-              error={errors.name}
-              id="name"
-              onChange={value => handleInputChange("name", value)}
-              placeholder="Enter your name"
-              value={formData.name}
-            />
-          </FormSection>
-        </form>
+            <AuthFormField label="Name" name="name" placeholder="Enter your name" />
+          </form>
+        </FormProvider>
 
         <div className={AUTH_LAYOUT.bottom}>
-          <Button className={AUTH_STYLES.signupBtn} onClick={handleSubmit} type="button">
+          <Button
+            className={AUTH_STYLES.signupBtn}
+            onClick={form.handleSubmit(onSubmit)}
+            type="button"
+          >
             Sign Up
           </Button>
           <div className={AUTH_STYLES.link}>
