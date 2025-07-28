@@ -4,7 +4,7 @@
 export const VALIDATION = {
   limits: {
     email: { max: 254 },
-    name: { max: 50, min: 2 },
+    name: { max: 20, min: 2 },
     password: { max: 16, min: 8 },
     verificationCode: { length: 6 },
   },
