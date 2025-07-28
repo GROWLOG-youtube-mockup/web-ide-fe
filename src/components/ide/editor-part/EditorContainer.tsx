@@ -47,7 +47,9 @@ const CollaborativeEditor = ({ filePath }: { filePath: string }) => {
         options={{
           automaticLayout: true,
           fontSize: 14,
+          hover: { delay: 500, enabled: true, sticky: false },
           lineNumbers: "on",
+          padding: { bottom: 0, top: 30 },
           tabSize: 2,
           wordWrap: "on",
         }}
