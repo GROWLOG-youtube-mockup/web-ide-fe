@@ -5,13 +5,12 @@ import {
   renamingFeature,
   selectionFeature,
   syncDataLoaderFeature,
-  type TreeInstance,
 } from "@headless-tree/core"
 import { useTree } from "@headless-tree/react"
 import { useMemo } from "react"
-import { mockFileTree } from "@/data/mock-file-tree"
+import { transformApiTreeToFileTree } from "@/data/mock-file-tree"
 import { fileSystemService } from "@/lib/file-system-service"
-import { convertToTreeData, createFileTreeDataLoader } from "@/lib/tree-utils"
+import { convertToTreeData } from "@/lib/tree-utils"
 import { useFileTreeStore } from "@/stores/file-tree-store"
 import type { FileData } from "@/types/file-explorer"
 
@@ -42,18 +41,35 @@ import type { FileData } from "@/types/file-explorer"
  * - 현재는 목업 데이터 사용, 추후 실제 API 연동 가능
  */
 export const useFileTree = () => {
-  const { treeState, setTreeState } = useFileTreeStore()
+  // useState로 복원 (FileExplorerActions에서 경고 발생 확인됨)
+  const { expandedItems, setExpandedItems, focusedItem, setFocusedItem } = useFileTreeStore()
 
-  const treeData = useMemo(() => convertToTreeData(mockFileTree), [])
-  const dataLoader = useMemo(() => createFileTreeDataLoader(treeData), [treeData])
+  const dataLoader = useMemo(() => {
+    const apiResponse = fileSystemService.getFileTree()
+    const transformedTree = transformApiTreeToFileTree(apiResponse.payload)
+    const treeData = convertToTreeData(transformedTree)
 
-  const tree: TreeInstance<FileData> = useTree<FileData>({
-    // zustand 스토어의 트리 상태
-    state: treeState,
-    // zustand 스토어의 트리 상태 업데이트 함수
-    setState: setTreeState,
+    return {
+      getItem: (itemId: string) => {
+        const item = treeData[itemId]
+        if (!item) throw new Error(`Item with id "${itemId}" not found`)
+        return item
+      },
+      getChildren: (itemId: string) => {
+        const item = treeData[itemId]
+        if (!item) throw new Error(`Item with id "${itemId}" not found`)
+        return item.children || []
+      },
+    }
+  }, [])
 
-    rootItemId: "/", // 루트 폴더 ID
+  const tree = useTree<FileData>({
+    // Distinct State Handlers 패턴: 개별 상태와 setter 전달
+    state: { expandedItems, focusedItem },
+    setExpandedItems,
+    setFocusedItem,
+
+    rootItemId: "/",
     // 아이템 이름 추출
     getItemName: item => String(item.getItemData().name || ""),
     // 폴더 여부 판단
@@ -62,7 +78,7 @@ export const useFileTree = () => {
     indent: 12,
 
     features: [
-      // 데이터 로더 동기화
+      // 동기 데이터 로더
       syncDataLoaderFeature,
       // 파일/폴더 선택 기능
       selectionFeature,

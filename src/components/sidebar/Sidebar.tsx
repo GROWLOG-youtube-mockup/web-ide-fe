@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/Button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { SidebarSeparator } from "@/components/ui/sidebar"
+import { useFileTree } from "@/hooks/useFileTree"
 import { cn } from "@/lib/utils"
 import { type NavItem, useSidebarStore } from "@/stores/sidebar-store"
 
@@ -91,7 +92,7 @@ const SidebarTab = ({ id, icon: Icon }: SidebarTabProps) => {
   )
 }
 
-const SidebarPanel = ({ id, title, children, actions }: SidebarPanelProps) => {
+const SidebarPanel = ({ id, title, actions, children }: SidebarPanelProps) => {
   const { activePanel, expandedPanel, setExpandedPanel } = useSidebarStore()
 
   const isExpanded = expandedPanel[id]
@@ -145,6 +146,8 @@ const PlaceholderPanel = ({ message }: { message: string }) => (
  * - 재사용 가능한 Sidebar 컴포넌트들을 조합하여 IDE에 특화된 사이드바 구성
  */
 export const Sidebar = ({ projectTitle }: SidebarProps) => {
+  const fileTreeData = useFileTree()
+
   return (
     <div className="flex h-full">
       <SidebarTabs>
@@ -160,8 +163,12 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
       </SidebarTabs>
 
       <div className="flex-1">
-        <SidebarPanel actions={<FileExplorerActions />} id="files" title={projectTitle}>
-          <FileExplorer />
+        <SidebarPanel
+          actions={<FileExplorerActions {...fileTreeData} />}
+          id="files"
+          title={projectTitle}
+        >
+          <FileExplorer tree={fileTreeData.tree} />
         </SidebarPanel>
         <SidebarPanel id="search" title="Search">
           <PlaceholderPanel message="Search panel coming soon..." />

@@ -1,3 +1,6 @@
+import type { TreeInitPayload } from "@/data/mock-file-tree"
+import { mockApiResponse } from "@/data/mock-file-tree"
+
 /**
  * 파일 시스템 작업을 위한 서비스 인터페이스
  */
@@ -21,6 +24,11 @@ export interface FileSystemService {
    * 새 폴더를 생성합니다
    */
   createFolder(parentPath: string, folderName: string): Promise<void>
+
+  /**
+   * 파일 트리 데이터를 가져옵니다
+   */
+  getFileTree(): TreeInitPayload
 
   /**
    * 파일 트리를 새로고침합니다
@@ -50,6 +58,10 @@ export class MockFileSystemService implements FileSystemService {
     console.log(`[Mock] 폴더 생성: ${fullPath}`)
   }
 
+  getFileTree(): TreeInitPayload {
+    return mockApiResponse
+  }
+
   async refreshTree(): Promise<void> {
     console.log(`[Mock] 파일 트리 새로고침`)
   }
@@ -75,6 +87,11 @@ export class ApiFileSystemService implements FileSystemService {
   }
 
   async createFolder(_parentPath: string, _folderName: string): Promise<void> {
+    // TODO: 실제 API 호출
+    throw new Error("API 구현 필요")
+  }
+
+  getFileTree(): TreeInitPayload {
     // TODO: 실제 API 호출
     throw new Error("API 구현 필요")
   }

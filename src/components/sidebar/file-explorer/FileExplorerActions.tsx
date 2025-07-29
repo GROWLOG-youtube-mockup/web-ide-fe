@@ -1,4 +1,4 @@
-import type { ItemInstance } from "@headless-tree/core"
+import type { ItemInstance, TreeInstance } from "@headless-tree/core"
 import type { LucideIcon } from "lucide-react"
 import {
   CopyMinusIcon,
@@ -9,7 +9,6 @@ import {
 } from "lucide-react"
 import type { MouseEvent } from "react"
 import { Button } from "@/components/ui/Button"
-import { useFileTree } from "@/hooks/useFileTree"
 import { fileSystemService } from "@/lib/file-system-service"
 import type { FileData } from "@/types/file-explorer"
 
@@ -41,16 +40,27 @@ const ActionButton = ({ icon: Icon, title, onClick }: ActionButtonProps) => (
   </Button>
 )
 
+interface FileExplorerActionsProps {
+  tree: TreeInstance<FileData>
+  collapseAll: () => void
+  expandAll: () => void
+  startRenaming: (itemId: string) => void
+}
+
 /**
  * 파일 탐색기 액션 버튼들
+ *
+ * @param tree - 상위 컴포넌트에서 전달받은 tree 인스턴스
+ * @param collapseAll - 모든 폴더 축소 함수
+ * @param expandAll - 모든 폴더 확장 함수
+ * @param startRenaming - 이름 변경 시작 함수
  *
  * @remarks
  * - 파일 추가, 폴더 추가, 새로고침, 전체 확장/축소 기능 제공
  * - SidebarPanel의 actions prop으로 사용됨
+ * - 상위 컴포넌트에서 useFileTree로 생성된 인스턴스를 props로 받음
  */
-export const FileExplorerActions = () => {
-  const { tree, collapseAll, expandAll } = useFileTree()
-
+export const FileExplorerActions = ({ tree, collapseAll, expandAll }: FileExplorerActionsProps) => {
   /**
    * 현재 포커스되거나 선택된 항목을 기반으로 대상 폴더 경로를 가져옵니다.
    * 우선순위: 포커스된 항목 > 선택된 항목 > 루트
