@@ -6,9 +6,9 @@
         "organizeImports": "on",
         // 파일을 저장할 때 임포트 구문을 자동으로 정리하도록 설정합니다.
         "recommended": true,
-        "useSortedAttributes": "on",
-        "useSortedKeys": "on",
-        "useSortedProperties": "on"
+        "useSortedAttributes": "on"
+        // "useSortedKeys": "on", // 주석과 함께 사용 시 코드 구조를 망가뜨려서 비활성화
+        // "useSortedProperties": "on" // 주석과 함께 사용 시 코드 구조를 망가뜨려서 비활성화
       }
     }
   },
@@ -108,7 +108,7 @@
           "options": {
             "syntax": "shorthand"
           }
-        }, // 변수: camelCase, 클래스, 함수: PascalCase 등의 네이밍 컨벤션을 엄격하게 검사합니다.
+        },
         // 파일명의 형식을 'kebab-case' 로 강제합니다.
         "useFilenamingConvention": {
           "level": "error",
@@ -119,9 +119,24 @@
         // 'import type'을 사용하도록 권장합니다. (타입만 가져올 때)
         "useImportType": "warn",
         "useNamingConvention": {
-          "level": "error",
+          "level": "warn",
           "options": {
-            "strictCase": true
+            "conventions": [
+              {
+                // 변수는 camelCase, PascalCase, CONSTANT_CASE 모두 허용
+                "formats": ["camelCase", "PascalCase", "CONSTANT_CASE"],
+                "selector": {
+                  "kind": "variable"
+                }
+              },
+              {
+                // 객체 프로퍼티는 모든 케이스 허용 (PascalCase: 컴파운드 패턴)
+                "formats": ["camelCase", "PascalCase", "CONSTANT_CASE"],
+                "selector": {
+                  "kind": "objectLiteralProperty"
+                }
+              }
+            ]
           }
         }
       },
@@ -138,15 +153,15 @@
   },
   "overrides": [
     {
-      // 1. shadcn/ui 예외 처리
-      "includes": ["src/components/ui/**/*.tsx"],
+      // 1. 컴포넌트는 'kebab-case' 또는 'PascalCase'
+      "includes": ["src/components/**/*.tsx"],
       "linter": {
         "rules": {
           "style": {
             "useFilenamingConvention": {
               "level": "error",
               "options": {
-                "filenameCases": ["kebab-case"]
+                "filenameCases": ["kebab-case", "PascalCase"]
               }
             }
           }
@@ -154,8 +169,8 @@
       }
     },
     {
-      // 2. 컴포넌트와 페이지는 'PascalCase'
-      "includes": ["src/components/**/*.tsx", "src/pages/**/*.tsx"],
+      // 2. 페이지는 'PascalCase'
+      "includes": ["src/pages/**/*.tsx"],
       "linter": {
         "rules": {
           "style": {
@@ -181,6 +196,22 @@
                 "filenameCases": ["camelCase"]
               }
             }
+          }
+        }
+      }
+    },
+    {
+      // 4. UI 컴포넌트는 네이밍 컨벤션과 unused 규칙 무시 (외부 라이브러리 호환성)
+      "includes": ["src/components/ui/**/*.ts", "src/components/ui/**/*.tsx"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedFunctionParameters": "off",
+            "noUnusedImports": "off",
+            "noUnusedVariables": "off"
+          },
+          "style": {
+            "useNamingConvention": "off"
           }
         }
       }
