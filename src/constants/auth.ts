@@ -37,23 +37,11 @@ export const VALIDATION = {
   },
 } as const
 
-// 기본 폼 데이터
-export const DEFAULT_FORM_DATA = {
-  login: { email: "", password: "" },
-  signup: { email: "", name: "", password: "", verificationCode: "" },
-} as const
-
-// 기본 에러 상태
-export const DEFAULT_ERRORS = {
-  login: { email: "", password: "" },
-  signup: { email: "", name: "", password: "", verificationCode: "" },
-} as const
-
 // 이메일 인증 초기 상태
 export const DEFAULT_EMAIL_VERIFY = {
-  emailSent: false,
-  emailVerified: false,
   isLoading: false,
+  isSent: false,
+  isVerified: false,
 } as const
 
 // 개발/테스트 설정
