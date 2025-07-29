@@ -1,46 +1,81 @@
 import type { JsonObject } from "@liveblocks/client"
 import { create } from "zustand"
+import { persist } from "zustand/middleware"
 
 export interface UserInfo {
-  id: string // 사용자 고유 식별자 (이메일)
-  name: string // 사용자 표시 이름
-  color: string // 협업 시 커서/하이라이트 색상 (hex 형식)
+  email: string // 사용자 이메일 (고유 식별자)
+  name: string // 화면에 표시될 사용자 이름
+  color?: string // 협업 시 커서 색상 (hex), 계정 단위로 색상설정을 저장할수도 있어서 일단 매개변수로 받음
 }
 
 interface UserStore {
-  userInfo: UserInfo | null // 현재 사용자 정보
+  userInfo: UserInfo | null // 현재 로그인된 사용자 정보
+  labelsVisible: boolean // 커서 보임/숨김
+  /**
+   * 커서 라벨 표시/숨김 토글
+   */
+  toggleCursorLabels: () => void
 
   /**
-   * 사용자 정보를 Liveblocks에서 사용 가능한 JSON 형태로 변환합니다
-   * @returns JsonObject | null - 변환된 사용자 정보 또는 null (로그인하지 않은 경우)
+   * Liveblocks API 호환 형태로 사용자 정보 반환
+   * @returns 사용자 정보 객체 또는 null (미로그인)
    */
   getUserAsJsonObject: () => JsonObject | null
 
   /**
-   * localStorage에서 사용자 정보를 로드하여 초기화합니다.
-   * 저장된 정보가 없는 경우 개발용 임시 데이터를 사용합니다.
+   * 사용자 정보 업데이트(계정 정보를 받아오는 쪽에서 호출)
+   */
+  setUserInfo: (userInfo: UserInfo) => void
+
+  /**
+   * 임시 사용자로 초기화 (첫 방문자 또는 게스트 모드용)
    */
   initializeUser: () => void
 }
 
-export const useUserStore = create<UserStore>((set, get) => ({
-  getUserAsJsonObject: () => {
-    const { userInfo } = get()
-    return userInfo ? (userInfo as unknown as JsonObject) : null
-  },
+export const useUserStore = create<UserStore>()(
+  persist(
+    (set, get) => ({
+      getUserAsJsonObject: () => {
+        const { userInfo } = get()
+        return userInfo ? (userInfo as unknown as JsonObject) : null
+      },
 
-  initializeUser: () => {
-    const storedData = localStorage.getItem("userInfo")
-    const userData = storedData ? JSON.parse(storedData) : null
+      initializeUser: () => {
+        const { userInfo } = get()
+        // 이미 사용자 정보가 있으면 건너뛰기
+        if (userInfo) return
 
-    const userInfo: UserInfo = {
-      // 기존 색상 유지, 없으면 랜덤 생성
-      color: userData?.color || `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-      id: userData?.email || "test@example.com", // 개발용 임시 데이터
-      name: userData?.name || "테스트 사용자", // 개발용 임시 데이터
+        // 사용자 정보가 없다면 임시 사용자 정보 생성
+        const newUserInfo: UserInfo = {
+          color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+          email: "guest@example.com", // 게스트 사용자임을 명확히
+          name: "게스트 사용자",
+        }
+        set({ userInfo: newUserInfo })
+      },
+      labelsVisible: true, // 기본값
+
+      setUserInfo: userInfo => {
+        // 🔥 색상이 없으면 랜덤 색상 추가
+        const userInfoWithColor = {
+          ...userInfo,
+          color: userInfo.color || `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+        }
+        set({ userInfo: userInfoWithColor })
+      },
+
+      toggleCursorLabels: () => {
+        const { labelsVisible } = get()
+        const newState = !labelsVisible
+
+        set({ labelsVisible: newState })
+        document.body.classList.toggle("labels-hidden", !newState)
+      },
+      userInfo: null,
+    }),
+    {
+      name: "userInfo", // localStorage 저장 키
     }
-    set({ userInfo })
-  },
-
-  userInfo: null,
-}))
+  )
+)
