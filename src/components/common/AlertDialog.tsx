@@ -1,6 +1,6 @@
 //추후에 수정필요
 import type * as React from "react"
-import { Button, type buttonVariants } from "@/components/ui/Button"
+import { Button, type buttonVariants } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/Dialog"
+} from "@/components/ui/dialog"
 
 type AlertDialogVariant = "default" | "destructive" | "warning" | "success"
 
