@@ -1,115 +1,116 @@
-import { clsx } from "clsx"
-import { dividerSvg } from "@/assets/icons"
+import { FormProvider } from "react-hook-form"
+import { AuthFormField } from "@/components/auth/AuthFormField"
+import { AuthHeader } from "@/components/auth/AuthHeader"
+import { ProfileAvatar } from "@/components/auth/ProfileAvatar"
 import { AlertDialog } from "@/components/common/AlertDialog"
-import { FormSection } from "@/components/common/FormSection"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
-import { AUTH_LAYOUT, AUTH_STYLES } from "@/lib/auth-styles"
+import { AUTH_LAYOUT, AUTH_STYLES } from "@/constants/auth-styles"
+import { useAuthForm } from "@/hooks/useAuthForm"
+import { profileEditFormSchema } from "@/lib/auth-schemas"
+import type { ProfileEditFormData } from "@/types/auth"
 
 export default function ProfileEditPage() {
+  const form = useAuthForm(profileEditFormSchema, {
+    currentPassword: "",
+    deletePassword: "",
+    email: "jaeyeopme@gmail.com",
+    name: "jaeyeopme",
+    newPassword: "",
+  })
+
+  const { register } = form
+
+  const onSubmit = (data: ProfileEditFormData) => {
+    console.log("Profile update data:", data)
+    // TODO: 프로필 업데이트 로직 구현
+  }
+
+  const onDeleteAccount = (deletePassword: string) => {
+    console.log("Account deletion confirmed with password:", deletePassword)
+    // TODO: 계정 삭제 로직 구현
+  }
+
+  const handleSubmit = form.handleSubmit(onSubmit as (data: unknown) => void)
+
   return (
     <div className={AUTH_LAYOUT.container}>
-      {/* Main Content Container */}
       <div className={AUTH_LAYOUT.main}>
-        {/* Header */}
-        <div className={AUTH_LAYOUT.header}>
-          <h1 className={AUTH_STYLES.title}>Profile</h1>
-          <p className={AUTH_STYLES.subtitle}>This is how others will see you on the site.</p>
-        </div>
+        <AuthHeader subtitle="This is how others will see you on the site." title="Profile" />
+        <ProfileAvatar />
 
-        {/* Divider */}
-        <div className={AUTH_LAYOUT.divider}>
-          <img alt="divider" className="h-px w-full" src={dividerSvg} />
-        </div>
+        <FormProvider {...form}>
+          <form className={AUTH_LAYOUT.section} onSubmit={handleSubmit}>
+            {/* Email Section */}
+            <AuthFormField disabled label="Email" name="email" type="email" />
 
-        {/* Avatar (shadcn/ui) */}
-        <div className={AUTH_LAYOUT.avatarWrapper}>
-          <div className={AUTH_LAYOUT.avatarInner}>
-            <Avatar className="h-full w-full">
-              <AvatarImage alt="avatar" src="https://github.com/shadcn.png" />
-              <AvatarFallback>U</AvatarFallback>
-            </Avatar>
-          </div>
-        </div>
-
-        {/* Form Fields */}
-        <div className={AUTH_LAYOUT.section}>
-          {/* Email Section */}
-          <FormSection htmlFor="email" label="Email">
-            <Input
-              className={clsx(AUTH_STYLES.field, "text-zinc-400")}
-              disabled
-              id="email"
-              type="email"
-              value="jaeyeopme@gmail.com"
+            {/* Current Password Section */}
+            <AuthFormField
+              label="Current Password"
+              name="currentPassword"
+              placeholder="Enter your current password"
+              type="password"
             />
-          </FormSection>
 
-          {/* Password Section */}
-          <FormSection
-            description="Must be at least 8 characters long, including both letters and numbers."
-            htmlFor="currentPassword"
-            label="Password"
-          >
-            <div className="flex flex-col gap-1.5">
-              <Input
-                className={AUTH_STYLES.field}
-                id="currentPassword"
-                placeholder="Enter your current password"
-                type="password"
-              />
-              <Input
-                className={AUTH_STYLES.field}
-                placeholder="Enter your new password"
-                type="password"
-              />
+            {/* New Password Section */}
+            <AuthFormField
+              description="Must be at least 8 characters long, including both letters and numbers."
+              label="New Password"
+              name="newPassword"
+              placeholder="Enter your new password"
+              type="password"
+            />
+
+            {/* Name Section */}
+            <AuthFormField label="Name" name="name" type="text" />
+
+            {/* Delete Account Section */}
+            <div className="flex w-full flex-col">
+              <div className="flex w-full items-center justify-between">
+                <span className={AUTH_STYLES.label}>Account</span>
+                <AlertDialog
+                  cancelText="Cancel"
+                  confirmText="Delete"
+                  description="Once deleted, the data cannot be recovered."
+                  onCancel={() => {
+                    // 다이얼로그 닫기
+                  }}
+                  onConfirm={() => {
+                    const deletePassword = form.getValues("deletePassword")
+                    if (deletePassword) {
+                      onDeleteAccount(deletePassword)
+                    }
+                  }}
+                  showCloseButton={false}
+                  title="Delete account"
+                  trigger={
+                    <span className="cursor-pointer text-right font-semibold text-[9px] text-red-500">
+                      Delete your account
+                    </span>
+                  }
+                  variant="destructive"
+                >
+                  <div className="h-[35px] w-full rounded-[5.333px] bg-[#ffffff]">
+                    <Input
+                      {...register("deletePassword")}
+                      className="h-full w-full rounded-[5.333px] border-none bg-transparent px-3 text-black text-sm placeholder:text-gray-400 focus:outline-none"
+                      placeholder="Enter your password"
+                      type="password"
+                    />
+                  </div>
+                </AlertDialog>
+              </div>
             </div>
-          </FormSection>
 
-          {/* Name Section */}
-          <FormSection htmlFor="name" label="Name">
-            <Input className={AUTH_STYLES.field} id="name" value="jaeyeopme" />
-          </FormSection>
-
-          {/* Delete Account Section */}
-
-          <AlertDialog
-            cancelText="Cancel"
-            confirmText="Delete"
-            description="Once deleted, the data cannot be recovered."
-            onCancel={() => {
-              // TODO: 취소 로직 구현
-              console.log("Account deletion cancelled")
-            }}
-            onConfirm={() => {
-              // TODO: 계정 삭제 로직 구현
-              console.log("Account deletion confirmed")
-            }}
-            showCloseButton={false}
-            title="Delete account"
-            trigger={
-              <span className="cursor-pointer text-right font-semibold text-[9px] text-red-500">
-                Delete your account
-              </span>
-            }
-            variant="destructive"
-          >
-            <div className="h-[35px] w-full rounded-[5.333px] bg-[#ffffff]">
-              <Input
-                className={clsx(AUTH_STYLES.field, "h-full w-full rounded-[5.333px]")}
-                placeholder="Enter your password"
-                type="password"
-              />
+            {/* Bottom Section */}
+            <div className={AUTH_LAYOUT.bottom}>
+              {/* Update Profile Button */}
+              <Button className={AUTH_STYLES.signupBtn} type="submit">
+                Update Profile
+              </Button>
             </div>
-          </AlertDialog>
-        </div>
-
-        {/* Bottom Section */}
-        <div className={AUTH_LAYOUT.bottom}>
-          {/* Update Profile Button */}
-          <Button className={AUTH_STYLES.signupBtn}>Update Profile</Button>
-        </div>
+          </form>
+        </FormProvider>
       </div>
     </div>
   )

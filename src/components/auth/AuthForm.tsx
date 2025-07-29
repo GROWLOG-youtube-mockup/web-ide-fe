@@ -1,0 +1,56 @@
+import type { ReactNode } from "react"
+import type { FieldValues, SubmitHandler, UseFormReturn } from "react-hook-form"
+import { AuthHeader } from "@/components/auth/AuthHeader"
+import { Button } from "@/components/ui/Button"
+import { Form } from "@/components/ui/Form"
+import { AUTH_LAYOUT, AUTH_STYLES } from "@/constants/auth-styles"
+
+type AuthFormProps<T extends FieldValues = FieldValues> = {
+  title: string
+  subtitle: string
+  onSubmit: SubmitHandler<T>
+  submitText: string
+  children: ReactNode
+  form: UseFormReturn<T>
+  footer?: ReactNode
+  showAvatar?: boolean
+  avatarComponent?: ReactNode
+}
+
+export function AuthForm<T extends FieldValues = FieldValues>({
+  title,
+  subtitle,
+  onSubmit,
+  submitText,
+  children,
+  form,
+  footer,
+  showAvatar = false,
+  avatarComponent,
+}: AuthFormProps<T>) {
+  return (
+    <div className={AUTH_LAYOUT.container}>
+      <div className={AUTH_LAYOUT.main}>
+        <AuthHeader subtitle={subtitle} title={title} />
+        {showAvatar && avatarComponent}
+
+        <Form {...form}>
+          <form className={AUTH_LAYOUT.section} onSubmit={form.handleSubmit(onSubmit)}>
+            {children}
+          </form>
+        </Form>
+
+        <div className={AUTH_LAYOUT.bottom}>
+          <Button
+            className={AUTH_STYLES.signupBtn}
+            onClick={form.handleSubmit(onSubmit)}
+            type="button"
+          >
+            {submitText}
+          </Button>
+          {footer}
+        </div>
+      </div>
+    </div>
+  )
+}
