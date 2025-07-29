@@ -78,9 +78,20 @@ export const TreeNode = ({ item }: TreeNodeProps): React.ReactElement => {
       return
     }
 
-    if ((e.key === "Enter" || e.key === " ") && itemData.type === "file") {
+    if (e.key === "Enter" || e.key === " ") {
       e.preventDefault()
-      openFileInEditor(itemData.path)
+
+      if (itemData.type === "file") {
+        openFileInEditor(itemData.path)
+        return
+      }
+
+      if (isExpanded) {
+        item.collapse()
+        return
+      }
+
+      item.expand()
     }
   }
 

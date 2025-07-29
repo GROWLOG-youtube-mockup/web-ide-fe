@@ -79,7 +79,6 @@ export const useEditorTabsStore = create<EditorTabsState>()(
 
           // TODO: 실제 에디터에서 파일 열기 로직 추가
           console.log("Opening file in editor:", filePath)
-          console.log("Opened files in editor:", get().openedFiles)
         },
 
         // 활성 파일 변경
