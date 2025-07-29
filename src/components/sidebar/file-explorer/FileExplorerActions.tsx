@@ -8,7 +8,7 @@ import {
   RefreshCwIcon,
 } from "lucide-react"
 import type { MouseEvent } from "react"
-import { Button } from "@/components/ui/Button"
+import { Button } from "@/components/ui/button"
 import { fileSystemService } from "@/lib/file-system-service"
 import type { FileData } from "@/types/file-explorer"
 

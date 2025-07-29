@@ -1,3 +1,7 @@
+// Divider SVG (공통 asset)
+import DividerSvg from "./divider.svg"
+export const dividerSvg = DividerSvg
+
 // Lucide React 아이콘 import (shadcn/ui)
 import {
   ChevronDown,

@@ -10,7 +10,7 @@ import {
 import type { MouseEventHandler, ReactNode } from "react"
 import { FileExplorer } from "@/components/sidebar/file-explorer/FileExplorer"
 import { FileExplorerActions } from "@/components/sidebar/file-explorer/FileExplorerActions"
-import { Button } from "@/components/ui/Button"
+import { Button } from "@/components/ui/button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { SidebarSeparator } from "@/components/ui/sidebar"
