@@ -15,11 +15,14 @@ export function useEmailVerification({
   const { watch, setError, clearErrors } = useFormContext()
   const [state, setState] = useState<EmailVerificationState>(DEFAULT_EMAIL_VERIFY)
 
-  const emailValue = watch(emailName)
-  const codeValue = watch(codeName)
+  const emailValue = watch(emailName) as string
+  const codeValue = watch(codeName) as string
 
   // 이메일 인증 코드 전송
   const handleSendEmailCode = async (): Promise<void> => {
+    // 이미 인증된 상태면 반환
+    if (state.isVerified) return
+
     // Zod 스키마로 이메일 유효성 검증
     const result = emailSchema.safeParse(emailValue)
     if (!result.success) {
@@ -41,6 +44,15 @@ export function useEmailVerification({
 
   // 이메일 인증 코드 확인
   const handleVerifyEmailCode = async (): Promise<void> => {
+    // 이미 인증된 상태면 반환
+    if (state.isVerified) return
+
+    // 코드가 전송되지 않았으면 반환
+    if (!state.isSent) {
+      setError(codeName, { message: "먼저 인증 코드를 전송해주세요." })
+      return
+    }
+
     // Zod 스키마로 코드 유효성 검증
     const result = verificationCodeSchema.safeParse(codeValue)
     if (!result.success) {
