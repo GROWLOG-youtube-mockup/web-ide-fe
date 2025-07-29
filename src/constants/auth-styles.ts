@@ -24,11 +24,13 @@ export const AUTH_STYLES = {
 
   // 필드 (기본 + 포커스 스타일 통합)
   field:
-    "h-full rounded-[5.368px] border-[0.667px] border-zinc-200 px-[13px] font-medium text-[10.667px] text-zinc-500 placeholder:text-zinc-500 h-[35px] focus:border-zinc-900 focus:ring-2 focus:ring-zinc-200 focus:outline-none",
+    "!text-[11px] h-full rounded-[5.368px] border-[0.667px] border-zinc-200 px-[13px] font-medium text-[10.667px] text-zinc-500 placeholder:text-zinc-500 h-[35px] focus:border-zinc-900 focus:ring-2 focus:ring-zinc-200",
   help: "text-[9px] text-zinc-400",
 
   // 기타
   icon: "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4",
+  input:
+    "h-full rounded-[5.368px] border-[0.667px] border-zinc-200 px-[13px] font-medium text-[10.667px] text-zinc-500 placeholder:text-zinc-500",
 
   // 텍스트
   label: "font-semibold text-[10px] text-zinc-700",

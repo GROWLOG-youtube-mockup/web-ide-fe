@@ -42,7 +42,7 @@ export function AuthFormField({
           {description && (
             <FormDescription className={AUTH_STYLES.help}>{description}</FormDescription>
           )}
-          <div className="flex flex-col">
+          <div className="mt-1 flex flex-col">
             <FormControl>
               <Input
                 {...field}

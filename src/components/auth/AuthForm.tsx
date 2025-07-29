@@ -1,23 +1,23 @@
 import type { ReactNode } from "react"
 import type { FieldValues, SubmitHandler, UseFormReturn } from "react-hook-form"
-import { AuthHeader } from "@/components/common/AuthHeader"
+import { AuthHeader } from "@/components/auth/AuthHeader"
 import { Button } from "@/components/ui/Button"
 import { Form } from "@/components/ui/Form"
 import { AUTH_LAYOUT, AUTH_STYLES } from "@/constants/auth-styles"
 
-interface AuthFormProps {
+type AuthFormProps<T extends FieldValues = FieldValues> = {
   title: string
   subtitle: string
-  onSubmit: SubmitHandler<FieldValues>
+  onSubmit: SubmitHandler<T>
   submitText: string
   children: ReactNode
-  form: UseFormReturn<FieldValues>
+  form: UseFormReturn<T>
   footer?: ReactNode
   showAvatar?: boolean
   avatarComponent?: ReactNode
 }
 
-export function AuthForm({
+export function AuthForm<T extends FieldValues = FieldValues>({
   title,
   subtitle,
   onSubmit,
@@ -27,7 +27,7 @@ export function AuthForm({
   footer,
   showAvatar = false,
   avatarComponent,
-}: AuthFormProps) {
+}: AuthFormProps<T>) {
   return (
     <div className={AUTH_LAYOUT.container}>
       <div className={AUTH_LAYOUT.main}>

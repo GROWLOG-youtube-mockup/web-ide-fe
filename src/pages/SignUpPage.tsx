@@ -1,7 +1,7 @@
-import { AuthForm } from "@/components/common/AuthForm"
-import { AuthFormField } from "@/components/common/AuthFormField"
-import { EmailVerificationField } from "@/components/common/EmailVerificationField"
-import { ProfileAvatar } from "@/components/common/ProfileAvatar"
+import { AuthForm } from "@/components/auth/AuthForm"
+import { AuthFormField } from "@/components/auth/AuthFormField"
+import { EmailVerificationField } from "@/components/auth/EmailVerificationField"
+import { ProfileAvatar } from "@/components/auth/ProfileAvatar"
 import { AUTH_STYLES } from "@/constants/auth-styles"
 import { useAuthForm } from "@/hooks/useAuthForm"
 import { signUpFormSchema } from "@/lib/auth-schemas"
@@ -28,7 +28,7 @@ export default function SignUpPage() {
   )
 
   return (
-    <AuthForm
+    <AuthForm<SignUpFormData>
       avatarComponent={<ProfileAvatar />}
       footer={footer}
       form={form}

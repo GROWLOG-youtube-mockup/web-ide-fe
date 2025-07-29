@@ -1,5 +1,5 @@
-import { AuthForm } from "@/components/common/AuthForm"
-import { AuthFormField } from "@/components/common/AuthFormField"
+import { AuthForm } from "@/components/auth/AuthForm"
+import { AuthFormField } from "@/components/auth/AuthFormField"
 import { AUTH_STYLES } from "@/constants/auth-styles"
 import { useAuthForm } from "@/hooks/useAuthForm"
 import { loginFormSchema } from "@/lib/auth-schemas"
@@ -24,7 +24,7 @@ export default function LoginPage() {
   )
 
   return (
-    <AuthForm
+    <AuthForm<LoginFormData>
       footer={footer}
       form={form}
       onSubmit={onSubmit}
