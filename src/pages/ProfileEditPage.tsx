@@ -1,5 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { FormProvider, useForm } from "react-hook-form"
+import { FormProvider } from "react-hook-form"
 import { AlertDialog } from "@/components/common/AlertDialog"
 import { AuthFormField } from "@/components/common/AuthFormField"
 import { AuthHeader } from "@/components/common/AuthHeader"
@@ -7,23 +6,20 @@ import { ProfileAvatar } from "@/components/common/ProfileAvatar"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { AUTH_LAYOUT, AUTH_STYLES } from "@/constants/auth-styles"
+import { useAuthForm } from "@/hooks/useAuthForm"
 import { profileEditFormSchema } from "@/lib/auth-schemas"
 import type { ProfileEditFormData } from "@/types/auth"
 
 export default function ProfileEditPage() {
-  const methods = useForm<ProfileEditFormData>({
-    defaultValues: {
-      currentPassword: "",
-      deletePassword: "",
-      email: "jaeyeopme@gmail.com",
-      name: "jaeyeopme",
-      newPassword: "",
-    },
-    mode: "onChange",
-    resolver: zodResolver(profileEditFormSchema),
+  const form = useAuthForm(profileEditFormSchema, {
+    currentPassword: "",
+    deletePassword: "",
+    email: "jaeyeopme@gmail.com",
+    name: "jaeyeopme",
+    newPassword: "",
   })
 
-  const { handleSubmit, register } = methods
+  const { register } = form
 
   const onSubmit = (data: ProfileEditFormData) => {
     console.log("Profile update data:", data)
@@ -35,14 +31,16 @@ export default function ProfileEditPage() {
     // TODO: 계정 삭제 로직 구현
   }
 
+  const handleSubmit = form.handleSubmit(onSubmit as (data: unknown) => void)
+
   return (
     <div className={AUTH_LAYOUT.container}>
       <div className={AUTH_LAYOUT.main}>
         <AuthHeader subtitle="This is how others will see you on the site." title="Profile" />
         <ProfileAvatar />
 
-        <FormProvider {...methods}>
-          <form className={AUTH_LAYOUT.section} onSubmit={handleSubmit(onSubmit)}>
+        <FormProvider {...form}>
+          <form className={AUTH_LAYOUT.section} onSubmit={handleSubmit}>
             {/* Email Section */}
             <AuthFormField disabled label="Email" name="email" type="email" />
 
@@ -78,7 +76,7 @@ export default function ProfileEditPage() {
                     // 다이얼로그 닫기
                   }}
                   onConfirm={() => {
-                    const deletePassword = methods.getValues("deletePassword")
+                    const deletePassword = form.getValues("deletePassword")
                     if (deletePassword) {
                       onDeleteAccount(deletePassword)
                     }
