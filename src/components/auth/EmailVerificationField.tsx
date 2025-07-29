@@ -30,7 +30,7 @@ export function EmailVerificationField({
         name={emailName}
         render={({ field }) => (
           <FormItem className="flex w-full flex-col">
-            <div className="flex w-full items-center justify-between">
+            <div className="mb-1 flex w-full items-center justify-between">
               <FormLabel className={AUTH_STYLES.label}>{emailLabel}</FormLabel>
             </div>
             <div className="flex h-[35px] gap-1.5">

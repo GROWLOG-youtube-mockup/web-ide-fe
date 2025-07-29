@@ -36,13 +36,13 @@ export function AuthFormField({
       render={({ field, fieldState }) => (
         <FormItem className="flex w-full flex-col">
           <div className="flex w-full items-center justify-between">
-            <FormLabel className={AUTH_STYLES.label}>{label}</FormLabel>
+            <FormLabel className={clsx(AUTH_STYLES.label, "mb-0.5")}>{label}</FormLabel>
             {action && <div>{action}</div>}
           </div>
           {description && (
             <FormDescription className={AUTH_STYLES.help}>{description}</FormDescription>
           )}
-          <div className="mt-1 flex flex-col">
+          <div className="flex flex-col">
             <FormControl>
               <Input
                 {...field}
