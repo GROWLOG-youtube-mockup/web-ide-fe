@@ -36,7 +36,7 @@ export default function LoginPage() {
 
       <AuthFormField
         action={
-          <span className="cursor-pointer font-medium text-[9.333px] text-zinc-500 ">
+          <span className="cursor-pointer font-medium text-[9.333px] text-zinc-500">
             Forgot your password?
           </span>
         }
