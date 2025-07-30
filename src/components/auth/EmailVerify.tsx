@@ -46,7 +46,7 @@ export function EmailVerify({
                 </FormControl>
               </div>
               <Button
-                className={clsx(AUTH_STYLES.btnSm, AUTH_STYLES.btnPri)}
+                className={clsx(AUTH_STYLES.btnSm, AUTH_STYLES.btnPri, "text-[10px]")}
                 disabled={emailVerified || isLoading || disabled}
                 onClick={handleSendEmailCode}
                 type="button"
@@ -76,7 +76,7 @@ export function EmailVerify({
                 </FormControl>
               </div>
               <Button
-                className={clsx(AUTH_STYLES.btnSm, AUTH_STYLES.btnSec)}
+                className={clsx(AUTH_STYLES.btnSm, AUTH_STYLES.btnSec, "text-[10px]")}
                 disabled={isLoading || !emailSent || emailVerified || disabled}
                 onClick={handleVerifyEmailCode}
                 type="button"
