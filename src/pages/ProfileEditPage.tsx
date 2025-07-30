@@ -1,117 +1,97 @@
-import { FormProvider } from "react-hook-form"
+import { useState } from "react"
+import { AuthForm } from "@/components/auth/AuthForm"
 import { AuthFormField } from "@/components/auth/AuthFormField"
-import { AuthHeader } from "@/components/auth/AuthHeader"
+import { PasswordChangeSection } from "@/components/auth/PasswordChangeSection"
 import { ProfileAvatar } from "@/components/auth/ProfileAvatar"
 import { AlertDialog } from "@/components/common/AlertDialog"
-import { Button } from "@/components/ui/button"
+import { useToast } from "@/components/common/ToastContext"
 import { Input } from "@/components/ui/input"
-import { AUTH_LAYOUT, AUTH_STYLES } from "@/constants/auth-styles"
 import { useAuthForm } from "@/hooks/useAuthForm"
+import { useProfileUpdate } from "@/hooks/useProfileUpdate"
 import { profileEditFormSchema } from "@/lib/auth-schemas"
-import type { ProfileEditFormData } from "@/types/auth"
 
 export default function ProfileEditPage() {
-  const form = useAuthForm(profileEditFormSchema, {
+  const [deletePassword, setDeletePassword] = useState("")
+  const { addToast } = useToast()
+
+  // 초기값 정의 (form 기본값과 정확히 일치해야 함)
+  const initialValues = {
     currentPassword: "",
-    deletePassword: "",
     email: "jaeyeopme@gmail.com",
     name: "jaeyeopme",
     newPassword: "",
-  })
+  } as const
 
-  const { register } = form
-
-  const onSubmit = (data: ProfileEditFormData) => {
-    console.log("Profile update data:", data)
-    // TODO: 프로필 업데이트 로직 구현
-  }
+  const form = useAuthForm(profileEditFormSchema, initialValues)
+  const { updateProfile, isSaving } = useProfileUpdate({ form, initialValues })
 
   const onDeleteAccount = (deletePassword: string) => {
+    if (!deletePassword.trim()) {
+      addToast({ type: "error", title: "비밀번호를 입력해주세요." })
+      return
+    }
+
     console.log("Account deletion confirmed with password:", deletePassword)
     // TODO: 계정 삭제 로직 구현
+    addToast({ type: "success", title: "계정이 성공적으로 삭제되었습니다." })
+    setDeletePassword("") // 입력 필드 초기화
   }
 
-  const handleSubmit = form.handleSubmit(onSubmit as (data: unknown) => void)
-
   return (
-    <div className={AUTH_LAYOUT.container}>
-      <div className={AUTH_LAYOUT.main}>
-        <AuthHeader subtitle="This is how others will see you on the site." title="Profile" />
-        <ProfileAvatar />
+    <AuthForm
+      avatarComponent={<ProfileAvatar />}
+      form={form}
+      onSubmit={updateProfile}
+      showAvatar={true}
+      submitText={isSaving ? "Updating..." : "Update Profile"}
+      subtitle="This is how others will see you on the site."
+      title="Profile"
+    >
+      {/* Email Section */}
+      <AuthFormField disabled label="Email" name="email" type="email" />
 
-        <FormProvider {...form}>
-          <form className={AUTH_LAYOUT.section} onSubmit={handleSubmit}>
-            {/* Email Section */}
-            <AuthFormField disabled label="Email" name="email" type="email" />
+      {/* Password Section */}
+      <PasswordChangeSection
+        currentPasswordName="currentPassword"
+        form={form}
+        newPasswordName="newPassword"
+      />
 
-            {/* Current Password Section */}
-            <AuthFormField
-              label="Current Password"
-              name="currentPassword"
-              placeholder="Enter your current password"
+      {/* Name Section */}
+      <AuthFormField label="Name" name="name" placeholder="Enter your name" type="text" />
+
+      {/* Delete Account Section */}
+      <div className="flex w-full justify-end overflow-hidden">
+        <AlertDialog
+          cancelText="Cancel"
+          confirmText="Delete"
+          description="Once deleted, the data cannot be recovered."
+          onCancel={() => {
+            setDeletePassword("") // 취소 시 입력 초기화
+          }}
+          onConfirm={() => {
+            onDeleteAccount(deletePassword)
+          }}
+          showCloseButton={false}
+          title="Delete account"
+          trigger={
+            <span className="mb-1 cursor-pointer font-semibold text-[9px] text-red-500 leading-5">
+              Delete your account
+            </span>
+          }
+          variant="destructive"
+        >
+          <div className="h-[35px] w-full rounded-[5.333px] bg-[#ffffff]">
+            <Input
+              className="h-full w-full rounded-[5.333px] border-none bg-transparent px-3 text-black text-sm placeholder:text-gray-400 focus:outline-none"
+              onChange={e => setDeletePassword(e.target.value)}
+              placeholder="Enter your password"
               type="password"
+              value={deletePassword}
             />
-
-            {/* New Password Section */}
-            <AuthFormField
-              description="Must be at least 8 characters long, including both letters and numbers."
-              label="New Password"
-              name="newPassword"
-              placeholder="Enter your new password"
-              type="password"
-            />
-
-            {/* Name Section */}
-            <AuthFormField label="Name" name="name" type="text" />
-
-            {/* Delete Account Section */}
-            <div className="flex w-full flex-col">
-              <div className="flex w-full items-center justify-between">
-                <span className={AUTH_STYLES.label}>Account</span>
-                <AlertDialog
-                  cancelText="Cancel"
-                  confirmText="Delete"
-                  description="Once deleted, the data cannot be recovered."
-                  onCancel={() => {
-                    // 다이얼로그 닫기
-                  }}
-                  onConfirm={() => {
-                    const deletePassword = form.getValues("deletePassword")
-                    if (deletePassword) {
-                      onDeleteAccount(deletePassword)
-                    }
-                  }}
-                  showCloseButton={false}
-                  title="Delete account"
-                  trigger={
-                    <span className="cursor-pointer text-right font-semibold text-[9px] text-red-500">
-                      Delete your account
-                    </span>
-                  }
-                  variant="destructive"
-                >
-                  <div className="h-[35px] w-full rounded-[5.333px] bg-[#ffffff]">
-                    <Input
-                      {...register("deletePassword")}
-                      className="h-full w-full rounded-[5.333px] border-none bg-transparent px-3 text-black text-sm placeholder:text-gray-400 focus:outline-none"
-                      placeholder="Enter your password"
-                      type="password"
-                    />
-                  </div>
-                </AlertDialog>
-              </div>
-            </div>
-
-            {/* Bottom Section */}
-            <div className={AUTH_LAYOUT.bottom}>
-              {/* Update Profile Button */}
-              <Button className={AUTH_STYLES.signupBtn} type="submit">
-                Update Profile
-              </Button>
-            </div>
-          </form>
-        </FormProvider>
+          </div>
+        </AlertDialog>
       </div>
-    </div>
+    </AuthForm>
   )
 }
