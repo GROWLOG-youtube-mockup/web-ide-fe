@@ -26,8 +26,6 @@ interface ProjectStore {
 
 // Mock API 함수 (실제 구현 시 별도 파일로 분리)
 const mockFetchProjects = async (filter?: ProjectFilter): Promise<ProjectsApiResponse> => {
-  console.log("🔧 mockFetchProjects 호출됨, filter:", filter)
-
   // 실제로는 axios 등을 사용해서 API 호출
   await new Promise(resolve => setTimeout(resolve, 1000)) // 로딩 시뮬레이션
 
@@ -104,16 +102,12 @@ const mockFetchProjects = async (filter?: ProjectFilter): Promise<ProjectsApiRes
 
   // 필터 적용
   if (filter) {
-    console.log("🔍 필터 적용 전 데이터:", mockData.data.length, "개")
     mockData.data = mockData.data.filter(project => {
       if (filter === "own") return project.myRole === "OWNER"
       if (filter === "joined") return project.myRole !== "OWNER"
       return true
     })
-    console.log("🔍 필터 적용 후 데이터:", mockData.data.length, "개")
   }
-
-  console.log("📤 mockFetchProjects 반환 데이터:", mockData)
   return mockData
 }
 
