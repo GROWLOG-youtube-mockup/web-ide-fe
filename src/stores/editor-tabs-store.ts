@@ -7,30 +7,34 @@ interface EditorTabsState {
 
   /**
    * 파일을 에디터에서 열기
-   *
-   * @param filePath - 열 파일의 경로
-   * @remarks
-   * 이미 열린 파일이면 활성화만 하고, 새 파일이면 목록에 추가 후 활성화합니다.
    */
   openFileInEditor: (filePath: string) => void
 
   /**
    * 에디터에서 파일 닫기
-   *
-   * @param filePath - 닫을 파일의 경로
-   * @remarks
-   * 활성 파일을 닫으면 마지막으로 열었던 파일로 자동 전환됩니다.
    */
   closeFile: (filePath: string) => void
 
   /**
    * 활성 파일 변경
-   *
-   * @param filePath - 활성화할 파일의 경로
-   * @remarks
-   * 이미 열린 파일만 활성화 가능합니다.
    */
   setActiveFile: (filePath: string) => void
+
+  // ✅ 새로 추가된 기능들 (FileTabStore에서 가져옴)
+  /**
+   * 모든 탭 닫기
+   */
+  closeAllTabs: () => void
+
+  /**
+   * 다른 모든 탭 닫기 (지정된 파일만 유지)
+   */
+  closeOtherTabs: (keepFilePath: string) => void
+
+  /**
+   * 오른쪽 탭들 닫기
+   */
+  closeTabsToTheRight: (fromFilePath: string) => void
 }
 
 export const useEditorTabsStore = create<EditorTabsState>()(
@@ -38,20 +42,34 @@ export const useEditorTabsStore = create<EditorTabsState>()(
     persist(
       (set, get): EditorTabsState => ({
         // 초기 상태
+        openedFiles: [],
         activeFile: null,
 
-        // 파일 닫기
+        // 기존 메서드들
+        openFileInEditor: (filePath: string) => {
+          const { openedFiles } = get()
+
+          if (openedFiles.includes(filePath)) {
+            set({ activeFile: filePath })
+          } else {
+            set({
+              activeFile: filePath,
+              openedFiles: [...openedFiles, filePath],
+            })
+          }
+
+          console.log("Opening file in editor:", filePath)
+        },
+
         closeFile: (filePath: string) => {
           const { openedFiles, activeFile } = get()
           const newOpenedFiles = openedFiles.filter(file => file !== filePath)
 
-          // 닫힌 파일이 활성 파일이 아니면 상태 유지
           if (activeFile !== filePath) {
             set({ openedFiles: newOpenedFiles })
             return
           }
 
-          // 닫힌 파일이 활성 파일이면 다른 파일로 전환
           const newActiveFile =
             newOpenedFiles.length > 0 ? newOpenedFiles[newOpenedFiles.length - 1] : null
 
@@ -60,33 +78,42 @@ export const useEditorTabsStore = create<EditorTabsState>()(
             openedFiles: newOpenedFiles,
           })
         },
-        openedFiles: [],
 
-        // 파일 열기
-        openFileInEditor: (filePath: string) => {
-          const { openedFiles } = get()
-
-          if (openedFiles.includes(filePath)) {
-            // 이미 열린 파일이면 활성화만
-            set({ activeFile: filePath })
-          } else {
-            // 새 파일 추가하고 활성화
-            set({
-              activeFile: filePath,
-              openedFiles: [...openedFiles, filePath],
-            })
-          }
-
-          // TODO: 실제 에디터에서 파일 열기 로직 추가
-          console.log("Opening file in editor:", filePath)
-        },
-
-        // 활성 파일 변경
         setActiveFile: (filePath: string) => {
           const { openedFiles } = get()
           if (openedFiles.includes(filePath)) {
             set({ activeFile: filePath })
           }
+        },
+
+        // 새로 추가된 메서드들(탭 관련 액션)
+        closeAllTabs: () => {
+          set({
+            openedFiles: [],
+            activeFile: null,
+          })
+        },
+
+        closeOtherTabs: (keepFilePath: string) => {
+          set({
+            openedFiles: [keepFilePath],
+            activeFile: keepFilePath,
+          })
+        },
+
+        closeTabsToTheRight: (fromFilePath: string) => {
+          const { openedFiles, activeFile } = get()
+          const currentIndex = openedFiles.findIndex(file => file === fromFilePath)
+
+          if (currentIndex === -1) return // 파일이 없으면 아무것도 하지 않음
+
+          const filesToKeep = openedFiles.slice(0, currentIndex + 1)
+
+          set({
+            openedFiles: filesToKeep,
+            // 활성 파일이 닫힌 파일들 중에 있다면 기준 파일로 변경
+            activeFile: activeFile && filesToKeep.includes(activeFile) ? activeFile : fromFilePath,
+          })
         },
       }),
       {

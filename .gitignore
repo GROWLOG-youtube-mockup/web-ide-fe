@@ -159,3 +159,4 @@ web_modules/
 
 # Biome
 .biome/
+.vercel
