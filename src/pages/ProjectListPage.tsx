@@ -7,7 +7,7 @@ import { useProjectStore } from "@/stores/project-store"
 
 export const ProjectListPage = () => {
   const [searchQuery, setSearchQuery] = useState("")
-  const { fetchProjects, projects, ownProjects, joinedProjects, loading, error } = useProjectStore()
+  const { fetchProjects, projects, loading, error } = useProjectStore()
 
   // 페이지 로드 시 모든 프로젝트 데이터를 한 번에 가져오기
   useEffect(() => {
@@ -25,9 +25,7 @@ export const ProjectListPage = () => {
       "- projects 상세:",
       projects.map(p => ({ id: p.id, name: p.name, myRole: p.myRole }))
     )
-    console.log("- ownProjects:", ownProjects)
-    console.log("- joinedProjects:", joinedProjects)
-  }, [loading, error, projects, ownProjects, joinedProjects])
+  }, [loading, error, projects])
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-white py-6">
