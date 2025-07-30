@@ -7,7 +7,7 @@ import { AUTH_STYLES } from "@/constants/auth-styles"
 import { useEmailVerification } from "@/hooks/useEmailVerification"
 import type { EmailVerifyProps } from "@/types/auth"
 
-export function EmailVerificationField({
+export function EmailVerify({
   emailName,
   codeName,
   emailLabel = "Email",
@@ -23,7 +23,7 @@ export function EmailVerificationField({
   const codeError = formState.errors[codeName]?.message as string | undefined
 
   return (
-    <div className="mb-2.5 flex w-full flex-col gap-1">
+    <div className="flex w-full flex-col gap-1">
       {/* Email Field */}
       <FormField
         control={control}
@@ -46,7 +46,7 @@ export function EmailVerificationField({
                 </FormControl>
               </div>
               <Button
-                className={clsx(AUTH_STYLES.btnSm, AUTH_STYLES.btnPri)}
+                className={clsx(AUTH_STYLES.btnSm, AUTH_STYLES.btnPri, "text-[10px]")}
                 disabled={emailVerified || isLoading || disabled}
                 onClick={handleSendEmailCode}
                 type="button"
@@ -76,7 +76,7 @@ export function EmailVerificationField({
                 </FormControl>
               </div>
               <Button
-                className={clsx(AUTH_STYLES.btnSm, AUTH_STYLES.btnSec)}
+                className={clsx(AUTH_STYLES.btnSm, AUTH_STYLES.btnSec, "text-[10px]")}
                 disabled={isLoading || !emailSent || emailVerified || disabled}
                 onClick={handleVerifyEmailCode}
                 type="button"

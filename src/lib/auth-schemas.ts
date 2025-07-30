@@ -44,13 +44,39 @@ export const signUpFormSchema = z.object({
 })
 
 // 프로필 편집용 스키마
-export const profileEditFormSchema = z.object({
-  currentPassword: loginPasswordSchema,
-  deletePassword: loginPasswordSchema,
-  email: emailSchema,
-  name: nameSchema,
-  newPassword: passwordSchema,
-})
+export const profileEditFormSchema = z
+  .object({
+    currentPassword: z.string().optional(),
+    deletePassword: z.string().optional(),
+    email: emailSchema,
+    name: nameSchema,
+    newPassword: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    const hasNewPassword = data.newPassword?.trim()
+    if (!hasNewPassword) return
+
+    // 현재 비밀번호 체크
+    if (!data.currentPassword?.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "current password is required to set a new password.",
+        path: ["currentPassword"],
+      })
+    }
+
+    // 새 비밀번호 복잡성 체크 - passwordSchema의 에러 메시지 재사용
+    const passwordResult = passwordSchema.safeParse(data.newPassword)
+    if (!passwordResult.success) {
+      passwordResult.error.issues.forEach(issue => {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: issue.message,
+          path: ["newPassword"],
+        })
+      })
+    }
+  })
 
 // 스키마 매핑
 const fieldSchemas = {

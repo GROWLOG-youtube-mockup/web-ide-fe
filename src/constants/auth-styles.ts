@@ -8,7 +8,13 @@ export const AUTH_STYLES = {
   btnFull: "w-full h-[35px]",
   btnPri: "bg-zinc-700 hover:bg-zinc-600 text-neutral-50",
   btnSec: "bg-zinc-800 hover:bg-zinc-600 text-neutral-50",
-  btnSm: "h-full rounded-[5.368px] font-semibold w-[55px] text-[8px]",
+  btnSm: "h-full rounded-[5.368px] font-semibold w-[55px] text-[10.67px]",
+
+  // 다이얼로그 작은 버튼 (통일된 스타일)
+  btnSmDialog: "h-[35px] rounded-md px-2.5 py-[3px] font-medium text-[10.67px]",
+  btnSmDialogCancel: "border border-slate-200 bg-white text-slate-950",
+  btnSmDialogConfirm: "bg-[#3d3d3d] text-slate-50 disabled:opacity-50",
+  btnSmDialogDelete: "bg-red-500 text-slate-50 disabled:opacity-50",
 
   //버튼 스타일
   desc: "text-[9px] text-zinc-500",
