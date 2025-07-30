@@ -1,6 +1,6 @@
 import { AuthForm } from "@/components/auth/AuthForm"
 import { AuthFormField } from "@/components/auth/AuthFormField"
-import { EmailVerificationField } from "@/components/auth/EmailVerificationField"
+import { EmailVerify } from "@/components/auth/EmailVerify"
 import { ProfileAvatar } from "@/components/auth/ProfileAvatar"
 import { AUTH_STYLES } from "@/constants/auth-styles"
 import { useAuthForm } from "@/hooks/useAuthForm"
@@ -38,7 +38,7 @@ export default function SignUpPage() {
       subtitle="Enter your information to sign up!"
       title="Sign up"
     >
-      <EmailVerificationField codeName="verificationCode" emailName="email" />
+      <EmailVerify codeName="verificationCode" emailName="email" />
 
       <AuthFormField
         description="Must be at least 8 characters long, including both letters and numbers."

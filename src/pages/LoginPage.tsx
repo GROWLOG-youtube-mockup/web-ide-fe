@@ -1,11 +1,15 @@
+import { useState } from "react"
 import { AuthForm } from "@/components/auth/AuthForm"
 import { AuthFormField } from "@/components/auth/AuthFormField"
+import { ResetPassword } from "@/components/auth/ResetPassword"
 import { AUTH_STYLES } from "@/constants/auth-styles"
 import { useAuthForm } from "@/hooks/useAuthForm"
 import { loginFormSchema } from "@/lib/auth-schemas"
 import type { LoginFormData } from "@/types/auth"
 
 export default function LoginPage() {
+  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false)
+
   const form = useAuthForm(loginFormSchema, {
     email: "",
     password: "",
@@ -24,27 +28,35 @@ export default function LoginPage() {
   )
 
   return (
-    <AuthForm<LoginFormData>
-      footer={footer}
-      form={form}
-      onSubmit={onSubmit}
-      submitText="Sign In"
-      subtitle="Enter your username and password to sign in!"
-      title="Sign In"
-    >
-      <AuthFormField label="Email" name="email" placeholder="Enter your email" type="email" />
+    <>
+      <AuthForm<LoginFormData>
+        footer={footer}
+        form={form}
+        onSubmit={onSubmit}
+        submitText="Sign In"
+        subtitle="Enter your username and password to sign in!"
+        title="Sign In"
+      >
+        <AuthFormField label="Email" name="email" placeholder="Enter your email" type="email" />
 
-      <AuthFormField
-        action={
-          <span className="cursor-pointer font-medium text-[9.333px] text-zinc-500">
-            Forgot your password?
-          </span>
-        }
-        label="Password"
-        name="password"
-        placeholder="Enter your password"
-        type="password"
-      />
-    </AuthForm>
+        <AuthFormField
+          action={
+            <button
+              className="cursor-pointer border-none bg-transparent p-0 font-medium text-[9.333px] text-zinc-500"
+              onClick={() => setIsForgotPasswordOpen(true)}
+              type="button"
+            >
+              Forgot your password?
+            </button>
+          }
+          label="Password"
+          name="password"
+          placeholder="Enter your password"
+          type="password"
+        />
+      </AuthForm>
+
+      <ResetPassword onOpenChange={setIsForgotPasswordOpen} open={isForgotPasswordOpen} />
+    </>
   )
 }
