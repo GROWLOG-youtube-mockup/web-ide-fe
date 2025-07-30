@@ -2,6 +2,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { XIcon } from "lucide-react"
 import type * as React from "react"
 import { Dialog, DialogPortal, DialogTrigger } from "@/components/ui/dialog"
+import { AUTH_STYLES } from "@/constants/auth-styles"
 
 type AlertDialogVariant = "default" | "destructive" | "warning" | "success"
 
@@ -129,31 +130,24 @@ export function AlertDialog({
         {/* Figma 디자인: button section */}
         <div className="relative box-border flex w-full shrink-0 flex-row content-stretch items-center justify-end gap-2 p-0">
           {onCancel && (
-            <div className="relative box-border flex shrink-0 flex-row content-stretch items-center justify-center gap-2.5 rounded-md bg-[#ffffff] px-2.5 py-[3px]">
-              <div className="pointer-events-none absolute inset-0 rounded-md border border-slate-200 border-solid" />
-              <button
-                className="relative shrink-0 cursor-pointer text-nowrap border-none bg-transparent text-left font-medium text-[10.67px] text-slate-950 not-italic leading-[0]"
-                disabled={isLoading}
-                onClick={onCancel}
-                type="button"
-              >
-                <p className="block whitespace-pre leading-[24px]">{cancelText}</p>
-              </button>
-            </div>
+            <button
+              className={`${AUTH_STYLES.btnSmDialog} ${AUTH_STYLES.btnSmDialogCancel}`}
+              disabled={isLoading}
+              onClick={onCancel}
+              type="button"
+            >
+              {cancelText}
+            </button>
           )}
           {onConfirm && (
-            <div className="relative box-border flex shrink-0 flex-row content-stretch items-center justify-center gap-2.5 rounded-md bg-red-500 px-2.5 py-[3px]">
-              <button
-                className="relative shrink-0 cursor-pointer text-nowrap border-none bg-transparent text-left font-medium text-[10.67px] text-slate-50 not-italic leading-[0]"
-                disabled={confirmDisabled || isLoading}
-                onClick={handleConfirm}
-                type="button"
-              >
-                <p className="block whitespace-pre leading-[24px]">
-                  {isLoading ? "처리중..." : confirmText}
-                </p>
-              </button>
-            </div>
+            <button
+              className={`${AUTH_STYLES.btnSmDialog} ${AUTH_STYLES.btnSmDialogDelete}`}
+              disabled={confirmDisabled || isLoading}
+              onClick={handleConfirm}
+              type="button"
+            >
+              {isLoading ? "처리중..." : confirmText}
+            </button>
           )}
         </div>
       </CustomDialogContent>

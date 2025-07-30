@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
+import { AUTH_STYLES } from "@/constants/auth-styles"
 
 interface ResetPasswordProps {
   open: boolean
@@ -82,7 +83,7 @@ export function ResetPassword({ open, onOpenChange }: ResetPasswordProps) {
             {/* Cancel and Submit buttons */}
             <div className="flex flex-row items-center justify-end gap-2">
               <Button
-                className="rounded-md border border-slate-200 bg-white px-2.5 py-[3px] font-medium text-[10.67px] text-slate-950"
+                className={`${AUTH_STYLES.btnSmDialog} ${AUTH_STYLES.btnSmDialogCancel}`}
                 onClick={handleCancel}
                 type="button"
                 variant="outline"
@@ -90,7 +91,7 @@ export function ResetPassword({ open, onOpenChange }: ResetPasswordProps) {
                 Cancel
               </Button>
               <Button
-                className="w-14 rounded-md bg-[#3d3d3d] px-2.5 py-[3px] font-medium text-[10.67px] text-slate-50 disabled:opacity-50"
+                className={`${AUTH_STYLES.btnSmDialog} ${AUTH_STYLES.btnSmDialogConfirm} w-14`}
                 disabled={!email || !verificationCode || !newPassword}
                 type="submit"
               >
