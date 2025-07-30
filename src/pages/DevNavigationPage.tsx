@@ -5,6 +5,7 @@ export function DevNavigationPage() {
     { name: "로그인", path: "/login" },
     { name: "회원가입", path: "/signup" },
     { name: "프로필 수정", path: "/profile/edit" },
+    { name: "프로젝트 리스트", path: "/projects" },
     { name: "IDE", path: "/ide" },
   ]
 
