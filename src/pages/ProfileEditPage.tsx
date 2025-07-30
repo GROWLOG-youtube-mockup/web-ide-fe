@@ -12,6 +12,8 @@ import { profileEditFormSchema } from "@/lib/auth-schemas"
 
 export default function ProfileEditPage() {
   const [deletePassword, setDeletePassword] = useState("")
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
   const { addToast } = useToast()
 
   // 초기값 정의 (form 기본값과 정확히 일치해야 함)
@@ -25,16 +27,30 @@ export default function ProfileEditPage() {
   const form = useAuthForm(profileEditFormSchema, initialValues)
   const { updateProfile, isSaving } = useProfileUpdate({ form, initialValues })
 
-  const onDeleteAccount = (deletePassword: string) => {
+  const onDeleteAccount = async () => {
     if (!deletePassword.trim()) {
       addToast({ type: "error", title: "비밀번호를 입력해주세요." })
       return
     }
 
-    console.log("Account deletion confirmed with password:", deletePassword)
-    // TODO: 계정 삭제 로직 구현
-    addToast({ type: "success", title: "계정이 성공적으로 삭제되었습니다." })
-    setDeletePassword("") // 입력 필드 초기화
+    setIsDeleting(true)
+    try {
+      console.log("Account deletion confirmed with password:", deletePassword)
+      // TODO: 계정 삭제 로직 구현
+      addToast({ type: "success", title: "계정이 성공적으로 삭제되었습니다." })
+      setDeletePassword("") // 입력 필드 초기화
+      setIsDeleteDialogOpen(false)
+    } catch (error) {
+      console.error("계정 삭제 오류:", error)
+      addToast({ type: "error", title: "계정 삭제 중 오류가 발생했습니다." })
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
+  const handleCancelDelete = () => {
+    setDeletePassword("") // 취소 시 입력 초기화
+    setIsDeleteDialogOpen(false)
   }
 
   return (
@@ -64,16 +80,16 @@ export default function ProfileEditPage() {
       <div className="flex w-full justify-end overflow-hidden">
         <AlertDialog
           cancelText="Cancel"
+          confirmDisabled={!deletePassword.trim()}
           confirmText="Delete"
           description="Once deleted, the data cannot be recovered."
-          onCancel={() => {
-            setDeletePassword("") // 취소 시 입력 초기화
-          }}
-          onConfirm={() => {
-            onDeleteAccount(deletePassword)
-          }}
+          isLoading={isDeleting}
+          isOpen={isDeleteDialogOpen}
+          onCancel={handleCancelDelete}
+          onConfirm={onDeleteAccount}
+          onOpenChange={setIsDeleteDialogOpen}
           showCloseButton={false}
-          title="Delete account"
+          title="Delete account" // 내부 필드에 커스텀 스타일 적용
           trigger={
             <span className="mb-1 cursor-pointer font-semibold text-[9px] text-red-500 leading-5">
               Delete your account
@@ -81,9 +97,9 @@ export default function ProfileEditPage() {
           }
           variant="destructive"
         >
-          <div className="h-[35px] w-full rounded-[5.333px] bg-[#ffffff]">
+          <div className="h-[35px] w-full rounded-[5.333px] border border-zinc-200 bg-[#ffffff]">
             <Input
-              className="h-full w-full rounded-[5.333px] border-none bg-transparent px-3 text-black text-sm placeholder:text-gray-400 focus:outline-none"
+              className="!text-[10.67px] h-full w-full rounded-[5.333px] border-none bg-transparent px-3 text-black placeholder:text-gray-400 focus:outline-none focus-visible:ring-1"
               onChange={e => setDeletePassword(e.target.value)}
               placeholder="Enter your password"
               type="password"
