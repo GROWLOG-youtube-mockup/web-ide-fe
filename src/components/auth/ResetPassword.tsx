@@ -73,7 +73,7 @@ export function ResetPassword({ open, onOpenChange }: ResetPasswordProps) {
 
             {/* New password input */}
             <Input
-              className="!border-[0.667px] h-[35px] rounded-[5.333px] py-[13.333px] pr-[13.333px] pl-[13px] font-medium text-[10.667px] text-zinc-600 placeholder:text-zinc-500 focus-visible:ring-zinc-200"
+              className="!text-[10.67px] !border-[0.667px] h-[35px] rounded-[5.333px] py-[13.333px] pr-[13.333px] pl-[13px] font-medium text-[10.667px] text-zinc-600 placeholder:text-zinc-500 focus-visible:ring-zinc-200"
               placeholder="Enter your new password"
               type="password"
               {...form.register("newPassword")}
