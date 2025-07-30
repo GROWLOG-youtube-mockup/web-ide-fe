@@ -4,7 +4,7 @@ import { TabBar } from "@/components/ide/tab/TabBar"
 
 export const CodeEditor = () => {
   return (
-    <div className="flex flex-1 flex-col bg-zinc-300">
+    <div className="flex h-full flex-1 flex-col bg-zinc-300">
       {/* Tabs */}
       <TabBar />
 

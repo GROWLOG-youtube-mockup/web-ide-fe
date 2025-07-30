@@ -7,7 +7,7 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu"
 import { cn } from "@/lib/utils"
-import { useFileTabStore } from "@/stores/editor-file-store"
+import { useEditorTabsStore } from "@/stores/editor-tabs-store" // ✅ 변경
 
 interface TabWithContextMenuProps {
   filePath: string
@@ -15,12 +15,13 @@ interface TabWithContextMenuProps {
 }
 
 export const TabWithContextMenu = ({ filePath, children }: TabWithContextMenuProps) => {
-  const { closeTab, closeAllTabs, closeOtherTabs, closeTabsToTheRight } = useFileTabStore()
+  // ✅ 변경: 새로운 store와 메서드 이름 사용
+  const { closeFile, closeAllTabs, closeOtherTabs, closeTabsToTheRight } = useEditorTabsStore()
 
   const menuItems = useMemo(
     () => [
       {
-        action: () => closeTab(filePath),
+        action: () => closeFile(filePath), // ✅ closeTab → closeFile
         label: "Close",
         variant: "destructive" as const,
       },
@@ -52,7 +53,8 @@ export const TabWithContextMenu = ({ filePath, children }: TabWithContextMenuPro
         variant: "default" as const,
       },
     ],
-    [filePath, closeTab, closeOtherTabs, closeTabsToTheRight, closeAllTabs]
+    // ✅ dependency array 변경: closeTab → closeFile
+    [filePath, closeFile, closeOtherTabs, closeTabsToTheRight, closeAllTabs]
   )
 
   return (

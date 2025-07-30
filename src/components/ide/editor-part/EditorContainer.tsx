@@ -1,11 +1,10 @@
 // EditorContainer.tsx
 import { ClientSideSuspense } from "@liveblocks/react/suspense"
 import { Editor } from "@monaco-editor/react"
-import { useState } from "react"
 import { Cursors } from "@/components/ide/editor-part/Cursors"
 import { useCollaborativeEditor } from "@/hooks/editor/useCollaborativeEditor"
 import { LiveblocksProvider, RoomProvider, useRoom } from "@/liveblocks.config"
-import { useFileTabStore } from "@/stores/editor-file-store"
+import { useEditorTabsStore } from "@/stores/editor-tabs-store"
 
 const CollaborativeEditor = ({ filePath }: { filePath: string }) => {
   const room = useRoom()
@@ -24,9 +23,6 @@ const CollaborativeEditor = ({ filePath }: { filePath: string }) => {
       </div>
     )
   }
-
-  console.log(`🎯 에디터 컴포넌트 렌더링: ${filePath} [${new Date().toISOString()}]`)
-
   return (
     <div className="relative h-full">
       <Cursors yProvider={yProvider} />
@@ -61,44 +57,21 @@ const CollaborativeEditor = ({ filePath }: { filePath: string }) => {
 }
 
 export const EditorContainer = () => {
-  const [filePath, setFilePath] = useState("")
-  const { openFile, activeTabId, openTabs } = useFileTabStore()
-
-  const handleOpenFile = () => {
-    if (filePath.trim()) {
-      openFile(filePath.trim())
-      setFilePath("") // 추가: 입력 후 초기화
-    }
-  }
+  // ✅ 변경: 새로운 통합 store와 메서드 이름 사용
+  const { activeFile, openedFiles } = useEditorTabsStore()
 
   return (
     <div className="flex h-full flex-col">
-      <header className="flex items-center gap-4 border-b bg-white p-4">
-        <input
-          className="flex-1 rounded border px-3 py-2"
-          onChange={e => setFilePath(e.target.value)}
-          placeholder="파일 경로 입력 (예: /src/App.tsx)"
-          type="text"
-          value={filePath}
-        />
-        <button
-          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-          disabled={!filePath.trim()}
-          onClick={handleOpenFile} // 추가
-          type="button"
-        >
-          파일 열기
-        </button>
-      </header>
-
       <main className="flex-1">
-        {openTabs.length > 0 ? (
+        {/* ✅ 변경: openTabs → openedFiles */}
+        {openedFiles.length > 0 ? (
           <LiveblocksProvider>
-            {openTabs.map(tab => (
-              <RoomProvider id={`room-${tab.filePath}`} key={tab.filePath}>
+            {openedFiles.map(filePath => (
+              <RoomProvider id={`room-${filePath}`} key={filePath}>
                 <ClientSideSuspense fallback={<div />}>
-                  <div className={`h-full ${tab.filePath === activeTabId ? "block" : "hidden"}`}>
-                    <CollaborativeEditor filePath={tab.filePath} />
+                  {/* ✅ 변경: activeTabId → activeFile */}
+                  <div className={`h-full ${filePath === activeFile ? "block" : "hidden"}`}>
+                    <CollaborativeEditor filePath={filePath} />
                   </div>
                 </ClientSideSuspense>
               </RoomProvider>
