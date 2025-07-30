@@ -37,19 +37,19 @@ export function AuthForm<T extends FieldValues = FieldValues>({
         <Form {...form}>
           <form className={AUTH_LAYOUT.section} onSubmit={form.handleSubmit(onSubmit)}>
             {children}
+
+            <div className={AUTH_LAYOUT.bottom}>
+              <Button
+                className={AUTH_STYLES.signupBtn}
+                disabled={form.formState.isSubmitting}
+                type="submit"
+              >
+                {submitText}
+              </Button>
+              {footer}
+            </div>
           </form>
         </Form>
-
-        <div className={AUTH_LAYOUT.bottom}>
-          <Button
-            className={AUTH_STYLES.signupBtn}
-            onClick={form.handleSubmit(onSubmit)}
-            type="button"
-          >
-            {submitText}
-          </Button>
-          {footer}
-        </div>
       </div>
     </div>
   )
