@@ -99,7 +99,7 @@ export default function ProfileEditPage() {
         >
           <div className="h-[35px] w-full rounded-[5.333px] border border-zinc-200 bg-[#ffffff]">
             <Input
-              className="!text-[10.67px] h-full w-full rounded-[5.333px] border-none bg-transparent px-3 text-black placeholder:text-gray-400 focus:outline-none focus-visible:ring-1"
+              className="!text-[12px] h-full w-full rounded-[5.333px] border-none bg-transparent px-3 text-black placeholder:text-gray-400 focus:outline-none focus-visible:ring-1"
               onChange={e => setDeletePassword(e.target.value)}
               placeholder="Enter your password"
               type="password"
