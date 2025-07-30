@@ -4,6 +4,7 @@ import { ErrorPage } from "@/pages/ErrorPage"
 import { IdePage } from "@/pages/IdePage"
 import LoginPage from "@/pages/LoginPage"
 import ProfileEditPage from "@/pages/ProfileEditPage"
+import ProjectListPage from "@/pages/ProjectListPage"
 import SignUpPage from "@/pages/SignUpPage"
 
 export const router = createBrowserRouter([
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
   {
     element: <ProfileEditPage />,
     path: "/profile/edit",
+  },
+  {
+    element: <ProjectListPage />,
+    path: "/projects",
   },
   {
     element: <IdePage />,
