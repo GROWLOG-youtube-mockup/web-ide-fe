@@ -1,41 +1,20 @@
 import { create } from "zustand"
 import { devtools, persist } from "zustand/middleware"
 
-export type NavItem = "files" | "search" | "share" | "projects" | "settings"
+export type TabId = "files" | "search" | "share" | "projects" | "settings"
+export type PanelId = "files" | "chats" | "search" | "share" | "projects" | "settings"
 
 interface SidebarState {
-  /** 현재 활성화된 사이드바 패널 */
-  activePanel: NavItem
-
-  /**
-   * 활성 사이드바 패널 변경
-   *
-   * @param panel - 활성화할 패널 ID
-   * @remarks
-   * 사이드바 탭을 클릭했을 때 호출됩니다.
-   */
-  setActivePanel: (panel: NavItem) => void
-
-  /** 각 패널의 확장/축소 상태 */
-  expandedPanel: Record<NavItem, boolean>
-
-  /**
-   * 패널 확장/축소 상태 변경
-   *
-   * @param panel - 상태를 변경할 패널 ID
-   * @param expanded - 확장 여부 (true: 확장, false: 축소)
-   * @remarks
-   * 각 패널의 헤더를 클릭했을 때 호출됩니다.
-   */
-  setExpandedPanel: (panel: NavItem, expanded: boolean) => void
-}
-
-const initialExpandedPanel: Record<NavItem, boolean> = {
-  files: true,
-  projects: true,
-  search: true,
-  settings: true,
-  share: true,
+  /** 현재 활성화된 탭 (탑레벨 탭) */
+  activeTab: TabId
+  /** 열려있는 패널 id 목록 */
+  expandedPanels: PanelId[]
+  /** 탭 활성화 */
+  setActiveTab: (id: TabId) => void
+  /** 패널 열기 (id 기준) */
+  addExpandedPanel: (id: PanelId) => void
+  /** 패널 닫기 (id 기준) */
+  removeExpandedPanel: (id: PanelId) => void
 }
 
 export const useSidebarStore = create<SidebarState>()(
@@ -43,29 +22,29 @@ export const useSidebarStore = create<SidebarState>()(
     persist(
       (set): SidebarState => ({
         // 초기 상태
-        activePanel: "files",
-        expandedPanel: initialExpandedPanel,
-
-        // 패널 관리
-        setActivePanel: (panel: NavItem) => {
-          set({ activePanel: panel })
+        activeTab: "files",
+        expandedPanels: [],
+        setActiveTab: (id: TabId) => {
+          set({ activeTab: id })
         },
-
-        // 패널 확장/축소 관리
-        setExpandedPanel: (panel: NavItem, expanded: boolean) => {
-          set(state => ({
-            expandedPanel: {
-              ...state.expandedPanel,
-              [panel]: expanded,
-            },
+        addExpandedPanel: (id: PanelId) => {
+          set((state: SidebarState) =>
+            state.expandedPanels.includes(id)
+              ? state
+              : { expandedPanels: [...state.expandedPanels, id] }
+          )
+        },
+        removeExpandedPanel: (id: PanelId) => {
+          set((state: SidebarState) => ({
+            expandedPanels: state.expandedPanels.filter(pre => pre !== id),
           }))
         },
       }),
       {
         name: "sidebar-store",
-        partialize: state => ({
-          activePanel: state.activePanel,
-          expandedPanel: state.expandedPanel,
+        partialize: (state: SidebarState) => ({
+          activeTab: state.activeTab,
+          expandedPanels: state.expandedPanels,
         }),
       }
     ),
