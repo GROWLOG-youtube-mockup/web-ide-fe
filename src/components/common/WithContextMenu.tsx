@@ -17,15 +17,15 @@ export const WithContextMenu = ({ children, menuItems }: ContextMenuWrapperProps
   return (
     <ContextMenu>
       <ContextMenuTrigger>{children}</ContextMenuTrigger>
-      <ContextMenuContent className="context-menu border border-[hsl(var(--context-border))] bg-[hsl(var(--context-background))] shadow-md">
+      <ContextMenuContent className="context-menu border border-[hsl(var(--border))] bg-[hsl(var(--background))] text-[hsl(var(--foreground))] shadow-lg dark:border-[hsl(var(--border))] dark:bg-[hsl(var(--background))] dark:text-[hsl(var(--foreground))]">
         {menuItems.map((item, index) => (
           <ContextMenuItem
             className={cn(
-              "context-menu-item cursor-pointer px-3 py-2 text-sm transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1",
+              "context-menu-item cursor-pointer px-3 py-2 text-sm transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-[hsl(var(--ring))] focus:ring-offset-1",
               item.variant === "destructive"
-                ? "text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-900/20 dark:hover:text-red-300"
-                : "text-[hsl(var(--context-foreground))] hover:bg-[hsl(var(--context-accent))] hover:text-[hsl(var(--context-accent-foreground))]",
-              index !== menuItems.length - 1 && "border-[hsl(var(--context-border))] border-b"
+                ? "text-[hsl(var(--destructive))] hover:bg-[hsl(var(--destructive))] hover:text-[hsl(var(--destructive-foreground))] dark:text-[hsl(var(--destructive))] dark:hover:bg-[hsl(var(--destructive))] dark:hover:text-[hsl(var(--destructive-foreground))]"
+                : "text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] hover:text-[hsl(var(--accent-foreground))] dark:text-[hsl(var(--foreground))] dark:hover:bg-[hsl(var(--accent))] dark:hover:text-[hsl(var(--accent-foreground))]",
+              index !== menuItems.length - 1 && "border-[hsl(var(--border))] border-b"
             )}
             key={item.label}
             onClick={item.action}
