@@ -31,8 +31,6 @@ export interface FileSystemService {
   delete(filePath: string): Promise<void>
 
   /**
-   * 
-  /**
    * 파일 트리 데이터를 가져옵니다
    */
   getFileTree(): TreeInitPayload

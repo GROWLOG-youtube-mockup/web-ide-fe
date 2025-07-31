@@ -68,44 +68,38 @@ interface FileExplorerActionsProps {
 export const FileExplorerActions = ({ tree, collapseAll, expandAll }: FileExplorerActionsProps) => {
   const { createFileItem, createFolderItem, refreshTree, isLoading } = useFileOperations()
 
-  const handleAddFile = () => {
-    const targetPath = getTargetPathInFileTree(tree)
-    const fileName = prompt("Enter file name:")
-    if (fileName) {
-      createFileItem(targetPath, fileName)
-    }
-  }
-
-  const handleAddFolder = () => {
-    const targetPath = getTargetPathInFileTree(tree)
-    const folderName = prompt("Enter folder name:")
-    if (folderName) {
-      createFolderItem(targetPath, folderName)
-    }
-  }
-
-  const handleRefresh = () => {
-    refreshTree()
-  }
-
   return (
     <>
       <ActionButton
         disabled={isLoading}
         icon={FilePlusIcon}
-        onClick={handleAddFile}
+        onClick={() => {
+          const targetPath = getTargetPathInFileTree(tree)
+          const fileName = prompt("Enter file name:")
+          if (fileName) {
+            createFileItem(targetPath, fileName)
+          }
+        }}
         title="Add File"
       />
       <ActionButton
         disabled={isLoading}
         icon={FolderPlusIcon}
-        onClick={handleAddFolder}
+        onClick={() => {
+          const targetPath = getTargetPathInFileTree(tree)
+          const folderName = prompt("Enter folder name:")
+          if (folderName) {
+            createFolderItem(targetPath, folderName)
+          }
+        }}
         title="Add Folder"
       />
       <ActionButton
         disabled={isLoading}
         icon={RefreshCwIcon}
-        onClick={handleRefresh}
+        onClick={() => {
+          refreshTree()
+        }}
         title="Refresh"
       />
       <ActionButton icon={CopyPlusIcon} onClick={expandAll} title="Expand All" />
