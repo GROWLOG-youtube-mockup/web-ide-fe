@@ -6,8 +6,8 @@ import { ProfileAvatar } from "@/components/auth/ProfileAvatar"
 import { AlertDialog } from "@/components/common/AlertDialog"
 import { useToast } from "@/components/common/ToastContext"
 import { Input } from "@/components/ui/input"
-import { useAuthForm } from "@/hooks/useAuthForm"
-import { useProfileUpdate } from "@/hooks/useProfileUpdate"
+import { useAuthForm } from "@/hooks/auth/useAuthForm"
+import { useProfileUpdate } from "@/hooks/auth/useProfileUpdate"
 import { profileEditFormSchema } from "@/lib/auth-schemas"
 
 export default function ProfileEditPage() {

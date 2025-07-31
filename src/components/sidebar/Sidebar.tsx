@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { SidebarSeparator } from "@/components/ui/sidebar"
-import { useFileTree } from "@/hooks/useFileTree"
+import { useFileTree } from "@/hooks/file-explorer/useFileTree"
 import { cn } from "@/lib/utils"
 import { type NavItem, useSidebarStore } from "@/stores/sidebar-store"
 

@@ -1,4 +1,4 @@
-import type { ItemInstance, TreeInstance } from "@headless-tree/core"
+import type { TreeInstance } from "@headless-tree/core"
 import type { LucideIcon } from "lucide-react"
 import {
   CopyMinusIcon,
@@ -9,13 +9,15 @@ import {
 } from "lucide-react"
 import type { MouseEvent } from "react"
 import { Button } from "@/components/ui/button"
-import { fileSystemService } from "@/lib/file-system-service"
+import { useFileOperations } from "@/hooks/file-explorer/useFileOperations"
 import type { FileData } from "@/types/file-explorer"
+import { getTargetPathInFileTree } from "@/utils/file-operations"
 
 interface ActionButtonProps {
   icon: LucideIcon
   title: string
   onClick: () => void
+  disabled?: boolean
 }
 
 /**
@@ -25,12 +27,15 @@ interface ActionButtonProps {
  * @param title - 툴팁으로 표시될 제목
  * @param onClick - 클릭 이벤트 핸들러
  */
-const ActionButton = ({ icon: Icon, title, onClick }: ActionButtonProps) => (
+const ActionButton = ({ icon: Icon, title, onClick, disabled = false }: ActionButtonProps) => (
   <Button
     className="h-6 w-6 cursor-pointer p-0 hover:bg-zinc-200"
+    disabled={disabled}
     onClick={(e: MouseEvent) => {
       e.stopPropagation() // 부모 요소의 클릭 이벤트 방지 (CollapsibleTrigger)
-      onClick()
+      if (!disabled) {
+        onClick()
+      }
     }}
     size="default"
     title={title}
@@ -61,60 +66,48 @@ interface FileExplorerActionsProps {
  * - 상위 컴포넌트에서 useFileTree로 생성된 인스턴스를 props로 받음
  */
 export const FileExplorerActions = ({ tree, collapseAll, expandAll }: FileExplorerActionsProps) => {
-  /**
-   * 현재 포커스되거나 선택된 항목을 기반으로 대상 폴더 경로를 가져옵니다.
-   * 우선순위: 포커스된 항목 > 선택된 항목 > 루트
-   */
-  const getTargetFolderPath = (): string => {
-    const getFolderPathForItem = (item: ItemInstance<FileData>): string => {
-      const itemData = item.getItemData()
-      if (itemData.type === "folder") {
-        return itemData.path
-      }
-      // 포커스되거나 선택된 항목이 파일이면 부모 폴더 경로 반환
-      const pathParts = itemData.path.split("/")
-      pathParts.pop() // 파일명 제거
-      return pathParts.join("/") || "/"
-    }
-
-    // 1. 포커스된 항목 확인
-    const focusedItem = tree.getFocusedItem()
-    if (focusedItem) {
-      return getFolderPathForItem(focusedItem)
-    }
-
-    // 2. 선택된 항목 확인
-    const selectedItems = tree.getSelectedItems()
-    if (selectedItems.length > 0) {
-      const selectedItem = selectedItems[0]
-      return getFolderPathForItem(selectedItem)
-    }
-
-    // 3. 기본값: 루트
-    return "/"
-  }
+  const { createFileItem, createFolderItem, refreshTree, isLoading } = useFileOperations()
 
   const handleAddFile = () => {
-    const targetPath = getTargetFolderPath()
-    const defaultFileName = "new-file.txt"
-    fileSystemService.createFile(targetPath, defaultFileName)
+    const targetPath = getTargetPathInFileTree(tree)
+    const fileName = prompt("Enter file name:")
+    if (fileName) {
+      createFileItem(targetPath, fileName)
+    }
   }
 
   const handleAddFolder = () => {
-    const targetPath = getTargetFolderPath()
-    const defaultFolderName = "new-folder"
-    fileSystemService.createFolder(targetPath, defaultFolderName)
+    const targetPath = getTargetPathInFileTree(tree)
+    const folderName = prompt("Enter folder name:")
+    if (folderName) {
+      createFolderItem(targetPath, folderName)
+    }
   }
 
   const handleRefresh = () => {
-    fileSystemService.refreshTree()
+    refreshTree()
   }
 
   return (
     <>
-      <ActionButton icon={FilePlusIcon} onClick={handleAddFile} title="Add File" />
-      <ActionButton icon={FolderPlusIcon} onClick={handleAddFolder} title="Add Folder" />
-      <ActionButton icon={RefreshCwIcon} onClick={handleRefresh} title="Refresh" />
+      <ActionButton
+        disabled={isLoading}
+        icon={FilePlusIcon}
+        onClick={handleAddFile}
+        title="Add File"
+      />
+      <ActionButton
+        disabled={isLoading}
+        icon={FolderPlusIcon}
+        onClick={handleAddFolder}
+        title="Add Folder"
+      />
+      <ActionButton
+        disabled={isLoading}
+        icon={RefreshCwIcon}
+        onClick={handleRefresh}
+        title="Refresh"
+      />
       <ActionButton icon={CopyPlusIcon} onClick={expandAll} title="Expand All" />
       <ActionButton icon={CopyMinusIcon} onClick={collapseAll} title="Collapse All" />
     </>

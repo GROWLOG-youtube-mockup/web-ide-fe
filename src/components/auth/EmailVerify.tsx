@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { AUTH_STYLES } from "@/constants/auth-styles"
-import { useEmailVerification } from "@/hooks/useEmailVerification"
+import { useEmailVerification } from "@/hooks/auth/useEmailVerification"
 import type { EmailVerifyProps } from "@/types/auth"
 
 export function EmailVerify({

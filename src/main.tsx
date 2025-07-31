@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client"
 import { RouterProvider } from "react-router-dom"
 import { ToastProvider } from "@/components/common/ToastContext"
 import { queryClient } from "@/lib/query-client"
-import { router } from "@/stores/router"
+import { router } from "@/router"
 import "./index.css"
 
 createRoot(document.getElementById("root") as HTMLElement).render(

@@ -1,6 +1,9 @@
 import type { TreeInstance } from "@headless-tree/core"
 import type React from "react"
+import { useState } from "react"
+import { WithContextMenu } from "@/components/common/WithContextMenu"
 import { TreeNode } from "@/components/sidebar/file-explorer/TreeNode"
+import { useFileExplorerContextMenu } from "@/hooks/file-explorer/useFileExplorerContextMenu"
 import type { FileData } from "@/types/file-explorer"
 
 interface FileExplorerProps {
@@ -19,13 +22,41 @@ interface FileExplorerProps {
  * - 각 트리 노드는 TreeNode 컴포넌트로 렌더링
  */
 export const FileExplorer = ({ tree }: FileExplorerProps): React.ReactElement => {
+  const [contextMenuTarget, setContextMenuTarget] = useState<{
+    filePath: string
+    isFolder: boolean
+  } | null>(null)
+
+  const { menuItems } = useFileExplorerContextMenu(
+    contextMenuTarget?.filePath || "",
+    contextMenuTarget?.isFolder || false
+  )
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+    const nodeElement = (e.target as Element).closest("[data-filepath]")
+    if (nodeElement) {
+      const filePath = nodeElement.getAttribute("data-filepath")
+      const isFolder = nodeElement.getAttribute("data-is-folder") === "true"
+      if (filePath) {
+        setContextMenuTarget({ filePath, isFolder })
+      }
+    }
+  }
+
   return (
-    <nav aria-label="File Explorer" className="w-full" {...tree.getContainerProps()}>
-      <ul className="m-0 list-none">
-        {tree.getItems().map(item => (
-          <TreeNode item={item} key={item.getId()} />
-        ))}
-      </ul>
-    </nav>
+    <WithContextMenu menuItems={menuItems}>
+      <nav
+        aria-label="File Explorer"
+        className="w-full"
+        onContextMenu={handleContextMenu}
+        {...tree.getContainerProps()}
+      >
+        <ul className="m-0 list-none">
+          {tree.getItems().map(item => (
+            <TreeNode item={item} key={item.getId()} />
+          ))}
+        </ul>
+      </nav>
+    </WithContextMenu>
   )
 }
