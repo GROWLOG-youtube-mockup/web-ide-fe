@@ -21,11 +21,11 @@ import {
 
 // 아이콘 크기 상수 정의 (Tailwind 기준)
 export const ICON_SIZES = {
-  lg: "width-lg height-lg",
-  md: "width-md height-md",
-  sm: "width-sm height-sm",
-  xl: "width-xl height-xl",
-  xs: "width-xs height-xs",
+  xs: "w-3 h-3", // 12px
+  sm: "w-4 h-4", // 16px
+  md: "w-5 h-5", // 20px
+  lg: "w-6 h-6", // 24px
+  xl: "w-8 h-8", // 32px
 } as const
 
 // Lucide React 아이콘들 (shadcn/ui에서 사용 가능)
