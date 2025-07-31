@@ -1,39 +1,39 @@
 :root {
   /* Tab 전용 색상 변수 */
-  --tab-background: 0 0% 100%;
-  --tab-foreground: 222.2 84% 4.9%;
-  --tab-popover: 0 0% 100%;
-  --tab-popover-foreground: 222.2 84% 4.9%;
-  --tab-accent: 210 40% 96%;
-  --tab-accent-foreground: 222.2 84% 4.9%;
-  --tab-border: 214.3 31.8% 91.4%;
-  --tab-active-line: 206 100% 56%;
-  --tab-primary: 222.2 47.4% 11.2%;
+  --tab-background: hsl(0 0% 100%);
+  --tab-foreground: hsl(222.2 84% 4.9%);
+  --tab-popover: hsl(0 0% 100%);
+  --tab-popover-foreground: hsl(222.2 84% 4.9%);
+  --tab-accent: hsl(210, 100%, 91%);
+  --tab-accent-foreground: hsl(222.2 84% 4.9%);
+  --tab-border: hsl(214.3 31.8% 91.4%);
+  --tab-active-line: hsl(206 100% 56%);
+  --tab-primary: hsl(222.2 47.4% 11.2%);
 
   /* Context Menu 전용 색상 변수 */
-  --context-background: 0 0% 100%;
-  --context-foreground: 222.2 84% 4.9%;
-  --context-accent: 210 40% 96%;
-  --context-accent-foreground: 222.2 84% 4.9%;
-  --context-border: 214.3 31.8% 91.4%;
+  --context-background: hsl(0 0% 100%);
+  --context-foreground: hsl(222.2 84% 4.9%);
+  --context-accent: hsl(210 40% 96%);
+  --context-accent-foreground: hsl(222.2 84% 4.9%);
+  --context-border: hsl(214.3 31.8% 91.4%);
 }
 
 .dark {
   /* Dark 모드 Tab 색상 변수 */
-  --tab-background: 222.2 84% 4.9%;
-  --tab-foreground: 210 40% 98%;
-  --tab-popover: 222.2 84% 4.9%;
-  --tab-popover-foreground: 210 40% 98%;
-  --tab-accent: 217.2 32.6% 17.5%;
-  --tab-accent-foreground: 210 40% 98%;
-  --tab-border: 217.2 32.6% 17.5%;
-  --tab-active-line: 206 100% 56%;
-  --tab-primary: 210 40% 98%;
+  --tab-background: hsl(222.2 84% 4.9%);
+  --tab-foreground: hsl(210 40% 98%);
+  --tab-popover: hsl(222.2 84% 4.9%);
+  --tab-popover-foreground: hsl(210 40% 98%);
+  --tab-accent: hsl(217.2 32.6% 17.5%);
+  --tab-accent-foreground: hsl(210 40% 98%);
+  --tab-border: hsl(217.2 32.6% 17.5%);
+  --tab-active-line: hsl(206 100% 56%);
+  --tab-primary: hsl(210 40% 98%);
 
   /* Dark 모드 Context Menu 색상 변수 */
-  --context-background: 222.2 84% 4.9%;
-  --context-foreground: 210 40% 98%;
-  --context-accent: 217.2 32.6% 17.5%;
-  --context-accent-foreground: 210 40% 98%;
-  --context-border: 217.2 32.6% 17.5%;
+  --context-background: hsl(222.2 84% 4.9%);
+  --context-foreground: hsl(210 40% 98%);
+  --context-accent: hsl(217.2 32.6% 17.5%);
+  --context-accent-foreground: hsl(210 40% 98%);
+  --context-border: hsl(217.2 32.6% 17.5%);
 }
