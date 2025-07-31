@@ -10,6 +10,7 @@ import {
 import type { MouseEventHandler, ReactNode } from "react"
 import { FileExplorer } from "@/components/sidebar/file-explorer/FileExplorer"
 import { FileExplorerActions } from "@/components/sidebar/file-explorer/FileExplorerActions"
+import { InviteSidebar } from "@/components/sidebar/share/ShareSection"
 import { Button } from "@/components/ui/button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -174,7 +175,7 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
           <PlaceholderPanel message="Search panel coming soon..." />
         </SidebarPanel>
         <SidebarPanel id="share" title="Share">
-          <PlaceholderPanel message="Share panel coming soon..." />
+          <InviteSidebar projectId="projectid" />
         </SidebarPanel>
         <SidebarPanel id="projects" title="Projects">
           <PlaceholderPanel message="Projects panel coming soon..." />
