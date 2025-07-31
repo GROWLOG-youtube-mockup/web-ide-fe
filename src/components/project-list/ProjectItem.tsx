@@ -1,5 +1,6 @@
 import { Circle, Edit3, LogOut, Trash } from "lucide-react"
 import { useState } from "react"
+import { AlertDialog } from "@/components/common/AlertDialog"
 import { cn } from "@/lib/utils"
 import type { Project } from "@/types/project"
 import { ProjectAvatars } from "./ProjectAvatars"
@@ -22,6 +23,7 @@ export const ProjectItem = ({
 }: ProjectItemProps) => {
   const [isHovered, setIsHovered] = useState(false)
   const isHost = project.myRole === "OWNER"
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   return (
     <button
@@ -45,12 +47,28 @@ export const ProjectItem = ({
 
             {/* Toggle/Status Icon */}
             {isHost ? (
-              <ProjectToggle
-                checked={project.isToggled || false}
-                onCheckedChange={() => {
-                  // 토글 상태를 업데이트
+              <AlertDialog
+                cancelText="Cancel"
+                confirmText="Change"
+                description={`Current status: ${project.isToggled ? "ON" : "OFF"}`}
+                isOpen={isDialogOpen}
+                onCancel={() => setIsDialogOpen(false)}
+                onConfirm={() => {
                   onToggle?.(project.id)
+                  setIsDialogOpen(false)
                 }}
+                onOpenChange={setIsDialogOpen}
+                showCloseButton={false}
+                title="Change status"
+                trigger={
+                  <ProjectToggle
+                    checked={project.isToggled || false}
+                    onCheckedChange={() => {
+                      setIsDialogOpen(true)
+                    }}
+                  />
+                }
+                variant="default"
               />
             ) : (
               <div className="flex h-3 w-3 items-center justify-center">

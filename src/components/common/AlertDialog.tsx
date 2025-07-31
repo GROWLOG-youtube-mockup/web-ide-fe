@@ -1,7 +1,13 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { XIcon } from "lucide-react"
 import type * as React from "react"
-import { Dialog, DialogPortal, DialogTrigger } from "@/components/ui/dialog"
+import {
+  Dialog,
+  DialogDescription,
+  DialogPortal,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { AUTH_STYLES } from "@/constants/auth-styles"
 
 type AlertDialogVariant = "default" | "destructive" | "warning" | "success"
@@ -92,8 +98,8 @@ export function AlertDialog({
   children,
   onConfirm,
   onCancel,
-  confirmText = "확인",
-  cancelText = "취소",
+  confirmText = "confirm",
+  cancelText = "cancel",
   variant = "default",
   showCloseButton = true,
   isOpen,
@@ -115,13 +121,17 @@ export function AlertDialog({
       <CustomDialogContent showCloseButton={showCloseButton}>
         {/* Figma 디자인: gap-1.5 -> gap-1.5, leading 값들 정확히 매칭 */}
         <div className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-start gap-1.5 text-nowrap p-0 text-left not-italic leading-[0]">
-          <div className={`relative shrink-0 font-bold text-[20px] ${styles.titleColor}`}>
-            <p className="block whitespace-pre text-nowrap leading-[20px]">{title}</p>
-          </div>
-          {description && (
-            <div className="relative shrink-0 font-medium text-[10.67px] text-slate-500">
-              <p className="block whitespace-pre text-nowrap leading-[20px]">{description}</p>
+          <DialogTitle asChild>
+            <div className={`relative shrink-0 font-bold text-[20px] ${styles.titleColor}`}>
+              <p className="block whitespace-pre text-nowrap leading-[20px]">{title}</p>
             </div>
+          </DialogTitle>
+          {description && (
+            <DialogDescription asChild>
+              <div className="relative shrink-0 font-medium text-[10.67px] text-slate-500">
+                <p className="block whitespace-pre text-nowrap leading-[20px]">{description}</p>
+              </div>
+            </DialogDescription>
           )}
         </div>
 
@@ -131,7 +141,7 @@ export function AlertDialog({
         <div className="relative box-border flex w-full shrink-0 flex-row content-stretch items-center justify-end gap-2 p-0">
           {onCancel && (
             <button
-              className={`${AUTH_STYLES.btnSmDialog} ${AUTH_STYLES.btnSmDialogCancel}`}
+              className={`${AUTH_STYLES.btnSmDialog} ${styles.cancelButtonClass} h-[35px] w-[56px]`}
               disabled={isLoading}
               onClick={onCancel}
               type="button"
@@ -141,7 +151,7 @@ export function AlertDialog({
           )}
           {onConfirm && (
             <button
-              className={`${AUTH_STYLES.btnSmDialog} ${AUTH_STYLES.btnSmDialogDelete}`}
+              className={`${AUTH_STYLES.btnSmDialog} ${styles.confirmButtonClass} h-[35px] w-[56px]`}
               disabled={confirmDisabled || isLoading}
               onClick={handleConfirm}
               type="button"
