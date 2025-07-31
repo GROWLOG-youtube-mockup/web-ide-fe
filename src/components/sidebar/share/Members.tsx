@@ -18,11 +18,11 @@ import {
 } from "@/hooks/permissions/useProjectMembers"
 import { cn } from "@/lib/utils"
 
-interface MembersSectionProps {
+interface MembersProps {
   projectId: string
 }
 
-export const MembersSection = ({ projectId }: MembersSectionProps) => {
+export const Members = ({ projectId }: MembersProps) => {
   const [isExpanded, setIsExpanded] = useState(true)
   const [removeDialogOpen, setRemoveDialogOpen] = useState<string | null>(null)
   const { data: members = [], isLoading, error } = useProjectMembers(projectId)

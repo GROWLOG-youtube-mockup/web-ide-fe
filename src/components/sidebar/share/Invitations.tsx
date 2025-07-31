@@ -6,11 +6,11 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { useInviteUser } from "@/hooks/permissions/useProjectMembers"
 import { cn } from "@/lib/utils"
 
-interface InvitationsSectionProps {
+interface InvitationsProps {
   projectId: string
 }
 
-export const InvitationsSection = ({ projectId }: InvitationsSectionProps) => {
+export const Invitations = ({ projectId }: InvitationsProps) => {
   const [email, setEmail] = useState("")
   const [pendingEmails, setPendingEmails] = useState<string[]>([])
   const [isSending, setIsSending] = useState(false)

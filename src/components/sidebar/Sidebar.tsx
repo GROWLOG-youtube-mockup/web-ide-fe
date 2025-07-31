@@ -5,7 +5,8 @@ import { SidebarPanel } from "@/components/sidebar/SidebarPanel"
 import { SidebarPanels } from "@/components/sidebar/SidebarPanels"
 import { SidebarTab } from "@/components/sidebar/SidebarTab"
 import { SidebarTabs } from "@/components/sidebar/SidebarTabs"
-import { InviteSidebar } from "@/components/sidebar/share/ShareSection"
+import { Invitations } from "@/components/sidebar/share/Invitations"
+import { Members } from "@/components/sidebar/share/Members"
 import { useFileTree } from "@/hooks/file-explorer/useFileTree"
 
 interface SidebarProps {
@@ -43,7 +44,7 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
       <div className="flex flex-1 flex-col">
         <SidebarPanels
           bottomPanels={[
-            <SidebarPanel id="settings" key="settings" title="Settings">
+            <SidebarPanel id="settings" key="settings" title="settings">
               <PlaceholderPanel message="Settings panel coming soon..." />
             </SidebarPanel>,
           ]}
@@ -52,7 +53,7 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
 
         <SidebarPanels
           bottomPanels={[
-            <SidebarPanel id="chats" key="chats" title="Chats">
+            <SidebarPanel id="chats" key="chats" title="chats">
               <PlaceholderPanel message="Chat panel coming soon..." />
             </SidebarPanel>,
           ]}
@@ -72,17 +73,22 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
         <SidebarPanels
           tab="search"
           topPanels={[
-            <SidebarPanel id="search" key="search" title="Search">
+            <SidebarPanel id="search" key="search" title="search">
               <PlaceholderPanel message="Search panel coming soon..." />
             </SidebarPanel>,
           ]}
         />
 
         <SidebarPanels
+          bottomPanels={[
+            <SidebarPanel id="members" key="members" title="members">
+              <Members projectId={"3"} />
+            </SidebarPanel>,
+          ]}
           tab="share"
           topPanels={[
-            <SidebarPanel id="share" key="share" title="Share">
-              <InviteSidebar projectId="projectid" />
+            <SidebarPanel id="invitations" key="invitations" title="invitations">
+              <Invitations projectId={"3"} />
             </SidebarPanel>,
           ]}
         />
@@ -90,7 +96,7 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
         <SidebarPanels
           tab="projects"
           topPanels={[
-            <SidebarPanel id="projects" key="projects" title="Projects">
+            <SidebarPanel id="projects" key="projects" title="projects">
               <PlaceholderPanel message="Projects panel coming soon..." />
             </SidebarPanel>,
           ]}

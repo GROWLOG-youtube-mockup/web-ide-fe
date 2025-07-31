@@ -2,7 +2,14 @@ import { create } from "zustand"
 import { devtools, persist } from "zustand/middleware"
 
 export type TabId = "files" | "search" | "share" | "projects" | "settings"
-export type PanelId = "files" | "chats" | "search" | "share" | "projects" | "settings"
+export type PanelId =
+  | "files"
+  | "chats"
+  | "search"
+  | "invitations"
+  | "members"
+  | "projects"
+  | "settings"
 
 interface SidebarState {
   /** 현재 활성화된 탭 (탑레벨 탭) */
@@ -23,7 +30,15 @@ export const useSidebarStore = create<SidebarState>()(
       (set): SidebarState => ({
         // 초기 상태
         activeTab: "files",
-        expandedPanels: [],
+        expandedPanels: [
+          "files",
+          "chats",
+          "search",
+          "invitations",
+          "members",
+          "projects",
+          "settings",
+        ],
         setActiveTab: (id: TabId) => {
           set({ activeTab: id })
         },
