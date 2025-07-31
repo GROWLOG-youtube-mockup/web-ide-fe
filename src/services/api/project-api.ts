@@ -1,18 +1,5 @@
-import axios from "axios"
+import { api } from "@/services/api/api-client"
 import type { ApiResponse, ProjectMember } from "@/types/api"
-
-export interface UserPermission {
-  role: "READ" | "WRITE" | "OWNER"
-}
-
-const api = axios.create({
-  // biome-ignore lint/style/useNamingConvention: axios standard property
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8080",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: import.meta.env.VITE_JWT,
-  },
-})
 
 export const projectApi = {
   // 프로젝트 사용자 초대
@@ -57,4 +44,8 @@ export const projectApi = {
     )
     return response.data.data || { role: "READ" }
   },
+}
+
+export interface UserPermission {
+  role: "READ" | "WRITE" | "OWNER"
 }

@@ -2,7 +2,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { AxiosError } from "axios"
 import { useToast } from "@/components/common/ToastContext"
-import { projectApi, type UserPermission } from "@/services/api/project-api"
+import type { UserPermission } from "@/services/api/project-api"
+import { projectApi } from "@/services/api/project-api"
 import type { ApiResponse, ProjectMember } from "@/types/api"
 
 // Query Keys 상수화

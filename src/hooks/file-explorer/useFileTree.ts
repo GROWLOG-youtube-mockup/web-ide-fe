@@ -10,7 +10,7 @@ import { useTree } from "@headless-tree/react"
 import { useMemo } from "react"
 import { transformApiTreeToFileTree } from "@/data/mock-file-tree"
 import { convertToTreeData } from "@/lib/tree-utils"
-import { fileSystemService } from "@/services/file-system"
+import { fileSystemService } from "@/services/api/file-system-api"
 import { useFileTreeStore } from "@/stores/file-tree-store"
 import type { FileData } from "@/types/file-explorer"
 

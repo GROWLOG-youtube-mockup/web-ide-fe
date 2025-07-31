@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react"
-import { fileSystemService } from "@/services/file-system"
+import { fileSystemService } from "@/services/api/file-system-api"
 
 export function useFileOperations() {
   const [isLoading, setIsLoading] = useState(false)
