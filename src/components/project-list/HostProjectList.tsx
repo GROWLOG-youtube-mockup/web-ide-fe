@@ -9,11 +9,6 @@ export const HostProjectList = ({ searchQuery }: HostProjectListProps) => {
   const { projects, loading, error, toggleProject } = useProjectStore()
   const ownProjects = projects.filter(project => project.myRole === "OWNER")
 
-  // 디버깅: ownProjects 상태 확인
-  console.log("🏠 HostProjectList - ownProjects:", ownProjects)
-  console.log("🏠 HostProjectList - loading:", loading)
-  console.log("🏠 HostProjectList - error:", error)
-
   // 검색 필터링
   const filteredProjects = ownProjects.filter(
     project =>
@@ -25,13 +20,11 @@ export const HostProjectList = ({ searchQuery }: HostProjectListProps) => {
     toggleProject(id)
   }
 
-  const handleEdit = (id: number) => {
-    console.log("Edit project:", id)
+  const handleEdit = (_id: number) => {
     // TODO: 프로젝트 편집 모달 또는 페이지로 이동
   }
 
-  const handleNewProject = (id: number) => {
-    console.log("New project based on:", id)
+  const handleNewProject = (_id: number) => {
     // TODO: 기존 프로젝트를 기반으로 새 프로젝트 생성
   }
 
