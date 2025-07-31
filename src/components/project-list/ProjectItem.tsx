@@ -29,12 +29,27 @@ export const ProjectItem = ({
   onLeave,
 }: ProjectItemProps) => {
   const [isHovered, setIsHovered] = useState(false)
-  const isHost = project.myRole === "OWNER"
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+  // 다이얼로그 상태들 - 한눈에 보기 쉽게
+  const [isToggleDialogOpen, setIsToggleDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isLeaveDialogOpen, setIsLeaveDialogOpen] = useState(false)
   const [editLoading, setEditLoading] = useState(false)
 
-  // 실제 저장 로직은 onEdit 콜백 활용(비동기라면 setEditLoading 활용)
+  const isHost = project.myRole === "OWNER"
+
+  // 핸들러 함수들 - 직관적으로 이해하기 쉽게
+  const handleToggleClick = () => setIsToggleDialogOpen(true)
+  const handleToggleConfirm = () => {
+    onToggle?.(project.id)
+    setIsToggleDialogOpen(false)
+  }
+
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setIsEditDialogOpen(true)
+  }
   const handleEditConfirm = async (data: ProjectFormData) => {
     setEditLoading(true)
     try {
@@ -43,6 +58,24 @@ export const ProjectItem = ({
     } finally {
       setEditLoading(false)
     }
+  }
+
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setIsDeleteDialogOpen(true)
+  }
+  const handleDeleteConfirm = () => {
+    onNewProject?.(project.id)
+    setIsDeleteDialogOpen(false)
+  }
+
+  const handleLeaveClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setIsLeaveDialogOpen(true)
+  }
+  const handleLeaveConfirm = () => {
+    onLeave?.(project.id)
+    setIsLeaveDialogOpen(false)
   }
 
   return (
@@ -68,28 +101,9 @@ export const ProjectItem = ({
 
               {/* Toggle/Status Icon */}
               {isHost ? (
-                <AlertDialog
-                  cancelText="Cancel"
-                  confirmText="Change"
-                  description={`Current status: ${project.isToggled ? "ON" : "OFF"}`}
-                  isOpen={isDialogOpen}
-                  onCancel={() => setIsDialogOpen(false)}
-                  onConfirm={() => {
-                    onToggle?.(project.id)
-                    setIsDialogOpen(false)
-                  }}
-                  onOpenChange={setIsDialogOpen}
-                  showCloseButton={false}
-                  title="Change status"
-                  trigger={
-                    <ProjectToggle
-                      checked={project.isToggled || false}
-                      onCheckedChange={() => {
-                        setIsDialogOpen(true)
-                      }}
-                    />
-                  }
-                  variant="default"
+                <ProjectToggle
+                  checked={project.isToggled || false}
+                  onCheckedChange={handleToggleClick}
                 />
               ) : (
                 <div className="flex h-3 w-3 items-center justify-center">
@@ -110,10 +124,7 @@ export const ProjectItem = ({
             {isHovered && isHost && (
               <button
                 className="flex h-3.5 w-3.5 items-center justify-center"
-                onClick={e => {
-                  e.stopPropagation()
-                  setIsEditDialogOpen(true)
-                }}
+                onClick={handleEditClick}
                 type="button"
               >
                 <Edit3 className="h-4 w-4 text-gray-400" />
@@ -128,10 +139,7 @@ export const ProjectItem = ({
                 {isHost ? (
                   <button
                     className="flex h-3.5 w-3.5 items-center justify-center"
-                    onClick={e => {
-                      e.stopPropagation()
-                      onNewProject?.(project.id)
-                    }}
+                    onClick={handleDeleteClick}
                     type="button"
                   >
                     <Trash className="h-4 w-4 text-gray-400" />
@@ -139,10 +147,7 @@ export const ProjectItem = ({
                 ) : (
                   <button
                     className="flex h-3.5 w-3.5 items-center justify-center"
-                    onClick={e => {
-                      e.stopPropagation()
-                      onLeave?.(project.id)
-                    }}
+                    onClick={handleLeaveClick}
                     type="button"
                   >
                     <LogOut className="h-4 w-4 text-gray-400" />
@@ -154,6 +159,23 @@ export const ProjectItem = ({
           </div>
         </div>
       </button>
+
+      {/* 다이얼로그들 - 한 곳에서 모두 관리 */}
+
+      {/* 토글 상태 변경 다이얼로그 */}
+      <AlertDialog
+        cancelText="Cancel"
+        confirmText="Change"
+        description={`Current status: ${project.isToggled ? "ON" : "OFF"}`}
+        isOpen={isToggleDialogOpen}
+        onCancel={() => setIsToggleDialogOpen(false)}
+        onConfirm={handleToggleConfirm}
+        onOpenChange={setIsToggleDialogOpen}
+        showCloseButton={false}
+        title="Change status"
+        variant="default"
+      />
+
       {/* 프로젝트 수정 다이얼로그 */}
       <ProjectDialog
         initial={{ name: project.name, description: project.description }}
@@ -162,6 +184,34 @@ export const ProjectItem = ({
         onConfirm={handleEditConfirm}
         onOpenChange={setIsEditDialogOpen}
         open={isEditDialogOpen}
+      />
+
+      {/* 프로젝트 삭제 확인 다이얼로그 */}
+      <AlertDialog
+        cancelText="Cancel"
+        confirmText="Delete"
+        description="Are you sure you want to delete this project?"
+        isOpen={isDeleteDialogOpen}
+        onCancel={() => setIsDeleteDialogOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        onOpenChange={setIsDeleteDialogOpen}
+        showCloseButton={false}
+        title="Delete Project"
+        variant="destructive"
+      />
+
+      {/* 프로젝트 나가기 확인 다이얼로그 */}
+      <AlertDialog
+        cancelText="Cancel"
+        confirmText="Leave"
+        description="Are you sure you want to leave this project?"
+        isOpen={isLeaveDialogOpen}
+        onCancel={() => setIsLeaveDialogOpen(false)}
+        onConfirm={handleLeaveConfirm}
+        onOpenChange={setIsLeaveDialogOpen}
+        showCloseButton={false}
+        title="Leave Project"
+        variant="warning"
       />
     </>
   )
