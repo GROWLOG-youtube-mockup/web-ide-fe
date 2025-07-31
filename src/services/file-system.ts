@@ -26,6 +26,16 @@ export interface FileSystemService {
   createFolder(parentPath: string, folderName: string): Promise<void>
 
   /**
+   * 파일을 삭제합니다
+   */
+  deleteFile(filePath: string): Promise<void>
+
+  /**
+   * 폴더를 삭제합니다
+   */
+  deleteFolder(folderPath: string): Promise<void>
+
+  /**
    * 파일 트리 데이터를 가져옵니다
    */
   getFileTree(): TreeInitPayload
@@ -58,6 +68,14 @@ export class MockFileSystemService implements FileSystemService {
     console.log(`[Mock] 폴더 생성: ${fullPath}`)
   }
 
+  async deleteFile(filePath: string): Promise<void> {
+    console.log(`[Mock] 파일 삭제: ${filePath}`)
+  }
+
+  async deleteFolder(folderPath: string): Promise<void> {
+    console.log(`[Mock] 폴더 삭제: ${folderPath}`)
+  }
+
   getFileTree(): TreeInitPayload {
     return mockApiResponse
   }
@@ -87,6 +105,16 @@ export class ApiFileSystemService implements FileSystemService {
   }
 
   async createFolder(_parentPath: string, _folderName: string): Promise<void> {
+    // TODO: 실제 API 호출
+    throw new Error("API 구현 필요")
+  }
+
+  async deleteFile(_filePath: string): Promise<void> {
+    // TODO: 실제 API 호출
+    throw new Error("API 구현 필요")
+  }
+
+  async deleteFolder(_folderPath: string): Promise<void> {
     // TODO: 실제 API 호출
     throw new Error("API 구현 필요")
   }

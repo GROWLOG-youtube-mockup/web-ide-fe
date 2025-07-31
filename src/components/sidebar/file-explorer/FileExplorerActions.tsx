@@ -9,7 +9,8 @@ import {
 } from "lucide-react"
 import type { MouseEvent } from "react"
 import { Button } from "@/components/ui/button"
-import { fileSystemService } from "@/lib/file-system-service"
+import { createFileWithPrompt, createFolderWithPrompt } from "@/services/file-operations"
+import { fileSystemService } from "@/services/file-system"
 import type { FileData } from "@/types/file-explorer"
 
 interface ActionButtonProps {
@@ -96,14 +97,12 @@ export const FileExplorerActions = ({ tree, collapseAll, expandAll }: FileExplor
 
   const handleAddFile = () => {
     const targetPath = getTargetFolderPath()
-    const defaultFileName = "new-file.txt"
-    fileSystemService.createFile(targetPath, defaultFileName)
+    createFileWithPrompt(targetPath)
   }
 
   const handleAddFolder = () => {
     const targetPath = getTargetFolderPath()
-    const defaultFolderName = "new-folder"
-    fileSystemService.createFolder(targetPath, defaultFolderName)
+    createFolderWithPrompt(targetPath)
   }
 
   const handleRefresh = () => {
