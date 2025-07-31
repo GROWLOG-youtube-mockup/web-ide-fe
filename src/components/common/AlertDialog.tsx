@@ -13,7 +13,7 @@ import { AUTH_STYLES } from "@/constants/auth-styles"
 type AlertDialogVariant = "default" | "destructive" | "warning" | "success"
 
 interface AlertDialogProps {
-  trigger: React.ReactNode
+  trigger?: React.ReactNode
   title: string
   description?: string
   children?: React.ReactNode
@@ -117,7 +117,7 @@ export function AlertDialog({
 
   return (
     <Dialog onOpenChange={onOpenChange} open={isOpen}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <CustomDialogContent showCloseButton={showCloseButton}>
         {/* Figma 디자인: gap-1.5 -> gap-1.5, leading 값들 정확히 매칭 */}
         <div className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-start gap-1.5 text-nowrap p-0 text-left not-italic leading-[0]">
