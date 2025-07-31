@@ -4,32 +4,32 @@ import type { ContextMenuItem } from "@/types/context-menu"
 import { copyToClipboard } from "@/utils/context-menu"
 
 export const useTabContextMenu = (filePath: string) => {
-  const { closeFile, closeAllTabs, closeOtherTabs, closeTabsToTheRight } = useEditorTabsStore()
+  const { handleCloseTab, handleCloseAllTabs, handleCloseOtherTabs, handleCloseTabsToTheRight } =
+    useEditorTabsStore()
 
   const menuItems: ContextMenuItem[] = useMemo(() => {
-    // Return empty array for invalid file paths to avoid unnecessary computation
     if (!filePath || filePath.trim() === "") {
       return []
     }
 
     return [
       {
-        action: () => closeFile(filePath),
+        action: () => handleCloseTab(filePath),
         label: "Close",
         variant: "destructive",
       },
       {
-        action: () => closeOtherTabs(filePath),
+        action: () => handleCloseOtherTabs(filePath),
         label: "Close Others",
         variant: "default",
       },
       {
-        action: () => closeTabsToTheRight(filePath),
+        action: () => handleCloseTabsToTheRight(filePath),
         label: "Close Tabs to the Right",
         variant: "default",
       },
       {
-        action: () => closeAllTabs(),
+        action: () => handleCloseAllTabs(),
         label: "Close All",
         variant: "destructive",
       },
@@ -37,7 +37,6 @@ export const useTabContextMenu = (filePath: string) => {
         action: async () => {
           const success = await copyToClipboard(filePath)
           if (!success) {
-            // TODO: Show toast notification for copy failure
             console.error("Failed to copy path to clipboard")
           }
         },
@@ -45,7 +44,13 @@ export const useTabContextMenu = (filePath: string) => {
         variant: "default",
       },
     ]
-  }, [filePath, closeFile, closeOtherTabs, closeTabsToTheRight, closeAllTabs])
+  }, [
+    filePath,
+    handleCloseTab,
+    handleCloseAllTabs,
+    handleCloseOtherTabs,
+    handleCloseTabsToTheRight,
+  ])
 
   return { menuItems }
 }

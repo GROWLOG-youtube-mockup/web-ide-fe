@@ -17,18 +17,8 @@ export interface FileData {
   children?: string[]
 }
 
-export interface TempNodeData {
-  id: string
-  parentPath: string
-  isFolder: boolean
-  level: number
-  onConfirm: (name: string) => Promise<void>
-  onCancel: () => void
-}
-
 export interface TreeNodeProps {
-  item?: ItemInstance<FileData>
-  tempNodeData?: TempNodeData
+  item: ItemInstance<FileData>
 }
 
 export interface TreeItemState {

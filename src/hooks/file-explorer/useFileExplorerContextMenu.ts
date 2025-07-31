@@ -1,105 +1,71 @@
 import { useMemo } from "react"
-import {
-  createFileWithPrompt,
-  createFolderWithPrompt,
-  getTargetPath,
-} from "@/services/file-operations"
-import { useEditorTabsStore } from "@/stores/editor-tabs-store"
+import { useFileOperations } from "@/hooks/file-explorer/useFileOperations"
 import type { ContextMenuItem } from "@/types/context-menu"
 import { copyToClipboard } from "@/utils/context-menu"
+import { getParentPath } from "@/utils/file-operations"
 
 export const useFileExplorerContextMenu = (filePath: string, isFolder: boolean) => {
-  const { openFileInEditor } = useEditorTabsStore()
+  const { createFileItem, createFolderItem, renameItem, deleteItem } = useFileOperations()
 
   const menuItems: ContextMenuItem[] = useMemo(() => {
-    // Return empty array for invalid file paths to avoid unnecessary computation
     if (!filePath || filePath.trim() === "") {
       return []
     }
 
-    const targetPath = getTargetPath(filePath, isFolder)
-
-    // File/folder creation actions
-    const createNewFile = () => createFileWithPrompt(targetPath)
-    const createNewFolder = () => createFolderWithPrompt(targetPath)
-    // TODO: headless-tree의 내장 rename 기능으로 교체 예정
-    const renameItem = () => console.log("Rename not implemented yet")
-    // TODO: 더 나은 UI로 delete 확인 다이얼로그 구현 예정
-    const deleteItem = () => console.log("Delete not implemented yet")
-
-    const copyPath = async () => {
-      const success = await copyToClipboard(filePath)
-      if (!success) {
-        // TODO: Show toast notification for copy failure
-        console.error("Failed to copy path to clipboard")
-      }
-    }
-
-    // File-specific menu items
-    if (!isFolder) {
-      return [
-        {
-          action: () => openFileInEditor(filePath),
-          label: "Open",
-          variant: "default",
-        },
-        {
-          action: createNewFile,
-          label: "New File",
-          variant: "default",
-        },
-        {
-          action: createNewFolder,
-          label: "New Folder",
-          variant: "default",
-        },
-        {
-          action: renameItem,
-          label: "Rename",
-          variant: "default",
-        },
-        {
-          action: deleteItem,
-          label: "Delete",
-          variant: "destructive",
-        },
-        {
-          action: copyPath,
-          label: "Copy Path",
-          variant: "default",
-        },
-      ]
-    }
-
-    // Folder-specific menu items
     return [
       {
-        action: createNewFile,
+        action: () => {
+          const parentPath = isFolder ? filePath : getParentPath(filePath)
+          const fileName = prompt("Enter file name:")
+          if (fileName) {
+            createFileItem(parentPath, fileName)
+          }
+        },
         label: "New File",
         variant: "default",
       },
       {
-        action: createNewFolder,
+        action: () => {
+          const parentPath = isFolder ? filePath : getParentPath(filePath)
+          const folderName = prompt("Enter folder name:")
+          if (folderName) {
+            createFolderItem(parentPath, folderName)
+          }
+        },
         label: "New Folder",
         variant: "default",
       },
       {
-        action: renameItem,
+        action: () => {
+          const newName = prompt("Enter new name:", filePath.split("/").pop())
+          if (newName) {
+            renameItem(filePath, newName)
+          }
+        },
         label: "Rename",
         variant: "default",
       },
       {
-        action: deleteItem,
+        action: () => {
+          if (confirm(`Are you sure you want to delete "${filePath.split("/").pop()}"?`)) {
+            deleteItem(filePath)
+          }
+        },
         label: "Delete",
         variant: "destructive",
       },
       {
-        action: copyPath,
+        action: async () => {
+          const success = await copyToClipboard(filePath)
+          if (!success) {
+            console.error("Failed to copy path to clipboard")
+          }
+        },
         label: "Copy Path",
         variant: "default",
       },
     ]
-  }, [filePath, isFolder, openFileInEditor])
+  }, [filePath, isFolder, createFileItem, createFolderItem, renameItem, deleteItem])
 
   return { menuItems }
 }
