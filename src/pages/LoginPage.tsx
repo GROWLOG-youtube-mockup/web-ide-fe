@@ -3,7 +3,7 @@ import { AuthForm } from "@/components/auth/AuthForm"
 import { AuthFormField } from "@/components/auth/AuthFormField"
 import { ResetPassword } from "@/components/auth/ResetPassword"
 import { AUTH_STYLES } from "@/constants/auth-styles"
-import { useAuthForm } from "@/hooks/useAuthForm"
+import { useAuthForm } from "@/hooks/auth/useAuthForm"
 import { loginFormSchema } from "@/lib/auth-schemas"
 import type { LoginFormData } from "@/types/auth"
 

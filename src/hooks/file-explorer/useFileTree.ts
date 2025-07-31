@@ -9,8 +9,8 @@ import {
 import { useTree } from "@headless-tree/react"
 import { useMemo } from "react"
 import { transformApiTreeToFileTree } from "@/data/mock-file-tree"
-import { fileSystemService } from "@/lib/file-system-service"
 import { convertToTreeData } from "@/lib/tree-utils"
+import { fileSystemService } from "@/services/file-system"
 import { useFileTreeStore } from "@/stores/file-tree-store"
 import type { FileData } from "@/types/file-explorer"
 
@@ -41,7 +41,6 @@ import type { FileData } from "@/types/file-explorer"
  * - 현재는 목업 데이터 사용, 추후 실제 API 연동 가능
  */
 export const useFileTree = () => {
-  // useState로 복원 (FileExplorerActions에서 경고 발생 확인됨)
   const { expandedItems, setExpandedItems, focusedItem, setFocusedItem } = useFileTreeStore()
 
   const dataLoader = useMemo(() => {
@@ -70,9 +69,7 @@ export const useFileTree = () => {
     setFocusedItem,
 
     rootItemId: "/",
-    // 아이템 이름 추출
     getItemName: item => String(item.getItemData().name || ""),
-    // 폴더 여부 판단
     isItemFolder: item => item.getItemData().type === "folder",
     dataLoader,
     indent: 12,
@@ -92,11 +89,8 @@ export const useFileTree = () => {
       renamingFeature,
     ],
 
-    // 드래그 가능 조건: 선택된 아이템이 있을 때
     canDrag: items => items.length > 0,
-    // 드롭 가능 조건: 대상이 폴더일 때
     canDrop: (_items, target) => target.item.getItemData().type === "folder",
-    // 같은 레벨에서 순서 변경 불가
     canReorder: false,
 
     onDrop: (items, target) => {

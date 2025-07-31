@@ -3,7 +3,7 @@ import { AuthFormField } from "@/components/auth/AuthFormField"
 import { EmailVerify } from "@/components/auth/EmailVerify"
 import { ProfileAvatar } from "@/components/auth/ProfileAvatar"
 import { AUTH_STYLES } from "@/constants/auth-styles"
-import { useAuthForm } from "@/hooks/useAuthForm"
+import { useAuthForm } from "@/hooks/auth/useAuthForm"
 import { signUpFormSchema } from "@/lib/auth-schemas"
 import type { SignUpFormData } from "@/types/auth"
 
