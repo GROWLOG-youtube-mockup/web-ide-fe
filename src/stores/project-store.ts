@@ -51,7 +51,7 @@ const mockFetchProjects = async (filter?: ProjectFilter): Promise<ProjectsApiRes
         updatedAt: "2025-07-01T10:00:00",
       },
       {
-        projectId: 1,
+        projectId: 4,
         name: "webide-project",
         description: "Java 기반 테Java 기반 테스트용Java 기반 테스트용Java 기반 테스트용스트용",
         ownerName: "현아",

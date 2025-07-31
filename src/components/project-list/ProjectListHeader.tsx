@@ -9,7 +9,7 @@ export const ProjectListHeader = () => {
       <div className="flex items-end gap-4">
         <div className="flex items-end justify-center">
           <Avatar className="h-[72px] w-[72px] rounded-full border-2 border-white">
-            <AvatarImage alt="Profile" src="/api/placeholder/72/72" />
+            <AvatarImage alt="Profile" src="https://github.com/shadcn.png" />
           </Avatar>
         </div>
         <div className="mb-3 flex items-center gap-2.5">
