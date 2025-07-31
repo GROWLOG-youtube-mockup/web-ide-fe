@@ -79,17 +79,41 @@ export const mockApiResponse: TreeInitPayload = {
               children: [
                 {
                   children: [
-                    { path: "/src/components/ide/CodeEditor.tsx", type: "file" },
-                    { path: "/src/components/ide/ResizeHandle.tsx", type: "file" },
+                    {
+                      path: "/src/components/ide/CodeEditor.tsx",
+                      type: "file",
+                    },
+                    {
+                      path: "/src/components/ide/ResizeHandle.tsx",
+                      type: "file",
+                    },
                     { path: "/src/components/ide/TopBar.tsx", type: "file" },
                     {
                       children: [
-                        { path: "/src/components/ide/sidebar/ActionButton.tsx", type: "file" },
-                        { path: "/src/components/ide/sidebar/AppSidebar.tsx", type: "file" },
-                        { path: "/src/components/ide/sidebar/FileExplorer.tsx", type: "file" },
-                        { path: "/src/components/ide/sidebar/FileTree.tsx", type: "file" },
-                        { path: "/src/components/ide/sidebar/NavigationPanel.tsx", type: "file" },
-                        { path: "/src/components/ide/sidebar/ViewManager.tsx", type: "file" },
+                        {
+                          path: "/src/components/ide/sidebar/ActionButton.tsx",
+                          type: "file",
+                        },
+                        {
+                          path: "/src/components/ide/sidebar/AppSidebar.tsx",
+                          type: "file",
+                        },
+                        {
+                          path: "/src/components/ide/sidebar/FileExplorer.tsx",
+                          type: "file",
+                        },
+                        {
+                          path: "/src/components/ide/sidebar/FileTree.tsx",
+                          type: "file",
+                        },
+                        {
+                          path: "/src/components/ide/sidebar/NavigationPanel.tsx",
+                          type: "file",
+                        },
+                        {
+                          path: "/src/components/ide/sidebar/ViewManager.tsx",
+                          type: "file",
+                        },
                       ],
                       path: "/src/components/ide/sidebar",
                       type: "folder",
@@ -99,7 +123,12 @@ export const mockApiResponse: TreeInitPayload = {
                   type: "folder",
                 },
                 {
-                  children: [{ path: "/src/components/layout/IdeLayout.tsx", type: "file" }],
+                  children: [
+                    {
+                      path: "/src/components/layout/IdeLayout.tsx",
+                      type: "file",
+                    },
+                  ],
                   path: "/src/components/layout",
                   type: "folder",
                 },
@@ -107,7 +136,10 @@ export const mockApiResponse: TreeInitPayload = {
                   children: [
                     { path: "/src/components/ui/Button.tsx", type: "file" },
                     { path: "/src/components/ui/Input.tsx", type: "file" },
-                    { path: "/src/components/ui/collapsible.tsx", type: "file" },
+                    {
+                      path: "/src/components/ui/collapsible.tsx",
+                      type: "file",
+                    },
                     { path: "/src/components/ui/separator.tsx", type: "file" },
                     { path: "/src/components/ui/sheet.tsx", type: "file" },
                     { path: "/src/components/ui/sidebar.tsx", type: "file" },

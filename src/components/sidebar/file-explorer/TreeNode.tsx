@@ -27,7 +27,12 @@ export const TreeNode = ({ item }: TreeNodeProps): React.ReactElement => {
   // 안전한 기본값 제공
   const safeNodeState = useMemo(
     () => ({
-      itemData: nodeState?.itemData || { name: "", path: "", type: "file" as const, id: "" },
+      itemData: nodeState?.itemData || {
+        name: "",
+        path: "",
+        type: "file" as const,
+        id: "",
+      },
       isFolder: nodeState?.isFolder ?? false,
       hasChildren: nodeState?.hasChildren ?? false,
       isExpanded: nodeState?.isExpanded ?? false,

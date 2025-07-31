@@ -1,164 +1,146 @@
-import { ChevronDown, Mail, UserPlus, X } from "lucide-react"
-import { useState } from "react"
-import { useToast } from "@/components/common/ToastContext"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { MailIcon, UserPlus, XIcon } from "lucide-react"
+import { useCallback, useState } from "react"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 import { Button } from "@/components/ui/button"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/custom-form"
+import { Input } from "@/components/ui/input"
 import { useInviteUser } from "@/hooks/permissions/useProjectMembers"
-import { cn } from "@/lib/utils"
 
-interface InvitationsProps {
-  projectId: string
-}
-
-export const Invitations = ({ projectId }: InvitationsProps) => {
-  const [email, setEmail] = useState("")
+export function Invitations({ projectId }: { projectId: string }) {
   const [pendingEmails, setPendingEmails] = useState<string[]>([])
   const [isSending, setIsSending] = useState(false)
   const inviteUser = useInviteUser(projectId)
-  const { addToast } = useToast()
 
-  const [isExpanded, setIsExpanded] = useState(true)
+  // zod 폼 스키마
+  const formSchema = z.object({
+    email: z.email({ message: "Please enter a valid email format." }),
+  })
 
-  // 이메일 유효성 검사 함수
-  const isValidEmail = (email: string) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-  }
-
-  // 이메일을 대기 목록에 추가하는 핸들러
-  const handleAddEmail = () => {
-    if (!email.trim()) {
-      return
-    }
-
-    if (!isValidEmail(email)) {
-      addToast({
-        type: "error",
-        title: "Please enter a valid email format.",
-        duration: 3000,
-      })
-      return
-    }
-
-    if (pendingEmails.includes(email)) {
-      addToast({
-        type: "error",
-        title: "This email is already added.",
-        duration: 3000,
-      })
-      return
-    }
-
-    setPendingEmails(prev => [...prev, email])
-    setEmail("")
-  }
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: { email: "" },
+  })
 
   // 대기 목록에서 이메일을 제거하는 핸들러
-  const handleRemoveEmail = (emailToRemove: string) => {
+  const handleRemoveEmail = useCallback((emailToRemove: string) => {
     setPendingEmails(prev => prev.filter(e => e !== emailToRemove))
-  }
+  }, [])
 
-  const handleSendInvitations = () => {
+  // 초대 전송
+  const handleSendInvitations = useCallback(() => {
     setIsSending(true)
     inviteUser.mutate(pendingEmails, {
-      onSuccess: () => {
-        setPendingEmails([])
-      },
-      onSettled: () => {
-        setIsSending(false)
-      },
+      onSuccess: () => setPendingEmails([]),
+      onSettled: () => setIsSending(false),
     })
-  }
-
-  // Enter 키 입력 시 이메일 추가 핸들러
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleAddEmail()
-    }
-  }
+  }, [inviteUser, pendingEmails])
 
   const isLoading = isSending || inviteUser.isPending
+  const isInviteDisabled = isLoading || pendingEmails.length === 0
+
+  // 이메일 추가 핸들러 (폼 submit)
+  const onAddEmail = (values: z.infer<typeof formSchema>) => {
+    const trimmed = values.email.trim()
+    if (pendingEmails.includes(trimmed)) {
+      form.setError("email", {
+        type: "manual",
+        message: "This email is already added.",
+      })
+      return
+    }
+    setPendingEmails(prev => [...prev, trimmed])
+    form.reset()
+  }
+
+  // 내부 컴포넌트: 이메일 목록 (심플 스타일)
+  const EmailList = () => (
+    <div className="mb-4 max-h-48 overflow-y-auto">
+      <div className="space-y-2 px-2">
+        {pendingEmails.length === 0 ? (
+          <div className="flex items-center justify-center py-4 text-[hsl(var(--muted-foreground))] text-sm">
+            Add emails to invite
+          </div>
+        ) : (
+          pendingEmails.map(emailItem => (
+            <div
+              className="flex items-center gap-2 rounded border border-[hsl(var(--border))] bg-[hsl(var(--background))] px-3 py-1 hover:bg-[hsl(var(--muted))]"
+              key={emailItem}
+            >
+              <span className="flex-1 text-[hsl(var(--foreground))] text-sm">{emailItem}</span>
+              <Button
+                aria-label={`Remove ${emailItem}`}
+                className="flex-shrink-0 text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]"
+                disabled={isLoading}
+                onClick={() => handleRemoveEmail(emailItem)}
+                type="button"
+              >
+                <XIcon className="h-4 w-4" />
+              </Button>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  )
+
+  // 내부 컴포넌트: 초대 버튼 (심플 스타일)
+  const InviteButton = () => (
+    <div className="px-2 pb-2">
+      <Button
+        aria-label="Send invitations"
+        className="w-full bg-[hsl(var(--primary))] py-3 text-[hsl(var(--primary-foreground))] text-sm hover:bg-[hsl(var(--primary)/0.95)] disabled:opacity-50"
+        disabled={isInviteDisabled}
+        onClick={handleSendInvitations}
+        type="button"
+      >
+        <MailIcon className="mr-2 h-4 w-4" />
+        {isLoading
+          ? "Sending..."
+          : `Invite Team Member${pendingEmails.length > 0 ? ` (${pendingEmails.length})` : ""}`}
+      </Button>
+    </div>
+  )
 
   return (
-    <div className="flex flex-col border-gray-200 border-b bg-[var(--share-primary)] dark:border-gray-700">
-      <Collapsible onOpenChange={setIsExpanded} open={isExpanded}>
-        <CollapsibleTrigger asChild>
-          <div className="flex flex-shrink-0 cursor-pointer items-center gap-2 px-4 pt-4 pb-3">
-            <ChevronDown
-              className={cn("h-4 w-4 transition-transform", isExpanded ? "rotate-0" : "-rotate-90")}
-            />
-            <span className="font-medium text-gray-600 text-sm uppercase tracking-wide dark:text-gray-400">
-              Invitations
-            </span>
-          </div>
-        </CollapsibleTrigger>
-
-        <CollapsibleContent className="mx-4">
-          <div className="mb-3 flex flex-shrink-0 gap-2 px-4">
-            <input
-              className="flex-1 rounded border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-700"
-              disabled={isLoading}
-              onChange={e => setEmail(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Invite by member email"
-              type="email"
-              value={email}
-            />
-            <Button
-              className="cursor-pointer rounded bg-gray-800 p-2 text-white disabled:opacity-50 dark:bg-gray-600"
-              disabled={isLoading}
-              onClick={handleAddEmail}
-              type="button"
-            >
-              <UserPlus className="h-4 w-4" />
-            </Button>
-          </div>
-
-          {/* 이메일 태그 영역 */}
-          <div className="mb-4 max-h-60 min-h-0 flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden">
-            <div className="space-y-2 px-4">
-              {pendingEmails.length === 0 ? (
-                <div className="flex items-center justify-center p-4">
-                  <span className="text-gray-500 text-sm">Add emails to invite</span>
-                </div>
-              ) : (
-                pendingEmails.map(emailItem => (
-                  <div
-                    className="flex items-center gap-2 rounded border bg-white px-4 py-1 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
-                    key={emailItem}
-                  >
-                    <span className="flex-1 text-sm">{emailItem}</span>
-                    <Button
-                      className="flex-shrink-0 text-gray-400 hover:text-gray-600"
-                      disabled={isLoading}
-                      onClick={() => handleRemoveEmail(emailItem)}
-                      type="button"
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-
-          {/* 초대 버튼 */}
-          <div className="flex-shrink-0 p-4">
-            <Button
-              className="flex w-full cursor-pointer items-center justify-center gap-2 rounded bg-gray-900 py-4 text-sm text-white disabled:opacity-50 dark:bg-gray-700"
-              disabled={isLoading || pendingEmails.length === 0}
-              onClick={handleSendInvitations}
-              type="button"
-            >
-              <Mail className="h-4 w-4" />
-              {isLoading
-                ? "Sending..."
-                : `Invite Team Member${
-                    pendingEmails.length > 0 ? ` (${pendingEmails.length})` : ""
-                  }`}
-            </Button>
-          </div>
-        </CollapsibleContent>
-      </Collapsible>
+    <div>
+      <Form {...form}>
+        <form
+          autoComplete="off"
+          className="mb-2 flex gap-2 px-2"
+          onSubmit={form.handleSubmit(onAddEmail)}
+        >
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormControl>
+                  <Input
+                    {...field}
+                    autoComplete="off"
+                    disabled={isLoading}
+                    placeholder="Invite by member email"
+                    type="email"
+                  />
+                </FormControl>
+                <FormMessage className="mt-1 text-[hsl(var(--destructive))] text-xs" />
+              </FormItem>
+            )}
+          />
+          <Button
+            aria-label="Add email to invite list"
+            className="rounded border border-[hsl(var(--border))] bg-[hsl(var(--background))] p-2 text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))] disabled:opacity-50"
+            disabled={isLoading}
+            type="submit"
+          >
+            <UserPlus className="h-4 w-4" />
+          </Button>
+        </form>
+      </Form>
+      <EmailList />
+      <InviteButton />
     </div>
   )
 }

@@ -45,7 +45,10 @@ export function useProfileUpdate({ form, initialValues }: UseProfileUpdateProps)
           message: "Current password is incorrect.",
           type: "server",
         })
-        addToast({ type: "error", title: "Please check your current password." })
+        addToast({
+          type: "error",
+          title: "Please check your current password.",
+        })
         return
       }
 
@@ -61,7 +64,10 @@ export function useProfileUpdate({ form, initialValues }: UseProfileUpdateProps)
       }
     } catch (error: unknown) {
       const axiosError = error as {
-        response?: { status: number; data: { field?: string; message?: string } }
+        response?: {
+          status: number
+          data: { field?: string; message?: string }
+        }
       }
 
       if (axiosError.response?.status === 400) {

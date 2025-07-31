@@ -53,8 +53,16 @@ const TOAST_CONFIG = {
     icon: CheckCircle,
     color: "text-green-500",
   },
-  error: { style: "bg-red-50 border-red-200 text-red-800", icon: XCircle, color: "text-red-500" },
-  info: { style: "bg-blue-50 border-blue-200 text-blue-800", icon: Info, color: "text-blue-500" },
+  error: {
+    style: "bg-red-50 border-red-200 text-red-800",
+    icon: XCircle,
+    color: "text-red-500",
+  },
+  info: {
+    style: "bg-blue-50 border-blue-200 text-blue-800",
+    icon: Info,
+    color: "text-blue-500",
+  },
 }
 
 function ToastItem({ type, title }: Toast) {

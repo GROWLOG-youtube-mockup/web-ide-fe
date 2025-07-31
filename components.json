@@ -9,7 +9,7 @@
   },
   "iconLibrary": "lucide",
   "rsc": false,
-  "style": "default",
+  "style": "new-york",
   "tailwind": {
     "baseColor": "zinc",
     "config": "tailwind.config.js",

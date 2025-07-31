@@ -2,10 +2,9 @@
 import { useState } from "react"
 import { ICON_SIZES, LucideIcons } from "@/assets/icons"
 import { WithContextMenu } from "@/components/common/WithContextMenu"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/Tabs"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useTabContextMenu } from "@/hooks/editor/useTabContextMenu"
 import { useEditorTabsStore } from "@/stores/editor-tabs-store"
-import "@/styles/global-tab.css"
 
 export const TabBar = () => {
   const {

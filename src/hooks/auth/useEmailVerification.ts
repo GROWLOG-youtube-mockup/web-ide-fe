@@ -38,7 +38,9 @@ export function useEmailVerification({
       setState(prev => ({ ...prev, isLoading: false, isSent: true }))
     } catch (_error) {
       setState(prev => ({ ...prev, isLoading: false }))
-      setError(emailName, { message: VALIDATION.messages.verification.sendFail })
+      setError(emailName, {
+        message: VALIDATION.messages.verification.sendFail,
+      })
     }
   }
 
@@ -70,7 +72,9 @@ export function useEmailVerification({
     } catch (error) {
       console.error("인증 실패:", error)
       setState(prev => ({ ...prev, isLoading: false }))
-      setError(codeName, { message: VALIDATION.messages.verification.verifyFail })
+      setError(codeName, {
+        message: VALIDATION.messages.verification.verifyFail,
+      })
     }
   }
 

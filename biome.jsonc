@@ -201,17 +201,22 @@
       }
     },
     {
-      // 4. UI 컴포넌트는 네이밍 컨벤션과 unused 규칙 무시 (외부 라이브러리 호환성)
+      // 4. UI 컴포넌트는 린트와 포맷터 모두 비활성화 (외부 라이브러리 호환성)
       "includes": ["src/components/ui/**/*.ts", "src/components/ui/**/*.tsx"],
       "linter": {
+        "enabled": false
+      },
+      "formatter": {
+        "enabled": false
+      }
+    },
+    {
+      // 5. shadcn/ui 자동 생성 훅 파일 네이밍 컨벤션만 예외 처리
+      "includes": ["src/hooks/use-mobile.ts"],
+      "linter": {
         "rules": {
-          "correctness": {
-            "noUnusedFunctionParameters": "off",
-            "noUnusedImports": "off",
-            "noUnusedVariables": "off"
-          },
           "style": {
-            "useNamingConvention": "off"
+            "useFilenamingConvention": "off"
           }
         }
       }

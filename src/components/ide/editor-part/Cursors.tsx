@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react"
 import type { UserInfo } from "@/stores/user-store"
-import "@/styles/Cursors.css"
+import "@/styles/cursors.css"
 import { useUserStore } from "@/stores/user-store"
 
 interface YjsProvider {
