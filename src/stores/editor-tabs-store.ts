@@ -5,23 +5,23 @@ interface EditorTabsState {
   openedFiles: string[]
   activeFile: string | null
 
-  /** 파일을 에디터에서 열기 */
-  handleOpenFileInEditor: (filePath: string) => void
-
   /** 활성 파일 변경 */
-  handleSetActiveFile: (filePath: string) => void
+  setActiveFile: (filePath: string) => void
+
+  /** 파일을 에디터에서 열기 */
+  openFileInEditor: (filePath: string) => void
 
   /** 에디터에서 파일 닫기 */
-  handleCloseTab: (filePath: string) => void
+  closeTab: (filePath: string) => void
 
   /** 모든 탭 닫기 */
-  handleCloseAllTabs: () => void
+  closeAllTabs: () => void
 
   /** 다른 모든 탭 닫기 (지정된 파일만 유지) */
-  handleCloseOtherTabs: (keepFilePath: string) => void
+  closeOtherTabs: (keepFilePath: string) => void
 
   /** 오른쪽 탭들 닫기 */
-  handleCloseTabsToTheRight: (fromFilePath: string) => void
+  closeTabsToTheRight: (fromFilePath: string) => void
 }
 
 export const useEditorTabsStore = create<EditorTabsState>()(
@@ -31,7 +31,7 @@ export const useEditorTabsStore = create<EditorTabsState>()(
         openedFiles: [],
         activeFile: null,
 
-        handleOpenFileInEditor: (filePath: string) => {
+        openFileInEditor: (filePath: string) => {
           const { openedFiles } = get()
           if (openedFiles.includes(filePath)) {
             set({ activeFile: filePath })
@@ -44,7 +44,7 @@ export const useEditorTabsStore = create<EditorTabsState>()(
           console.log("Opening file in editor:", filePath)
         },
 
-        handleCloseTab: (filePath: string) => {
+        closeTab: (filePath: string) => {
           const { openedFiles, activeFile } = get()
           const newOpenedFiles = openedFiles.filter(file => file !== filePath)
 
@@ -62,28 +62,28 @@ export const useEditorTabsStore = create<EditorTabsState>()(
           })
         },
 
-        handleSetActiveFile: (filePath: string) => {
+        setActiveFile: (filePath: string) => {
           const { openedFiles } = get()
           if (openedFiles.includes(filePath)) {
             set({ activeFile: filePath })
           }
         },
 
-        handleCloseAllTabs: () => {
+        closeAllTabs: () => {
           set({
             openedFiles: [],
             activeFile: null,
           })
         },
 
-        handleCloseOtherTabs: (keepFilePath: string) => {
+        closeOtherTabs: (keepFilePath: string) => {
           set({
             openedFiles: [keepFilePath],
             activeFile: keepFilePath,
           })
         },
 
-        handleCloseTabsToTheRight: (fromFilePath: string) => {
+        closeTabsToTheRight: (fromFilePath: string) => {
           const { openedFiles, activeFile } = get()
           const currentIndex = openedFiles.findIndex(file => file === fromFilePath)
 

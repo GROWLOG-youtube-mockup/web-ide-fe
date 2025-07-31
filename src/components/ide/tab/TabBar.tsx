@@ -8,7 +8,12 @@ import { useEditorTabsStore } from "@/stores/editor-tabs-store"
 import "@/styles/global-tab.css"
 
 export const TabBar = () => {
-  const { openedFiles, activeFile, setActiveFile, closeFile } = useEditorTabsStore()
+  const {
+    openedFiles,
+    activeFile,
+    setActiveFile: handleSetActiveFile,
+    closeTab: handleCloseTab,
+  } = useEditorTabsStore()
   const [contextMenuFilePath, setContextMenuFilePath] = useState<string | null>(null)
   const { menuItems } = useTabContextMenu(contextMenuFilePath || "")
 
@@ -25,7 +30,7 @@ export const TabBar = () => {
   }
 
   return (
-    <Tabs className="w-full" onValueChange={setActiveFile} value={activeFile || undefined}>
+    <Tabs className="w-full" onValueChange={handleSetActiveFile} value={activeFile || undefined}>
       <WithContextMenu menuItems={menuItems}>
         <TabsList
           className="h-8 justify-start rounded-none bg-transparent p-0"
@@ -52,7 +57,7 @@ export const TabBar = () => {
                 className="-translate-y-1/2 absolute top-1/2 right-1 z-30 flex-shrink-0 rounded-md p-1 transition-colors hover:text-red-400"
                 onClick={e => {
                   e.stopPropagation()
-                  closeFile(filePath)
+                  handleCloseTab(filePath)
                 }}
                 type="button"
               >

@@ -4,8 +4,12 @@ import type { ContextMenuItem } from "@/types/context-menu"
 import { copyToClipboard } from "@/utils/context-menu"
 
 export const useTabContextMenu = (filePath: string) => {
-  const { handleCloseTab, handleCloseAllTabs, handleCloseOtherTabs, handleCloseTabsToTheRight } =
-    useEditorTabsStore()
+  const {
+    closeTab: handleCloseTab,
+    closeAllTabs: handleCloseAllTabs,
+    closeOtherTabs: handleCloseOtherTabs,
+    closeTabsToTheRight: handleCloseTabsToTheRight,
+  } = useEditorTabsStore()
 
   const menuItems: ContextMenuItem[] = useMemo(() => {
     if (!filePath || filePath.trim() === "") {
