@@ -2,10 +2,11 @@ import type { LucideIcon } from "lucide-react"
 import type { MouseEventHandler, ReactNode } from "react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { type NavItem, useSidebarStore } from "@/stores/sidebar-store"
+import type { TabId } from "@/stores/sidebar-store"
+import { useSidebarStore } from "@/stores/sidebar-store"
 
 interface SidebarTabProps {
-  id: NavItem
+  id: TabId
   icon: LucideIcon
 }
 
@@ -31,14 +32,15 @@ const SidebarTabButton = ({ children, onClick, isActive = false }: SidebarTabBut
 }
 
 export const SidebarTab = ({ id, icon: Icon }: SidebarTabProps) => {
-  const { activePanel, setActivePanel } = useSidebarStore()
-
-  const handleClick = () => {
-    setActivePanel(id)
-  }
+  const { activeTab, setActiveTab } = useSidebarStore()
 
   return (
-    <SidebarTabButton isActive={activePanel === id} onClick={handleClick}>
+    <SidebarTabButton
+      isActive={activeTab === id}
+      onClick={() => {
+        setActiveTab(id)
+      }}
+    >
       <Icon className="size-6" />
     </SidebarTabButton>
   )

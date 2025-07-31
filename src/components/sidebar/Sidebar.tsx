@@ -2,9 +2,9 @@ import { FilesIcon, FolderInputIcon, SearchIcon, SettingsIcon, Share2Icon } from
 import { FileExplorer } from "@/components/sidebar/file-explorer/FileExplorer"
 import { FileExplorerActions } from "@/components/sidebar/file-explorer/FileExplorerActions"
 import { SidebarPanel } from "@/components/sidebar/SidebarPanel"
+import { SidebarPanels } from "@/components/sidebar/SidebarPanels"
 import { SidebarTab } from "@/components/sidebar/SidebarTab"
 import { SidebarTabs } from "@/components/sidebar/SidebarTabs"
-import { SidebarTabsGroup } from "@/components/sidebar/SidebarTabsGroup"
 import { InviteSidebar } from "@/components/sidebar/share/ShareSection"
 import { useFileTree } from "@/hooks/file-explorer/useFileTree"
 
@@ -30,43 +30,71 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
 
   return (
     <div className="flex h-full">
-      <SidebarTabs>
-        <SidebarTabsGroup>
-          <SidebarTab icon={FilesIcon} id="files" />
-          <SidebarTab icon={SearchIcon} id="search" />
-          <SidebarTab icon={Share2Icon} id="share" />
-          <SidebarTab icon={FolderInputIcon} id="projects" />
-        </SidebarTabsGroup>
+      <SidebarTabs
+        bottomTabs={[<SidebarTab icon={SettingsIcon} id="settings" key="settings" />]}
+        topTabs={[
+          <SidebarTab icon={FilesIcon} id="files" key="files" />,
+          <SidebarTab icon={SearchIcon} id="search" key="search" />,
+          <SidebarTab icon={Share2Icon} id="share" key="share" />,
+          <SidebarTab icon={FolderInputIcon} id="projects" key="projects" />,
+        ]}
+      />
 
-        <SidebarTabsGroup position="bottom">
-          <SidebarTab icon={SettingsIcon} id="settings" />
-        </SidebarTabsGroup>
-      </SidebarTabs>
+      <div className="flex flex-1 flex-col">
+        <SidebarPanels
+          bottomPanels={[
+            <SidebarPanel id="settings" key="settings" title="Settings">
+              <PlaceholderPanel message="Settings panel coming soon..." />
+            </SidebarPanel>,
+          ]}
+          tab="settings"
+        />
 
-      <div className="flex-1">
-        <SidebarPanel
-          actions={<FileExplorerActions {...fileTreeData} />}
-          id="files"
-          title={projectTitle}
-        >
-          <FileExplorer tree={fileTreeData.tree} />
-        </SidebarPanel>
+        <SidebarPanels
+          bottomPanels={[
+            <SidebarPanel id="chats" key="chats" title="Chats">
+              <PlaceholderPanel message="Chat panel coming soon..." />
+            </SidebarPanel>,
+          ]}
+          tab="files"
+          topPanels={[
+            <SidebarPanel
+              actions={<FileExplorerActions {...fileTreeData} />}
+              id="files"
+              key="files-tree"
+              title={projectTitle}
+            >
+              <FileExplorer tree={fileTreeData.tree} />
+            </SidebarPanel>,
+          ]}
+        />
 
-        <SidebarPanel id="search" title="Search">
-          <PlaceholderPanel message="Search panel coming soon..." />
-        </SidebarPanel>
+        <SidebarPanels
+          tab="search"
+          topPanels={[
+            <SidebarPanel id="search" key="search" title="Search">
+              <PlaceholderPanel message="Search panel coming soon..." />
+            </SidebarPanel>,
+          ]}
+        />
 
-        <SidebarPanel id="share" title="Share">
-          <InviteSidebar projectId="projectid" />
-        </SidebarPanel>
+        <SidebarPanels
+          tab="share"
+          topPanels={[
+            <SidebarPanel id="share" key="share" title="Share">
+              <InviteSidebar projectId="projectid" />
+            </SidebarPanel>,
+          ]}
+        />
 
-        <SidebarPanel id="projects" title="Projects">
-          <PlaceholderPanel message="Projects panel coming soon..." />
-        </SidebarPanel>
-
-        <SidebarPanel id="settings" title="Settings">
-          <PlaceholderPanel message="Settings panel coming soon..." />
-        </SidebarPanel>
+        <SidebarPanels
+          tab="projects"
+          topPanels={[
+            <SidebarPanel id="projects" key="projects" title="Projects">
+              <PlaceholderPanel message="Projects panel coming soon..." />
+            </SidebarPanel>,
+          ]}
+        />
       </div>
     </div>
   )
@@ -75,4 +103,3 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
 Sidebar.Panel = SidebarPanel
 Sidebar.Tab = SidebarTab
 Sidebar.Tabs = SidebarTabs
-Sidebar.TabsGroup = SidebarTabsGroup
