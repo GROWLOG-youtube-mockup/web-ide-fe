@@ -1,23 +1,42 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { AuthForm } from "@/components/auth/AuthForm"
 import { AuthFormField } from "@/components/auth/AuthFormField"
 import { ResetPassword } from "@/components/auth/ResetPassword"
+import { useToast } from "@/components/common/ToastContext"
 import { AUTH_STYLES } from "@/constants/auth-styles"
 import { useAuthForm } from "@/hooks/auth/useAuthForm"
 import { loginFormSchema } from "@/lib/auth-schemas"
+import { useUserStore } from "@/stores/user-store"
 import type { LoginFormData } from "@/types/auth"
 
 export default function LoginPage() {
   const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false)
+  const navigate = useNavigate()
+  const { addToast } = useToast()
+  const { loginUser, isLoading } = useUserStore()
 
   const form = useAuthForm(loginFormSchema, {
     email: "",
     password: "",
   })
 
-  const onSubmit = (data: LoginFormData) => {
-    console.log("로그인 처리:", data)
-    // TODO: 실제 로그인 API 호출
+  const onSubmit = async (data: LoginFormData) => {
+    const success = await loginUser(data)
+    if (success) {
+      addToast({
+        type: "success",
+        title: "Login successful! Welcome",
+        duration: 2000,
+      })
+      navigate("/") // 로그인 성공 시 프로젝트 목록 페이지로 이동
+    } else {
+      addToast({
+        type: "error",
+        title: "Login failed, please check your email and password",
+        duration: 3000,
+      })
+    }
   }
 
   const footer = (
@@ -33,7 +52,7 @@ export default function LoginPage() {
         footer={footer}
         form={form}
         onSubmit={onSubmit}
-        submitText="Sign In"
+        submitText={isLoading ? "Signing In..." : "Sign In"}
         subtitle="Enter your username and password to sign in!"
         title="Sign In"
       >
