@@ -148,6 +148,7 @@ export function Invitations({ projectId }: { projectId: string }) {
         </form>
       </Form>
       <EmailList />
+      <div className="min-h-[20px]">{"\u00A0"}</div>
       <InviteButton />
     </>
   )
