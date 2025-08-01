@@ -10,11 +10,13 @@ import { useAuthForm } from "@/hooks/auth/useAuthForm"
 import { signUpFormSchema } from "@/lib/auth-schemas"
 import { signUp } from "@/services/api/users"
 import type { SignUpFormData } from "@/types/auth"
+import { savePendingProfileImage } from "@/utils/pending-profile-image"
 
 export default function SignUpPage() {
   const navigate = useNavigate()
   const { addToast } = useToast()
   const [isEmailVerified, setIsEmailVerified] = useState(false)
+  const [pendingProfileImage, setPendingProfileImage] = useState<File | null>(null)
 
   const form = useAuthForm(signUpFormSchema, {
     email: "",
@@ -35,6 +37,7 @@ export default function SignUpPage() {
     }
 
     try {
+      // 1. 회원가입 먼저 진행
       const response = await signUp({
         email: data.email,
         password: data.password,
@@ -42,11 +45,21 @@ export default function SignUpPage() {
       })
 
       if (response.success) {
-        addToast({
-          type: "success",
-          title: "회원가입이 완료되었습니다! 로그인해주세요.",
-          duration: 3000,
-        })
+        // 2. 프로필 이미지가 있다면 localStorage에 저장하고 안내
+        if (pendingProfileImage) {
+          await savePendingProfileImage(pendingProfileImage)
+          addToast({
+            type: "success",
+            title: "회원가입이 완료되었습니다! 로그인하면 프로필 이미지가 자동으로 설정됩니다.",
+            duration: 4000,
+          })
+        } else {
+          addToast({
+            type: "success",
+            title: "회원가입이 완료되었습니다! 로그인해주세요.",
+            duration: 3000,
+          })
+        }
         navigate("/login")
       } else {
         addToast({
@@ -73,7 +86,9 @@ export default function SignUpPage() {
 
   return (
     <AuthForm<SignUpFormData>
-      avatarComponent={<ProfileAvatar />}
+      avatarComponent={
+        <ProfileAvatar onImageSelect={(file: File) => setPendingProfileImage(file)} />
+      }
       footer={footer}
       form={form}
       onSubmit={onSubmit}

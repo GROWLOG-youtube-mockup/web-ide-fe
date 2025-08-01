@@ -1,4 +1,10 @@
-import type { ApiResponse, SignUpRequest, SignUpResponse, UserInfoResponse } from "@/types/api"
+import type {
+  ApiResponse,
+  ProfileImageResponse,
+  SignUpRequest,
+  SignUpResponse,
+  UserInfoResponse,
+} from "@/types/api"
 import apiClient from "./index"
 
 // 회원가입
@@ -11,7 +17,7 @@ export const signUp = async (data: SignUpRequest): Promise<ApiResponse<SignUpRes
 export const getMyInfo = async (): Promise<UserInfoResponse> => {
   const response = await apiClient.get<ApiResponse<UserInfoResponse>>("/users/me")
   if (!response.data.data) {
-    throw new Error("사용자 정보를 가져올 수 없습니다")
+    throw new Error("could not fetch user info")
   }
   return response.data.data
 }
@@ -21,11 +27,19 @@ export const uploadProfileImage = async (file: File): Promise<string> => {
   const formData = new FormData()
   formData.append("profileImage", file)
 
-  const response = await apiClient.patch("/users/profile-image", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  })
+  const response = await apiClient.patch<ApiResponse<ProfileImageResponse>>(
+    "/users/profile-image",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  )
+
+  if (!response.data.success || !response.data.data) {
+    throw new Error("failed to upload profile image")
+  }
 
   return response.data.data.profileImageUrl
 }

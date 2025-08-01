@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useFormContext } from "react-hook-form"
+import { useToast } from "@/components/common/ToastContext"
 import { DEFAULT_EMAIL_VERIFY, VALIDATION } from "@/constants/auth"
 import { emailSchema, verificationCodeSchema } from "@/lib/auth-schemas"
 import { sendEmailVerification, verifyEmail } from "@/services/api/auth"
@@ -15,6 +16,7 @@ export function useEmailVerification({
 }: UseEmailVerificationProps): UseEmailVerificationReturn {
   const { watch, setError, clearErrors } = useFormContext()
   const [state, setState] = useState<EmailVerificationState>(DEFAULT_EMAIL_VERIFY)
+  const { addToast } = useToast()
 
   const emailValue = watch(emailName) as string
   const codeValue = watch(codeName) as string
@@ -38,16 +40,34 @@ export function useEmailVerification({
 
       if (response.success) {
         setState(prev => ({ ...prev, isLoading: false, isSent: true }))
+        // 서버로부터 받은 성공 메시지를 toast로 표시
+        // response.data는 Record<string, string> 형태이므로 첫 번째 값 사용
+        const message = response.data
+          ? Object.values(response.data)[0] || "Verification email sent successfully"
+          : "Verification email sent successfully"
+        addToast({
+          type: "success",
+          title: message,
+          duration: 3000,
+        })
       } else {
         setState(prev => ({ ...prev, isLoading: false }))
-        setError(emailName, {
-          message: response.error?.message || VALIDATION.messages.verification.sendFail,
+        const errorMessage = response.error?.message || VALIDATION.messages.verification.sendFail
+        // 서버 에러는 toast로만 표시
+        addToast({
+          type: "error",
+          title: errorMessage,
+          duration: 3000,
         })
       }
     } catch (_error) {
       setState(prev => ({ ...prev, isLoading: false }))
-      setError(emailName, {
-        message: VALIDATION.messages.verification.sendFail,
+      const errorMessage = VALIDATION.messages.verification.sendFail
+      // 네트워크 에러는 toast로만 표시
+      addToast({
+        type: "error",
+        title: errorMessage,
+        duration: 3000,
       })
     }
   }
@@ -86,23 +106,37 @@ export function useEmailVerification({
 
         if (isVerified) {
           setState(prev => ({ ...prev, isLoading: false, isVerified: true }))
+          // 인증 성공 메시지를 toast로 표시
+          addToast({
+            type: "success",
+            title: "Email verification completed successfully!",
+            duration: 3000,
+          })
         } else {
           setState(prev => ({ ...prev, isLoading: false }))
-          setError(codeName, {
-            message: "인증 코드가 올바르지 않습니다.",
-          })
+          const errorMessage = "인증 코드가 올바르지 않습니다."
+          setError(codeName, { message: errorMessage })
+          // 인증 코드 오류는 하단 에러 메시지만 표시 (toast 제거)
         }
       } else {
         setState(prev => ({ ...prev, isLoading: false }))
-        setError(codeName, {
-          message: response.error?.message || VALIDATION.messages.verification.verifyFail,
+        const errorMessage = response.error?.message || VALIDATION.messages.verification.verifyFail
+        // 서버 에러는 toast로만 표시
+        addToast({
+          type: "error",
+          title: errorMessage,
+          duration: 3000,
         })
       }
     } catch (error) {
       console.error("인증 실패:", error)
       setState(prev => ({ ...prev, isLoading: false }))
-      setError(codeName, {
-        message: VALIDATION.messages.verification.verifyFail,
+      const errorMessage = VALIDATION.messages.verification.verifyFail
+      // 네트워크 에러는 toast로만 표시
+      addToast({
+        type: "error",
+        title: errorMessage,
+        duration: 3000,
       })
     }
   }
