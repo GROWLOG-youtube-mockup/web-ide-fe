@@ -1,6 +1,7 @@
 import { AvatarFallback } from "@radix-ui/react-avatar"
-import { Plus } from "lucide-react"
+import { Edit3, Plus } from "lucide-react"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/custom-button"
 import { useUserStore } from "@/stores/user-store"
@@ -10,8 +11,13 @@ export const ProjectListHeader = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [createLoading, setCreateLoading] = useState(false)
   const { userInfo } = useUserStore()
+  const navigate = useNavigate()
 
   // 사용자 정보는 로그인 시 이미 가져왔으므로 추가 호출 불필요
+
+  const handleProfileClick = () => {
+    navigate("/profile/edit")
+  }
 
   const handleCreateConfirm = async (data: { name: string; description: string }) => {
     setCreateLoading(true)
@@ -31,7 +37,12 @@ export const ProjectListHeader = () => {
     <>
       <div className="mt-12 flex items-end justify-between px-0 py-2">
         {/* Profile Section */}
-        <div className="flex items-end gap-4">
+        <button
+          aria-label="프로필 수정 페이지로 이동"
+          className="m-0 flex cursor-pointer items-end gap-4 border-none bg-transparent p-0"
+          onClick={handleProfileClick}
+          type="button"
+        >
           <div className="flex items-end justify-center">
             <Avatar className="h-[72px] w-[72px] rounded-full border-2 border-white">
               <AvatarImage
@@ -44,11 +55,17 @@ export const ProjectListHeader = () => {
             </Avatar>
           </div>
           <div className="mb-3 flex items-center gap-2.5">
-            <h2 className="font-semibold text-2xl text-black leading-8 tracking-[-0.144px]">
-              {userInfo?.name || "사용자"}
-            </h2>
+            <div className="group flex items-end gap-1.5">
+              <h2 className="font-semibold text-2xl text-black leading-8 tracking-[-0.144px]">
+                {userInfo?.name || "사용자"}
+              </h2>
+              <Edit3
+                className="mb-1 h-4 w-4 cursor-pointer text-muted-foreground transition-colors duration-200 group-hover:text-foreground"
+                strokeWidth={1.5}
+              />
+            </div>
           </div>
-        </div>
+        </button>
 
         {/* New Project Button */}
         <div className="w-[140px]">

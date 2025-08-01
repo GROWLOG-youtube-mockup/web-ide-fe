@@ -1,6 +1,8 @@
 import { useState } from "react"
 import type { UseFormReturn } from "react-hook-form"
 import { useToast } from "@/components/common/ToastContext"
+import { updateName, updatePassword } from "@/services/api/users"
+import { useUserStore } from "@/stores/user-store"
 import type { ProfileEditFormData } from "@/types/auth"
 
 interface UseProfileUpdateProps {
@@ -11,6 +13,7 @@ interface UseProfileUpdateProps {
 export function useProfileUpdate({ form, initialValues }: UseProfileUpdateProps) {
   const [isSaving, setIsSaving] = useState(false)
   const { addToast } = useToast()
+  const { fetchUserInfo } = useUserStore()
 
   const updateProfile = async (data: ProfileEditFormData) => {
     setIsSaving(true)
@@ -34,23 +37,17 @@ export function useProfileUpdate({ form, initialValues }: UseProfileUpdateProps)
         return
       }
 
-      // 실제 API 호출 시뮬레이션
-      await new Promise(resolve => setTimeout(resolve, 1000))
-
-      // 서버 응답 시뮬레이션
-      const simulateServerError = Math.random() < 0.3
-
-      if (simulateServerError && updates.currentPassword) {
-        form.setError("currentPassword", {
-          message: "Current password is incorrect.",
-          type: "server",
-        })
-        addToast({
-          type: "error",
-          title: "Please check your current password.",
-        })
-        return
+      // API 문서에 따른 실제 API 호출들
+      if (updates.name) {
+        await updateName(updates.name)
       }
+
+      if (updates.newPassword && updates.currentPassword) {
+        await updatePassword(updates.currentPassword, updates.newPassword)
+      }
+
+      // 성공 시 사용자 정보 다시 가져오기
+      await fetchUserInfo()
 
       addToast({ type: "success", title: "Profile updated successfully." })
 
