@@ -17,7 +17,7 @@ export function ProtectedRoute() {
   // 토큰이 없거나 사용자 정보가 없으면 로그인 페이지로 리다이렉트
   const token = localStorage.getItem("accessToken")
   if (!token || !userInfo) {
-    return <Navigate replace state={{ from: location }} to="/login" />
+    return <Navigate replace state={{ from: location }} to="/" />
   }
 
   // 인증된 사용자면 자식 컴포넌트 렌더링
@@ -30,7 +30,7 @@ export function AuthRoute() {
   const token = localStorage.getItem("accessToken")
 
   if (token && userInfo) {
-    return <Navigate replace to="/" />
+    return <Navigate replace to="/projects" />
   }
 
   return <Outlet />
