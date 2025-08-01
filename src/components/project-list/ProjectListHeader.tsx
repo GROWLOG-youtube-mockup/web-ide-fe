@@ -38,7 +38,7 @@ export const ProjectListHeader = () => {
       <div className="mt-12 flex items-end justify-between px-0 py-2">
         {/* Profile Section */}
         <button
-          aria-label="프로필 수정 페이지로 이동"
+          aria-label="Profile edit"
           className="m-0 flex cursor-pointer items-end gap-4 border-none bg-transparent p-0"
           onClick={handleProfileClick}
           type="button"
