@@ -1,5 +1,5 @@
 import { FilesIcon, FolderInputIcon, SearchIcon, SettingsIcon, Share2Icon } from "lucide-react"
-import { Chats } from "@/components/sidebar/chat/Chats"
+import { Chats } from "@/components/sidebar/chat/chats"
 import { FileExplorer } from "@/components/sidebar/file-explorer/FileExplorer"
 import { FileExplorerActions } from "@/components/sidebar/file-explorer/FileExplorerActions"
 import { SidebarPanel } from "@/components/sidebar/SidebarPanel"
@@ -46,7 +46,7 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
         <SidebarPanels
           bottomPanels={[
             <SidebarPanel id="chats" key="chats" title="chats">
-              <PlaceholderPanel message="Chat panel coming soon..." />
+              <Chats />
             </SidebarPanel>,
           ]}
           tab="files"

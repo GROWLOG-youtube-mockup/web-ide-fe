@@ -123,7 +123,6 @@ export function Invitations({ projectId }: { projectId: string }) {
                   <FormControl>
                     <Input
                       {...field}
-                      className="rounded-md"
                       disabled={isLoading}
                       placeholder="Invite by member email"
                       type="email"

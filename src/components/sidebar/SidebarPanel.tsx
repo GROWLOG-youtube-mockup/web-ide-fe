@@ -1,9 +1,9 @@
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible"
-import { ScrollArea } from "@radix-ui/react-scroll-area"
 import { ChevronRight } from "lucide-react"
 import type { ReactNode } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/custom-button"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
 import { type PanelId, useSidebarStore } from "@/stores/sidebar-store"
 
@@ -48,7 +48,6 @@ export function SidebarPanel({ id, title, actions, countBadge = 0, children }: S
             <div className="flex min-w-0 flex-1 items-center gap-1.5">
               <ChevronRight className={cn("transition-transform", expanded && "rotate-90")} />
               <span className="truncate text-left uppercase">{title}</span>
-
               {countBadge > 0 && (
                 <Badge
                   className="flex h-5 min-w-5 items-center justify-center rounded-full text-xs"
@@ -62,7 +61,7 @@ export function SidebarPanel({ id, title, actions, countBadge = 0, children }: S
           </Button>
         </CollapsibleTrigger>
       </div>
-      <CollapsibleContent className="min-h-0 flex-1 overflow-auto">
+      <CollapsibleContent className="min-h-0 flex-1 overflow-auto transition-all duration-300">
         <ScrollArea className="h-full w-full p-2">{children}</ScrollArea>
       </CollapsibleContent>
     </Collapsible>
