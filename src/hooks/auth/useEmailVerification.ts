@@ -98,8 +98,6 @@ export function useEmailVerification({
         code: codeValue,
       })
 
-      console.log("이메일 인증 응답:", response) // 디버깅용
-
       if (response.success) {
         // API 응답이 Record<string, boolean> 형태이므로 적절한 키 확인 필요
         const isVerified = Object.values(response.data || {}).some(Boolean)
@@ -114,7 +112,7 @@ export function useEmailVerification({
           })
         } else {
           setState(prev => ({ ...prev, isLoading: false }))
-          const errorMessage = "인증 코드가 올바르지 않습니다."
+          const errorMessage = "code is not valid"
           setError(codeName, { message: errorMessage })
           // 인증 코드 오류는 하단 에러 메시지만 표시 (toast 제거)
         }
@@ -128,8 +126,7 @@ export function useEmailVerification({
           duration: 3000,
         })
       }
-    } catch (error) {
-      console.error("인증 실패:", error)
+    } catch (_error) {
       setState(prev => ({ ...prev, isLoading: false }))
       const errorMessage = VALIDATION.messages.verification.verifyFail
       // 네트워크 에러는 toast로만 표시

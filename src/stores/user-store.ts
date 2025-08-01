@@ -86,13 +86,11 @@ export const useUserStore = create<UserStore>()(
             try {
               const pendingImage = await getPendingProfileImage()
               if (pendingImage) {
-                console.log("회원가입 시 저장된 프로필 이미지를 업로드합니다...")
                 await uploadProfileImage(pendingImage)
                 // 업로드 성공 후 저장된 데이터 삭제
                 clearPendingProfileImage()
                 // 프로필 정보 다시 가져오기
                 await get().fetchUserInfo()
-                console.log("프로필 이미지 자동 업로드 완료!")
               }
             } catch (error) {
               console.error("프로필 이미지 자동 업로드 실패:", error)
