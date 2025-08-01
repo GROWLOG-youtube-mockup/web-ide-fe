@@ -1,7 +1,8 @@
+import { AvatarFallback } from "@radix-ui/react-avatar"
 import { Plus } from "lucide-react"
 import { useEffect, useState } from "react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import { Avatar, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/custom-button"
 import { useUserStore } from "@/stores/user-store"
 import { ProjectDialog } from "./ProjectDialog"
 

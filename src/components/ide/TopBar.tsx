@@ -2,15 +2,17 @@ import { FigmaIcons, LucideIcons } from "@/assets/icons"
 import LogoSvg from "@/assets/Logo.svg"
 import { ProjectAvatars } from "@/components/project-list/ProjectAvatars"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/custom-button"
 
 export const TopBar = () => {
   const LogOutIcon = LucideIcons.logOut
 
   return (
     <div
-      className="flex h-[50px] items-center border-b bg-white"
-      style={{ borderBottomColor: "var(--sidebar-border)" }}
+      className="flex h-[50px] items-center bg-[var(--background)]"
+      style={{
+        borderBottom: "1px solid var(--border)",
+      }}
     >
       <div className="flex w-full items-center justify-between px-3 py-1">
         {/* Logo and Menu */}

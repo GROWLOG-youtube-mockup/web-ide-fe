@@ -43,12 +43,12 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
 
       <div className="flex flex-1 flex-col">
         <SidebarPanels
-          bottomPanels={[
+          tab="settings"
+          topPanels={[
             <SidebarPanel id="settings" key="settings" title="settings">
               <PlaceholderPanel message="Settings panel coming soon..." />
             </SidebarPanel>,
           ]}
-          tab="settings"
         />
 
         <SidebarPanels
@@ -81,7 +81,7 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
 
         <SidebarPanels
           bottomPanels={[
-            <SidebarPanel id="members" key="members" title="members">
+            <SidebarPanel countBadge={30} id="members" key="members" title="members">
               <Members projectId={"3"} />
             </SidebarPanel>,
           ]}

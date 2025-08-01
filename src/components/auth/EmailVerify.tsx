@@ -1,7 +1,7 @@
 import clsx from "clsx"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/custom-button"
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/custom-form"
 import { Input } from "@/components/ui/input"
 import { AUTH_STYLES } from "@/constants/auth-styles"

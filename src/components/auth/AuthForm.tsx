@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 import type { FieldValues, SubmitHandler, UseFormReturn } from "react-hook-form"
 import { AuthHeader } from "@/components/auth/AuthHeader"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/custom-button"
 import { Form } from "@/components/ui/custom-form"
 import { AUTH_LAYOUT, AUTH_STYLES } from "@/constants/auth-styles"
 
