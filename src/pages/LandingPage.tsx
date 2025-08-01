@@ -28,7 +28,7 @@ export default function LandingPage() {
         </div>
       </div>
 
-      <div className="mt-[180px] flex flex-col items-center space-y-8">
+      <div className="mt-[110px] flex flex-col items-center space-y-8">
         {/* 중앙 텍스트 및 버튼 */}
         <div className="flex flex-col items-center gap-6 pb-6">
           <div className="flex w-[563px] flex-col items-center gap-2.5">
