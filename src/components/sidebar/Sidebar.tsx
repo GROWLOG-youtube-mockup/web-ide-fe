@@ -1,13 +1,13 @@
 import { FilesIcon, FolderInputIcon, SearchIcon, SettingsIcon, Share2Icon } from "lucide-react"
-import { Chats } from "@/components/sidebar/chat/chats"
-import { FileExplorer } from "@/components/sidebar/file-explorer/FileExplorer"
+import { Chats } from "@/components/sidebar/chat/ChatsPanel"
 import { FileExplorerActions } from "@/components/sidebar/file-explorer/FileExplorerActions"
+import { FileExplorer } from "@/components/sidebar/file-explorer/FileExplorerPanel"
 import { SidebarPanel } from "@/components/sidebar/SidebarPanel"
 import { SidebarPanels } from "@/components/sidebar/SidebarPanels"
 import { SidebarTab } from "@/components/sidebar/SidebarTab"
 import { SidebarTabs } from "@/components/sidebar/SidebarTabs"
-import { Invitations } from "@/components/sidebar/share/Invitations"
-import { Members } from "@/components/sidebar/share/Members"
+import { Invitations } from "@/components/sidebar/share/InvitationsPanel"
+import { Members } from "@/components/sidebar/share/MembersPanel"
 import { useFileTree } from "@/hooks/file-explorer/useFileTree"
 
 interface SidebarProps {

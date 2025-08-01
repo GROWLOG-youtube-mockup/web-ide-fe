@@ -1,6 +1,10 @@
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible"
 import { ChevronRight } from "lucide-react"
 import type { ReactNode } from "react"
+import {
+  CustomCollapsible,
+  CustomCollapsibleContent,
+  CustomCollapsibleTrigger,
+} from "@/components/common/Collapsible"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/custom-button"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -29,13 +33,13 @@ export function SidebarPanel({ id, title, actions, countBadge = 0, children }: S
   }
 
   return (
-    <Collapsible
+    <CustomCollapsible
       className="sidebar-panel flex min-h-0 flex-1 flex-col overflow-hidden"
       onOpenChange={handleOpenChange}
       open={expanded}
     >
       <div className="flex flex-col">
-        <CollapsibleTrigger asChild>
+        <CustomCollapsibleTrigger onClick={() => handleOpenChange(!expanded)}>
           <Button
             className={cn(
               "flex w-full cursor-pointer items-center justify-between gap-1.5",
@@ -46,7 +50,9 @@ export function SidebarPanel({ id, title, actions, countBadge = 0, children }: S
             variant={"ghost"}
           >
             <div className="flex min-w-0 flex-1 items-center gap-1.5">
-              <ChevronRight className={cn("transition-transform", expanded && "rotate-90")} />
+              <ChevronRight
+                className={cn("transition-transform duration-300", expanded && "rotate-90")}
+              />
               <span className="truncate text-left uppercase">{title}</span>
               {countBadge > 0 && (
                 <Badge
@@ -59,11 +65,11 @@ export function SidebarPanel({ id, title, actions, countBadge = 0, children }: S
             </div>
             {actions && <div className="flex items-center gap-1">{actions}</div>}
           </Button>
-        </CollapsibleTrigger>
+        </CustomCollapsibleTrigger>
       </div>
-      <CollapsibleContent className="min-h-0 flex-1 overflow-auto transition-all duration-300">
+      <CustomCollapsibleContent className="min-h-0 flex-1" open={expanded}>
         <ScrollArea className="h-full w-full p-2">{children}</ScrollArea>
-      </CollapsibleContent>
-    </Collapsible>
+      </CustomCollapsibleContent>
+    </CustomCollapsible>
   )
 }
