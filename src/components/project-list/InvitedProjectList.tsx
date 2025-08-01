@@ -1,5 +1,5 @@
 import { useProjectStore } from "@/stores/project-store"
-import { ProjectItem } from "./ProjectItem"
+import ProjectItem from "./ProjectItem"
 
 interface InvitedProjectListProps {
   searchQuery: string
