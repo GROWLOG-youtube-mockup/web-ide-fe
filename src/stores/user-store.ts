@@ -143,12 +143,15 @@ export const useUserStore = create<UserStore>()(
       fetchUserInfo: async () => {
         try {
           const userInfo = await getMyInfo()
+          const currentUserInfo = get().userInfo
           const formattedUserInfo: UserInfo = {
             userId: userInfo.userId,
             name: userInfo.name,
             email: userInfo.email,
             profileImage: userInfo.profileImage,
-            color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+            // 기존 색상이 있으면 유지, 없으면 새로 생성
+            color:
+              currentUserInfo?.color || `#${Math.floor(Math.random() * 16777215).toString(16)}`,
           }
           set({ userInfo: formattedUserInfo })
         } catch (error) {

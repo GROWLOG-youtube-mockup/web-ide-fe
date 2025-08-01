@@ -6,21 +6,17 @@ import { ProjectListHeader } from "@/components/project-list/ProjectListHeader"
 import { ProjectSearch } from "@/components/project-list/ProjectSearch"
 import { useLogout } from "@/hooks/auth/useLogout"
 import { useProjectStore } from "@/stores/project-store"
-import { useUserStore } from "@/stores/user-store"
 
 export const ProjectListPage = () => {
   const [searchQuery, setSearchQuery] = useState("")
   const { fetchProjects } = useProjectStore()
-  const { userInfo, fetchUserInfo } = useUserStore()
   const { logout } = useLogout()
 
   useEffect(() => {
     fetchProjects()
-    // 사용자 정보가 없거나 프로필 이미지가 없으면 가져오기
-    if (!userInfo || !userInfo.profileImage) {
-      fetchUserInfo()
-    }
-  }, [fetchProjects, fetchUserInfo, userInfo])
+  }, [fetchProjects])
+
+  // 사용자 정보는 로그인 시 이미 가져왔으므로 추가 호출 불필요
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-white py-6">

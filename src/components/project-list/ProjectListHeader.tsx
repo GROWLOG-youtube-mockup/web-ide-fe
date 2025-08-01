@@ -1,6 +1,6 @@
 import { AvatarFallback } from "@radix-ui/react-avatar"
 import { Plus } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/custom-button"
 import { useUserStore } from "@/stores/user-store"
@@ -9,14 +9,9 @@ import { ProjectDialog } from "./ProjectDialog"
 export const ProjectListHeader = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [createLoading, setCreateLoading] = useState(false)
-  const { userInfo, fetchUserInfo } = useUserStore()
+  const { userInfo } = useUserStore()
 
-  // 컴포넌트 마운트 시 사용자 정보 가져오기
-  useEffect(() => {
-    if (!userInfo?.profileImage) {
-      fetchUserInfo()
-    }
-  }, [userInfo, fetchUserInfo])
+  // 사용자 정보는 로그인 시 이미 가져왔으므로 추가 호출 불필요
 
   const handleCreateConfirm = async (data: { name: string; description: string }) => {
     setCreateLoading(true)
