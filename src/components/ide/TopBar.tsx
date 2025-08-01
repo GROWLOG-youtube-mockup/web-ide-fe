@@ -28,12 +28,12 @@ export const TopBar = () => {
             <ProjectAvatars
               maxVisible={3}
               members={[
-                { userId: 1, name: "User 1", role: "write", profileImage: FigmaIcons.avatar },
-                { userId: 2, name: "User 2", role: "write", profileImage: FigmaIcons.avatar },
-                { userId: 3, name: "User 3", role: "read", profileImage: FigmaIcons.avatar },
-                { userId: 4, name: "User 4", role: "read", profileImage: FigmaIcons.avatar },
-                { userId: 5, name: "User 5", role: "read", profileImage: FigmaIcons.avatar },
-                { userId: 6, name: "User 6", role: "read", profileImage: FigmaIcons.avatar },
+                { userId: 1, name: "User 1", role: "WRITE", profileImage: FigmaIcons.avatar },
+                { userId: 2, name: "User 2", role: "WRITE", profileImage: FigmaIcons.avatar },
+                { userId: 3, name: "User 3", role: "READ", profileImage: FigmaIcons.avatar },
+                { userId: 4, name: "User 4", role: "READ", profileImage: FigmaIcons.avatar },
+                { userId: 5, name: "User 5", role: "READ", profileImage: FigmaIcons.avatar },
+                { userId: 6, name: "User 6", role: "READ", profileImage: FigmaIcons.avatar },
               ]}
               size="md"
             />

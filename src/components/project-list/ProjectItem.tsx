@@ -15,19 +15,21 @@ type ProjectFormData = {
 
 interface ProjectItemProps {
   project: Project
+  isToggled?: boolean
   onToggle?: (id: number) => void
   onEdit?: (id: number, data: ProjectFormData) => void
   onNewProject?: (id: number) => void
   onLeave?: (id: number) => void
 }
 
-export const ProjectItem = ({
+export default function ProjectItem({
   project,
+  isToggled = false,
   onToggle,
   onEdit,
   onNewProject,
   onLeave,
-}: ProjectItemProps) => {
+}: ProjectItemProps) {
   const [isHovered, setIsHovered] = useState(false)
 
   // 다이얼로그 상태들 - 한눈에 보기 쉽게
@@ -100,11 +102,8 @@ export const ProjectItem = ({
               </div>
 
               {/* Toggle/Status Icon */}
-              {isHost ? (
-                <ProjectToggle
-                  checked={project.isToggled || false}
-                  onCheckedChange={handleToggleClick}
-                />
+              {isHost && onToggle ? (
+                <ProjectToggle checked={isToggled} onCheckedChange={handleToggleClick} />
               ) : (
                 <div className="flex h-3 w-3 items-center justify-center">
                   <Circle className="h-2 w-2 fill-green-500 text-green-500" />
@@ -166,7 +165,7 @@ export const ProjectItem = ({
       <AlertDialog
         cancelText="Cancel"
         confirmText="Change"
-        description={`Current status: ${project.isToggled ? "ON" : "OFF"}`}
+        description={`Current status: ${isToggled ? "ON" : "OFF"}`}
         isOpen={isToggleDialogOpen}
         onCancel={() => setIsToggleDialogOpen(false)}
         onConfirm={handleToggleConfirm}

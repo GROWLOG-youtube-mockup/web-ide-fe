@@ -1,23 +1,23 @@
 /**
- * 서버 API 응답 타입 정의
+ * 서버 API 응답 타입 정의 (API 문서와 일치)
  */
 
 export interface ProjectMember {
   userId: number
   name: string
-  role: "owner" | "write" | "read"
+  role: "OWNER" | "WRITE" | "READ"
   email?: string
   profileImage?: string
 }
 
 export interface ProjectResponse {
   projectId: number
-  name: string
+  projectName: string
   description: string
   ownerName: string
-  memberNames: ProjectMember[]
-  myRole: "OWNER" | "WRITE" | "READ"
-  status: "ACTIVE" | "INACTIVE"
+  memberNames: string[]
+  myRole: string
+  status: string
   createdAt: string
   updatedAt: string
 }
@@ -56,12 +56,16 @@ export type ProjectFilter = "all" | "own" | "joined"
 export const transformProjectResponse = (response: ProjectResponse): Project => {
   return {
     id: response.projectId,
-    name: response.name,
+    name: response.projectName,
     description: response.description,
     ownerName: response.ownerName,
-    members: response.memberNames || [], // undefined 방어
-    myRole: response.myRole,
-    status: response.status,
+    members: (response.memberNames || []).map((name: string, index: number) => ({
+      userId: index + 1,
+      name,
+      role: "READ" as const,
+    })),
+    myRole: response.myRole as "OWNER" | "WRITE" | "READ",
+    status: response.status as "ACTIVE" | "INACTIVE",
     createdAt: new Date(response.createdAt),
     updatedAt: new Date(response.updatedAt),
     isToggled: false, // 기본값

@@ -1,16 +1,32 @@
 import type { JsonObject } from "@liveblocks/client"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
+import { getUserInfo, login } from "@/services/api/auth"
+import type { LoginRequest } from "@/types/api"
 
 export interface UserInfo {
+  userId?: number // 사용자 ID
   email: string // 사용자 이메일 (고유 식별자)
   name: string // 화면에 표시될 사용자 이름
+  profileImage?: string // 프로필 이미지 URL
   color?: string // 협업 시 커서 색상 (hex), 계정 단위로 색상설정을 저장할수도 있어서 일단 매개변수로 받음
 }
 
 interface UserStore {
   userInfo: UserInfo | null // 현재 로그인된 사용자 정보
   labelsVisible: boolean // 커서 보임/숨김
+  isLoading: boolean // 로그인 로딩 상태
+
+  /**
+   * 로그인 액션
+   */
+  loginUser: (loginData: LoginRequest) => Promise<boolean>
+
+  /**
+   * 로그아웃 액션 (Toast와 리다이렉트 포함)
+   */
+  logoutUser: (showToast?: boolean) => void
+
   /**
    * 커서 라벨 표시/숨김 토글
    */
@@ -28,6 +44,11 @@ interface UserStore {
   setUserInfo: (userInfo: UserInfo) => void
 
   /**
+   * 서버에서 사용자 정보 가져오기
+   */
+  fetchUserInfo: () => Promise<void>
+
+  /**
    * 임시 사용자로 초기화 (첫 방문자 또는 게스트 모드용)
    */
   initializeUser: () => void
@@ -36,6 +57,44 @@ interface UserStore {
 export const useUserStore = create<UserStore>()(
   persist(
     (set, get) => ({
+      userInfo: null,
+      labelsVisible: true, // 기본값
+      isLoading: false,
+
+      loginUser: async (loginData: LoginRequest): Promise<boolean> => {
+        set({ isLoading: true })
+        try {
+          const response = await login(loginData)
+          if (response.success && response.data) {
+            const { userId, name, accessToken } = response.data
+            localStorage.setItem("accessToken", accessToken)
+
+            const userInfo: UserInfo = {
+              userId,
+              email: loginData.email,
+              name,
+              color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+            }
+            set({ userInfo, isLoading: false })
+
+            // 로그인 성공 후 상세 정보 가져오기
+            get().fetchUserInfo()
+
+            return true
+          }
+          set({ isLoading: false })
+          return false
+        } catch (_error) {
+          set({ isLoading: false })
+          return false
+        }
+      },
+
+      logoutUser: () => {
+        localStorage.removeItem("accessToken")
+        set({ userInfo: null })
+      },
+
       getUserAsJsonObject: () => {
         const { userInfo } = get()
         return userInfo ? (userInfo as unknown as JsonObject) : null
@@ -54,7 +113,6 @@ export const useUserStore = create<UserStore>()(
         }
         set({ userInfo: newUserInfo })
       },
-      labelsVisible: true, // 기본값
 
       setUserInfo: userInfo => {
         // 🔥 색상이 없으면 랜덤 색상 추가
@@ -65,6 +123,25 @@ export const useUserStore = create<UserStore>()(
         set({ userInfo: userInfoWithColor })
       },
 
+      fetchUserInfo: async () => {
+        try {
+          const response = await getUserInfo()
+          if (response.success && response.data) {
+            const { userId, name, email, profileImage } = response.data
+            const userInfo: UserInfo = {
+              userId,
+              name,
+              email,
+              profileImage,
+              color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+            }
+            set({ userInfo })
+          }
+        } catch (error) {
+          console.error("사용자 정보 조회 실패:", error)
+        }
+      },
+
       toggleCursorLabels: () => {
         const { labelsVisible } = get()
         const newState = !labelsVisible
@@ -72,7 +149,6 @@ export const useUserStore = create<UserStore>()(
         set({ labelsVisible: newState })
         document.body.classList.toggle("labels-hidden", !newState)
       },
-      userInfo: null,
     }),
     {
       name: "userInfo", // localStorage 저장 키

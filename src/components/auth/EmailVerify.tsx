@@ -1,4 +1,5 @@
 import clsx from "clsx"
+import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/custom-form"
@@ -14,6 +15,7 @@ export function EmailVerify({
   emailPlaceholder = "Enter your email",
   codePlaceholder = "Enter verification code",
   disabled = false,
+  onVerificationChange,
 }: EmailVerifyProps) {
   const { control, formState } = useFormContext()
   const { emailSent, emailVerified, isLoading, handleSendEmailCode, handleVerifyEmailCode } =
@@ -21,6 +23,11 @@ export function EmailVerify({
 
   const emailError = formState.errors[emailName]?.message as string | undefined
   const codeError = formState.errors[codeName]?.message as string | undefined
+
+  // 인증 상태 변경을 부모에게 알림
+  useEffect(() => {
+    onVerificationChange?.(emailVerified)
+  }, [emailVerified, onVerificationChange])
 
   return (
     <div className="flex w-full flex-col gap-1">

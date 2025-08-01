@@ -1,12 +1,21 @@
 import { Plus } from "lucide-react"
-import { useState } from "react"
-import { Avatar, AvatarImage } from "@/components/ui/avatar"
+import { useEffect, useState } from "react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import { useUserStore } from "@/stores/user-store"
 import { ProjectDialog } from "./ProjectDialog"
 
 export const ProjectListHeader = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [createLoading, setCreateLoading] = useState(false)
+  const { userInfo, fetchUserInfo } = useUserStore()
+
+  // 컴포넌트 마운트 시 사용자 정보 가져오기
+  useEffect(() => {
+    if (!userInfo?.profileImage) {
+      fetchUserInfo()
+    }
+  }, [userInfo, fetchUserInfo])
 
   const handleCreateConfirm = async (data: { name: string; description: string }) => {
     setCreateLoading(true)
@@ -29,12 +38,18 @@ export const ProjectListHeader = () => {
         <div className="flex items-end gap-4">
           <div className="flex items-end justify-center">
             <Avatar className="h-[72px] w-[72px] rounded-full border-2 border-white">
-              <AvatarImage alt="Profile" src="https://github.com/shadcn.png" />
+              <AvatarImage
+                alt="Profile"
+                src={userInfo?.profileImage || "https://github.com/shadcn.png"}
+              />
+              <AvatarFallback className="h-[72px] w-[72px] bg-gray-200 text-gray-600 text-xl">
+                {userInfo?.name?.charAt(0)?.toUpperCase() || "U"}
+              </AvatarFallback>
             </Avatar>
           </div>
           <div className="mb-3 flex items-center gap-2.5">
             <h2 className="font-semibold text-2xl text-black leading-8 tracking-[-0.144px]">
-              User123
+              {userInfo?.name || "사용자"}
             </h2>
           </div>
         </div>

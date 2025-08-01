@@ -30,3 +30,68 @@ export interface ProjectMember {
   profileImageUrl: string
   role: "READ" | "WRITE" | "OWNER"
 }
+
+// 로그인 관련 타입
+export interface LoginRequest {
+  email: string
+  password: string
+}
+
+export interface LoginResponse {
+  userId: number
+  name: string
+  accessToken: string
+}
+
+// 회원가입 관련 타입
+export interface SignUpRequest {
+  email: string
+  password: string
+  username: string
+}
+
+export interface SignUpResponse {
+  userId: number
+  email: string
+  name: string
+  profileImageUrl?: string
+  createdAt: string
+  updatedAt: string
+}
+
+// 이메일 인증 관련 타입
+export interface EmailSendRequest {
+  email: string
+}
+
+export interface EmailVerifyRequest {
+  email: string
+  code: string
+}
+
+// 사용자 정보 관련 타입
+export interface UserInfoResponse {
+  userId: number
+  name: string
+  email: string
+  profileImage?: string
+}
+
+// 프로젝트 관련 타입 (API 문서와 일치)
+export interface ProjectResponse {
+  projectId: number
+  projectName: string
+  description: string
+  ownerName: string
+  memberNames: string[]
+  myRole: string
+  status: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CreateProjectRequest {
+  projectName: string
+  description: string
+  imageId: number
+}

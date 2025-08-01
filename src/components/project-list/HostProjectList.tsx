@@ -1,12 +1,18 @@
+import { useState } from "react"
+import { useToast } from "@/components/common/ToastContext"
+import { updateProjectStatus } from "@/services/api/projects"
 import { useProjectStore } from "@/stores/project-store"
-import { ProjectItem } from "./ProjectItem"
+import ProjectItem from "./ProjectItem"
 
 interface HostProjectListProps {
   searchQuery: string
 }
 
 export const HostProjectList = ({ searchQuery }: HostProjectListProps) => {
-  const { projects, loading, error, toggleProject } = useProjectStore()
+  const { projects, loading, error, refreshProjects } = useProjectStore()
+  const [toggledProjects, setToggledProjects] = useState<Record<number, boolean>>({})
+  const { addToast } = useToast()
+
   const ownProjects = projects.filter(project => project.myRole === "OWNER")
 
   // 검색 필터링
@@ -16,8 +22,43 @@ export const HostProjectList = ({ searchQuery }: HostProjectListProps) => {
       project.description.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const handleToggle = (id: number) => {
-    toggleProject(id)
+  const handleToggle = async (id: number) => {
+    const project = projects.find(p => p.id === id)
+    if (!project) return
+
+    // 현재 토글 상태를 확인 (UI 상태 우선, 없으면 서버 상태)
+    const currentToggleState =
+      toggledProjects[id] !== undefined ? toggledProjects[id] : project.status === "ACTIVE"
+
+    const newStatus = currentToggleState ? "INACTIVE" : "ACTIVE"
+
+    try {
+      // 서버에 상태 업데이트 요청
+      await updateProjectStatus(id, newStatus)
+
+      // 로컬 UI 상태 업데이트
+      setToggledProjects(prev => ({
+        ...prev,
+        [id]: !currentToggleState,
+      }))
+
+      // 성공 토스트
+      addToast({
+        type: "success",
+        title: `Project ${newStatus === "ACTIVE" ? "activated" : "deactivated"} successfully`,
+        duration: 2000,
+      })
+
+      // 프로젝트 목록 새로고침 (서버 상태와 동기화)
+      await refreshProjects()
+    } catch (error) {
+      console.error("프로젝트 상태 변경 실패:", error)
+      addToast({
+        type: "error",
+        title: "Failed to update project status",
+        duration: 3000,
+      })
+    }
   }
 
   const handleEdit = (_id: number) => {
@@ -70,6 +111,7 @@ export const HostProjectList = ({ searchQuery }: HostProjectListProps) => {
         ) : (
           filteredProjects.map(project => (
             <ProjectItem
+              isToggled={toggledProjects[project.id] || false}
               key={project.id}
               onEdit={handleEdit}
               onNewProject={handleNewProject}
