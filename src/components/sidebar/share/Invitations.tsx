@@ -1,9 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { MailIcon, UserPlus, XIcon } from "lucide-react"
+import { MailIcon, UserPlusIcon, XIcon } from "lucide-react"
 import { useCallback, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/custom-button"
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/custom-form"
 import { Input } from "@/components/ui/input"
 import { useInviteUser } from "@/hooks/permissions/useProjectMembers"
@@ -15,7 +16,7 @@ export function Invitations({ projectId }: { projectId: string }) {
 
   // zod 폼 스키마
   const formSchema = z.object({
-    email: z.email({ message: "Please enter a valid email format." }),
+    email: z.email({ message: "Please enter a valid email format" }),
   })
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -54,93 +55,100 @@ export function Invitations({ projectId }: { projectId: string }) {
     form.reset()
   }
 
-  // 내부 컴포넌트: 이메일 목록 (심플 스타일)
+  // 내부 컴포넌트: 이메일 목록 (Badge 스타일)
   const EmailList = () => (
-    <div className="mb-4 max-h-48 overflow-y-auto">
-      <div className="space-y-2 px-2">
-        {pendingEmails.length === 0 ? (
-          <div className="flex items-center justify-center py-4 text-[hsl(var(--muted-foreground))] text-sm">
-            Add emails to invite
-          </div>
-        ) : (
-          pendingEmails.map(emailItem => (
-            <div
-              className="flex items-center gap-2 rounded border border-[hsl(var(--border))] bg-[hsl(var(--background))] px-3 py-1 hover:bg-[hsl(var(--muted))]"
+    <>
+      {pendingEmails.length === 0 ? (
+        <div className="flex min-h-[40px] items-center justify-center text-[var(--color-muted-foreground)] text-sm normal-case">
+          Add emails to invite
+        </div>
+      ) : (
+        <div className="flex min-h-[40px] flex-wrap items-center gap-2">
+          {pendingEmails.map(emailItem => (
+            <Badge
+              className="flex items-center gap-1 bg-[var(--color-secondary)] px-2 py-1 text-[var(--color-secondary-foreground)]"
               key={emailItem}
+              variant="secondary"
             >
-              <span className="flex-1 text-[hsl(var(--foreground))] text-sm">{emailItem}</span>
+              <span className="text-xs">{emailItem}</span>
               <Button
                 aria-label={`Remove ${emailItem}`}
-                className="flex-shrink-0 text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]"
+                className="ml-1 h-4 w-4 p-0 text-[var(--color-muted-foreground)] hover:text-[var(--color-destructive)]"
                 disabled={isLoading}
                 onClick={() => handleRemoveEmail(emailItem)}
                 type="button"
+                variant="ghost"
               >
                 <XIcon className="h-4 w-4" />
               </Button>
-            </div>
-          ))
-        )}
-      </div>
-    </div>
+            </Badge>
+          ))}
+        </div>
+      )}
+    </>
   )
 
-  // 내부 컴포넌트: 초대 버튼 (심플 스타일)
+  // 내부 컴포넌트: 초대 버튼
   const InviteButton = () => (
-    <div className="px-2 pb-2">
-      <Button
-        aria-label="Send invitations"
-        className="w-full bg-[hsl(var(--primary))] py-3 text-[hsl(var(--primary-foreground))] text-sm hover:bg-[hsl(var(--primary)/0.95)] disabled:opacity-50"
-        disabled={isInviteDisabled}
-        onClick={handleSendInvitations}
-        type="button"
-      >
-        <MailIcon className="mr-2 h-4 w-4" />
-        {isLoading
-          ? "Sending..."
-          : `Invite Team Member${pendingEmails.length > 0 ? ` (${pendingEmails.length})` : ""}`}
-      </Button>
-    </div>
+    <Button
+      aria-label="Send invitations"
+      className="w-full"
+      disabled={isInviteDisabled}
+      onClick={handleSendInvitations}
+      size="default"
+      type="button"
+      variant="default"
+    >
+      <MailIcon className="h-5 w-5" />
+      {isLoading
+        ? "Sending..."
+        : `Invite Team Member ${pendingEmails.length > 0 ? `(${pendingEmails.length})` : ""}`}
+    </Button>
   )
 
   return (
-    <div>
+    <>
       <Form {...form}>
         <form
-          autoComplete="off"
-          className="mb-2 flex gap-2 px-2"
+          className="flex items-center gap-2 border-[var(--color-border)] bg-[var(--color-background)]"
+          noValidate
           onSubmit={form.handleSubmit(onAddEmail)}
         >
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormControl>
-                  <Input
-                    {...field}
-                    autoComplete="off"
+              <FormItem className="flex flex-1 flex-col">
+                <div className="flex gap-2">
+                  <FormControl>
+                    <Input
+                      {...field}
+                      className="rounded-md"
+                      disabled={isLoading}
+                      placeholder="Invite by member email"
+                      type="email"
+                    />
+                  </FormControl>
+                  <Button
+                    aria-label="Add email to invite list"
+                    className="rounded-md"
                     disabled={isLoading}
-                    placeholder="Invite by member email"
-                    type="email"
-                  />
-                </FormControl>
-                <FormMessage className="mt-1 text-[hsl(var(--destructive))] text-xs" />
+                    size="icon"
+                    type="submit"
+                  >
+                    <UserPlusIcon className="h-5 w-5" />
+                  </Button>
+                </div>
+                <FormMessage className="min-h-[20px] text-xs transition-opacity duration-200">
+                  {form.formState.errors.email?.message || "\u00A0"}
+                </FormMessage>
               </FormItem>
             )}
           />
-          <Button
-            aria-label="Add email to invite list"
-            className="rounded border border-[hsl(var(--border))] bg-[hsl(var(--background))] p-2 text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))] disabled:opacity-50"
-            disabled={isLoading}
-            type="submit"
-          >
-            <UserPlus className="h-4 w-4" />
-          </Button>
         </form>
       </Form>
       <EmailList />
       <InviteButton />
-    </div>
+    </>
   )
 }

@@ -8,7 +8,7 @@ import {
   RefreshCwIcon,
 } from "lucide-react"
 import type { MouseEvent } from "react"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/custom-button"
 import { useFileOperations } from "@/hooks/file-explorer/useFileOperations"
 import type { FileData } from "@/types/file-explorer"
 import { getTargetPathInFileTree } from "@/utils/file-operations"

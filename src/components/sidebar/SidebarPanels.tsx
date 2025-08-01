@@ -14,7 +14,7 @@ export const SidebarPanels = ({ tab, topPanels, bottomPanels = [] }: SidebarPane
 
   return (
     <div className="sidebar-panels flex flex-1 flex-col justify-between" data-tab={tab}>
-      <div className="sidebar-panels-top flex flex-col">{topPanels}</div>
+      <div className="sidebar-panels-top flex flex-col ">{topPanels}</div>
       <div className="sidebar-panels-bottom flex flex-col">{bottomPanels}</div>
     </div>
   )

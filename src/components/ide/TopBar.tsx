@@ -2,7 +2,7 @@ import { FigmaIcons, LucideIcons } from "@/assets/icons"
 import LogoSvg from "@/assets/Logo.svg"
 import { ProjectAvatars } from "@/components/project-list/ProjectAvatars"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/custom-button"
 
 export const TopBar = () => {
   const LogOutIcon = LucideIcons.logOut

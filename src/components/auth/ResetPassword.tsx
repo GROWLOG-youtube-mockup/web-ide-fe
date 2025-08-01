@@ -1,6 +1,6 @@
 import { FormProvider, useForm } from "react-hook-form"
 import { EmailVerify } from "@/components/auth/EmailVerify"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/custom-button"
 import {
   Dialog,
   DialogContent,
