@@ -25,16 +25,12 @@ export const getMyInfo = async (): Promise<UserInfoResponse> => {
 // 프로필 이미지 업로드
 export const uploadProfileImage = async (file: File): Promise<string> => {
   const formData = new FormData()
-  formData.append("profileImage", file)
+  formData.append("file", file) // API 문서에 맞는 필드명으로 변경
 
   const response = await apiClient.patch<ApiResponse<ProfileImageResponse>>(
     "/users/profile-image",
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
+    formData
+    // Content-Type 헤더를 제거하여 axios가 자동으로 설정하도록 함
   )
 
   if (!response.data.success || !response.data.data) {
