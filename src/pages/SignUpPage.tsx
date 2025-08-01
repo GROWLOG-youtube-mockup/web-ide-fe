@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { AuthForm } from "@/components/auth/AuthForm"
 import { AuthFormField } from "@/components/auth/AuthFormField"
 import { EmailVerify } from "@/components/auth/EmailVerify"
@@ -92,7 +92,9 @@ export default function SignUpPage() {
   const footer = (
     <div className={AUTH_STYLES.link}>
       <span className="font-medium">Already have an account?</span>
-      <span className="cursor-pointer font-semibold underline">Sign In</span>
+      <Link className="ml-1 cursor-pointer font-semibold underline" to="/login">
+        Sign In
+      </Link>
     </div>
   )
 
