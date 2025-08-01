@@ -19,5 +19,6 @@ export function transformProjectResponse(apiProject: ProjectResponse): Project {
     status: apiProject.status as "ACTIVE" | "INACTIVE",
     createdAt: new Date(apiProject.createdAt),
     updatedAt: new Date(apiProject.updatedAt),
+    isToggled: false, // 기본값
   }
 }

@@ -1,7 +1,8 @@
 import type { JsonObject } from "@liveblocks/client"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
-import { getUserInfo, login } from "@/services/api/auth"
+import { login } from "@/services/api/auth"
+import { getMyInfo } from "@/services/api/users"
 import type { LoginRequest } from "@/types/api"
 
 export interface UserInfo {
@@ -125,18 +126,15 @@ export const useUserStore = create<UserStore>()(
 
       fetchUserInfo: async () => {
         try {
-          const response = await getUserInfo()
-          if (response.success && response.data) {
-            const { userId, name, email, profileImage } = response.data
-            const userInfo: UserInfo = {
-              userId,
-              name,
-              email,
-              profileImage,
-              color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-            }
-            set({ userInfo })
+          const userInfo = await getMyInfo()
+          const formattedUserInfo: UserInfo = {
+            userId: userInfo.userId,
+            name: userInfo.name,
+            email: userInfo.email,
+            profileImage: userInfo.profileImage,
+            color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
           }
+          set({ userInfo: formattedUserInfo })
         } catch (error) {
           console.error("사용자 정보 조회 실패:", error)
         }

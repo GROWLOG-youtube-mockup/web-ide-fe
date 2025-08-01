@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom"
 import { AuthForm } from "@/components/auth/AuthForm"
 import { AuthFormField } from "@/components/auth/AuthFormField"
 import { EmailVerify } from "@/components/auth/EmailVerify"
+import { ProfileAvatar } from "@/components/auth/ProfileAvatar"
 import { useToast } from "@/components/common/ToastContext"
 import { AUTH_STYLES } from "@/constants/auth-styles"
 import { useAuthForm } from "@/hooks/auth/useAuthForm"
 import { signUpFormSchema } from "@/lib/auth-schemas"
-import { signUp } from "@/services/api/auth"
+import { signUp } from "@/services/api/users"
 import type { SignUpFormData } from "@/types/auth"
 
 export default function SignUpPage() {
@@ -72,9 +73,11 @@ export default function SignUpPage() {
 
   return (
     <AuthForm<SignUpFormData>
+      avatarComponent={<ProfileAvatar />}
       footer={footer}
       form={form}
       onSubmit={onSubmit}
+      showAvatar={true}
       submitText="Sign Up"
       subtitle="Enter your information to sign up!"
       title="Sign up"
