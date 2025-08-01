@@ -28,6 +28,7 @@ export interface EmailVerifyProps {
   emailPlaceholder?: string
   codePlaceholder?: string
   disabled?: boolean
+  onVerificationChange?: (isVerified: boolean) => void
 }
 
 // 이메일 인증 훅 타입
