@@ -1,4 +1,5 @@
 import { FilesIcon, FolderInputIcon, SearchIcon, SettingsIcon, Share2Icon } from "lucide-react"
+import { Chats } from "@/components/sidebar/chat/Chats"
 import { FileExplorer } from "@/components/sidebar/file-explorer/FileExplorer"
 import { FileExplorerActions } from "@/components/sidebar/file-explorer/FileExplorerActions"
 import { SidebarPanel } from "@/components/sidebar/SidebarPanel"
@@ -42,15 +43,6 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
       />
 
       <div className="flex flex-1 flex-col">
-        <SidebarPanels
-          tab="settings"
-          topPanels={[
-            <SidebarPanel id="settings" key="settings" title="settings">
-              <PlaceholderPanel message="Settings panel coming soon..." />
-            </SidebarPanel>,
-          ]}
-        />
-
         <SidebarPanels
           bottomPanels={[
             <SidebarPanel id="chats" key="chats" title="chats">
@@ -98,6 +90,20 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
           topPanels={[
             <SidebarPanel id="projects" key="projects" title="projects">
               <PlaceholderPanel message="Projects panel coming soon..." />
+            </SidebarPanel>,
+          ]}
+          bottomPanels={[
+            <SidebarPanel id="chats" key="chats" title="chats">
+              <Chats />
+            </SidebarPanel>,
+          ]}
+        />
+
+        <SidebarPanels
+          tab="settings"
+          topPanels={[
+            <SidebarPanel id="settings" key="settings" title="settings">
+              <PlaceholderPanel message="Settings panel coming soon..." />
             </SidebarPanel>,
           ]}
         />

@@ -30,7 +30,7 @@ export function SidebarPanel({ id, title, actions, countBadge = 0, children }: S
 
   return (
     <Collapsible
-      className="sidebar-panel flex flex-1 flex-col"
+      className="sidebar-panel flex min-h-0 flex-1 flex-col overflow-hidden"
       onOpenChange={handleOpenChange}
       open={expanded}
     >
