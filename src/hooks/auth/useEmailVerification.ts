@@ -1,7 +1,8 @@
 import { useState } from "react"
 import { useFormContext } from "react-hook-form"
-import { DEFAULT_EMAIL_VERIFY, DEV_CONFIG, VALIDATION } from "@/constants/auth"
+import { DEFAULT_EMAIL_VERIFY, VALIDATION } from "@/constants/auth"
 import { emailSchema, verificationCodeSchema } from "@/lib/auth-schemas"
+import { sendEmailVerification, verifyEmail } from "@/services/api/auth"
 import type {
   EmailVerificationState,
   UseEmailVerificationProps,
@@ -33,9 +34,16 @@ export function useEmailVerification({
 
     setState(prev => ({ ...prev, isLoading: true }))
     try {
-      // TODO: 실제 API 호출로 대체
-      await new Promise(resolve => setTimeout(resolve, DEV_CONFIG.apiDelay))
-      setState(prev => ({ ...prev, isLoading: false, isSent: true }))
+      const response = await sendEmailVerification({ email: emailValue })
+
+      if (response.success) {
+        setState(prev => ({ ...prev, isLoading: false, isSent: true }))
+      } else {
+        setState(prev => ({ ...prev, isLoading: false }))
+        setError(emailName, {
+          message: response.error?.message || VALIDATION.messages.verification.sendFail,
+        })
+      }
     } catch (_error) {
       setState(prev => ({ ...prev, isLoading: false }))
       setError(emailName, {
@@ -65,10 +73,31 @@ export function useEmailVerification({
 
     setState(prev => ({ ...prev, isLoading: true }))
     try {
-      // TODO: 실제 API 호출로 대체
-      await new Promise(resolve => setTimeout(resolve, DEV_CONFIG.apiDelay))
-      console.log(`이메일 인증 코드 확인: ${codeValue}`)
-      setState(prev => ({ ...prev, isLoading: false, isVerified: true }))
+      const response = await verifyEmail({
+        email: emailValue,
+        code: codeValue,
+      })
+
+      console.log("이메일 인증 응답:", response) // 디버깅용
+
+      if (response.success) {
+        // API 응답이 Record<string, boolean> 형태이므로 적절한 키 확인 필요
+        const isVerified = Object.values(response.data || {}).some(Boolean)
+
+        if (isVerified) {
+          setState(prev => ({ ...prev, isLoading: false, isVerified: true }))
+        } else {
+          setState(prev => ({ ...prev, isLoading: false }))
+          setError(codeName, {
+            message: "인증 코드가 올바르지 않습니다.",
+          })
+        }
+      } else {
+        setState(prev => ({ ...prev, isLoading: false }))
+        setError(codeName, {
+          message: response.error?.message || VALIDATION.messages.verification.verifyFail,
+        })
+      }
     } catch (error) {
       console.error("인증 실패:", error)
       setState(prev => ({ ...prev, isLoading: false }))
