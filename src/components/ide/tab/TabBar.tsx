@@ -1,18 +1,29 @@
-// components/tab/TabBar.tsx
 import { useState } from "react"
 import { ICON_SIZES, LucideIcons } from "@/assets/icons"
 import { WithContextMenu } from "@/components/common/WithContextMenu"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/custom-tabs"
 import { useTabContextMenu } from "@/hooks/editor/useTabContextMenu"
+import { cn } from "@/lib/utils"
 import { useEditorTabsStore } from "@/stores/editor-tabs-store"
 
 export const TabBar = () => {
+  const closeButtonStyles = cn(
+    "-translate-y-1/2 absolute top-1/2 right-1 z-30 flex-shrink-0",
+    "rounded-md p-1 transition-colors hover:text-red-400"
+  )
+
+  const iconStyles = cn(
+    ICON_SIZES.sm,
+    "text-[var(--tab-foreground)] transition-colors hover:text-blue-400"
+  )
+
   const {
     openedFiles,
     activeFile,
     setActiveFile: handleSetActiveFile,
     closeTab: handleCloseTab,
   } = useEditorTabsStore()
+
   const [contextMenuFilePath, setContextMenuFilePath] = useState<string | null>(null)
   const { menuItems } = useTabContextMenu(contextMenuFilePath || "")
 
@@ -31,38 +42,29 @@ export const TabBar = () => {
   return (
     <Tabs className="w-full" onValueChange={handleSetActiveFile} value={activeFile || undefined}>
       <WithContextMenu menuItems={menuItems}>
-        <TabsList
-          className="h-8 justify-start rounded-none bg-transparent p-0"
-          onContextMenu={handleContextMenu}
-        >
+        <TabsList onContextMenu={handleContextMenu} variant="editor">
           {openedFiles.map(filePath => (
             <div className="relative flex" data-filepath={filePath} key={filePath}>
-              <TabsTrigger
-                className="tab-trigger relative flex h-8 w-[160px] items-center gap-2 rounded-none border-[hsl(var(--tab-border))] border-r px-2 py-1 pr-8 after:absolute after:top-0 after:right-0 after:left-0 after:z-10 after:h-1 after:bg-transparent after:content-[''] data-[state=active]:bg-[hsl(var(--tab-accent))] data-[state=active]:after:bg-[hsl(var(--tab-active-line))]"
-                title={filePath}
-                value={filePath}
-              >
+              <TabsTrigger title={filePath} value={filePath} variant="editor">
                 <div className="flex min-w-0 flex-1 items-center gap-[5px]">
                   <LucideIcons.fileText
-                    className={`${ICON_SIZES.sm} text-[hsl(var(--tab-foreground))]`}
+                    className={`${ICON_SIZES.sm} text-[var(--tab-foreground)]`}
                   />
-                  <span className="truncate font-medium text-[hsl(var(--tab-foreground))]/80 text-sm">
+                  <span className="truncate font-medium text-[var(--tab-foreground)]/80 text-sm">
                     {getFileName(filePath)}
                   </span>
                 </div>
               </TabsTrigger>
               <button
                 aria-label={`Close ${getFileName(filePath)}`}
-                className="-translate-y-1/2 absolute top-1/2 right-1 z-30 flex-shrink-0 rounded-md p-1 transition-colors hover:text-red-400"
+                className={closeButtonStyles}
                 onClick={e => {
                   e.stopPropagation()
                   handleCloseTab(filePath)
                 }}
                 type="button"
               >
-                <LucideIcons.x
-                  className={`${ICON_SIZES.sm} text-[hsl(var(--tab-foreground))] transition-colors hover:text-blue-400`}
-                />
+                <LucideIcons.x className={iconStyles} />
               </button>
             </div>
           ))}

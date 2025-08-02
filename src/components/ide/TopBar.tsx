@@ -1,5 +1,5 @@
 import { FigmaIcons, LucideIcons } from "@/assets/icons"
-import LogoSvg from "@/assets/Logo.svg"
+import LogoSvg from "@/assets/logo.svg"
 import { ProjectAvatars } from "@/components/project-list/ProjectAvatars"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/custom-button"
@@ -28,12 +28,42 @@ export const TopBar = () => {
             <ProjectAvatars
               maxVisible={3}
               members={[
-                { userId: 1, name: "User 1", role: "WRITE", profileImage: FigmaIcons.avatar },
-                { userId: 2, name: "User 2", role: "WRITE", profileImage: FigmaIcons.avatar },
-                { userId: 3, name: "User 3", role: "READ", profileImage: FigmaIcons.avatar },
-                { userId: 4, name: "User 4", role: "READ", profileImage: FigmaIcons.avatar },
-                { userId: 5, name: "User 5", role: "READ", profileImage: FigmaIcons.avatar },
-                { userId: 6, name: "User 6", role: "READ", profileImage: FigmaIcons.avatar },
+                {
+                  userId: 1,
+                  name: "User 1",
+                  role: "WRITE",
+                  profileImage: FigmaIcons.avatar,
+                },
+                {
+                  userId: 2,
+                  name: "User 2",
+                  role: "WRITE",
+                  profileImage: FigmaIcons.avatar,
+                },
+                {
+                  userId: 3,
+                  name: "User 3",
+                  role: "READ",
+                  profileImage: FigmaIcons.avatar,
+                },
+                {
+                  userId: 4,
+                  name: "User 4",
+                  role: "READ",
+                  profileImage: FigmaIcons.avatar,
+                },
+                {
+                  userId: 5,
+                  name: "User 5",
+                  role: "READ",
+                  profileImage: FigmaIcons.avatar,
+                },
+                {
+                  userId: 6,
+                  name: "User 6",
+                  role: "READ",
+                  profileImage: FigmaIcons.avatar,
+                },
               ]}
               size="md"
             />
