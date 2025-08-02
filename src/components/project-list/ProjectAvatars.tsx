@@ -13,19 +13,25 @@ type DisplayMember =
     }
 
 interface ProjectAvatarsProps {
+  members?: ProjectMember[]
   projectId?: string
   maxVisible?: number
   size?: "sm" | "md" | "lg"
 }
 
-export const ProjectAvatars = ({ projectId, maxVisible = 3, size = "md" }: ProjectAvatarsProps) => {
+export const ProjectAvatars = ({
+  members,
+  projectId,
+  maxVisible = 3,
+  size = "md",
+}: ProjectAvatarsProps) => {
   const { getOnlineParticipants } = useParticipantsStore()
 
   // 프로젝트 ID가 있으면 온라인 참여자만 사용
   const onlineParticipants = projectId ? getOnlineParticipants(projectId) : []
 
-  // 온라인 참여자가 2명 이상일 때만 표시
-  const displayMembers: DisplayMember[] = onlineParticipants.length >= 2 ? onlineParticipants : []
+  // 실시간 온라인 참여자 표시
+  const displayMembers: DisplayMember[] = projectId ? onlineParticipants : members || []
 
   const visibleMembers = displayMembers.slice(0, maxVisible)
   const remainingCount = Math.max(0, displayMembers.length - maxVisible)
@@ -63,12 +69,14 @@ export const ProjectAvatars = ({ projectId, maxVisible = 3, size = "md" }: Proje
           {/* 호버 툴팁 */}
           <div className="-translate-x-1/2 pointer-events-none absolute top-full left-1/2 z-50 mt-2 transform whitespace-nowrap rounded-lg bg-gray-900 px-3 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100">
             <div className="font-medium">{member.name}</div>
-            <div className="mt-1 text-gray-300 text-xs">
-              <span className="flex items-center gap-1">
-                <div className="h-2 w-2 rounded-full bg-green-400"></div>
-                온라인
-              </span>
-            </div>
+            {projectId && (
+              <div className="mt-1 text-gray-300 text-xs">
+                <span className="flex items-center gap-1">
+                  <div className="h-2 w-2 rounded-full bg-green-400"></div>
+                  온라인
+                </span>
+              </div>
+            )}
             {/* 툴팁 화살표 */}
             <div className="-translate-x-1/2 absolute bottom-full left-1/2 h-0 w-0 transform border-r-[4px] border-r-transparent border-b-[4px] border-b-gray-900 border-l-[4px] border-l-transparent"></div>
           </div>

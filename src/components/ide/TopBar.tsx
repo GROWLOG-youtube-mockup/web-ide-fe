@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/custom-button"
 import { useFileTree } from "@/hooks/file-explorer/useFileTree"
 import { useParticipantTracking } from "@/hooks/participants/useParticipantTracking"
 import { useProjectMembers } from "@/hooks/permissions/useProjectMembers"
+import { useParticipantsStore } from "@/stores/participants-store"
 import { useUserStore } from "@/stores/user-store"
 
 export const TopBar = () => {
@@ -14,6 +15,7 @@ export const TopBar = () => {
   const navigate = useNavigate()
   const { projectId } = useParams<{ projectId: string }>()
   const { userInfo } = useUserStore()
+  const { getOnlineParticipants } = useParticipantsStore()
 
   // WebSocket 연결을 위한 파일 트리 훅
   const fileTreeData = useFileTree()
@@ -25,6 +27,10 @@ export const TopBar = () => {
 
   // 실시간 참여자 추적 훅
   useParticipantTracking(projectId || "", fileTreeData.stompClient)
+
+  // 온라인 참여자 수 확인 (2명 이상일 때만 표시)
+  const onlineParticipants = projectId ? getOnlineParticipants(projectId) : []
+  const shouldShowAvatars = onlineParticipants.length >= 2
 
   const handleAvatarClick = () => {
     navigate("/profile/edit")
@@ -59,7 +65,7 @@ export const TopBar = () => {
         <div className="flex items-center gap-6">
           {/* Project Members */}
           <div className="flex items-center gap-3">
-            {!membersLoading && projectMembers.length > 0 && (
+            {!membersLoading && projectMembers.length > 0 && shouldShowAvatars && (
               <ProjectAvatars
                 maxVisible={3}
                 members={projectMembers.map(member => ({
