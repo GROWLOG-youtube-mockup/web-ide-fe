@@ -1,11 +1,52 @@
+import { useNavigate, useParams } from "react-router-dom"
 import { FigmaIcons, LucideIcons } from "@/assets/icons"
 import LogoSvg from "@/assets/logo.svg"
 import { ProjectAvatars } from "@/components/project-list/ProjectAvatars"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/custom-button"
+import { useFileTree } from "@/hooks/file-explorer/useFileTree"
+import { useParticipantTracking } from "@/hooks/participants/useParticipantTracking"
+import { useProjectMembers } from "@/hooks/permissions/useProjectMembers"
+import { useParticipantsStore } from "@/stores/participants-store"
+import { useUserStore } from "@/stores/user-store"
 
 export const TopBar = () => {
   const LogOutIcon = LucideIcons.logOut
+  const navigate = useNavigate()
+  const { projectId } = useParams<{ projectId: string }>()
+  const { userInfo } = useUserStore()
+  const { getOnlineParticipants } = useParticipantsStore()
+
+  // WebSocket 연결을 위한 파일 트리 훅
+  const fileTreeData = useFileTree()
+
+  // React Query를 사용한 프로젝트 멤버 데이터
+  const { data: projectMembers = [], isLoading: membersLoading } = useProjectMembers(
+    projectId || ""
+  )
+
+  // 실시간 참여자 추적 훅
+  useParticipantTracking(projectId || "", fileTreeData.stompClient)
+
+  // 온라인 참여자 수 확인 (2명 이상일 때만 표시)
+  const onlineParticipants = projectId ? getOnlineParticipants(projectId) : []
+  const shouldShowAvatars = onlineParticipants.length >= 2
+
+  const handleAvatarClick = () => {
+    navigate("/profile/edit")
+  }
+
+  const handleExitProject = () => {
+    navigate("/projects")
+  }
+
+  // 사용자 이름의 첫 글자들로 fallback 생성 (한글/영문 모두 두 글자)
+  const getInitials = (name: string) => {
+    if (!name) return "ME"
+
+    // 한글, 영문 모두 처음 두 글자
+    return name.substring(0, 2).toUpperCase()
+  }
 
   return (
     <div
@@ -24,27 +65,32 @@ export const TopBar = () => {
         <div className="flex items-center gap-6">
           {/* Project Members */}
           <div className="flex items-center gap-3">
-            {/* todo: 실제 프로젝트 멤버 데이터로 교체 */}
-            <ProjectAvatars
-              maxVisible={3}
-              members={[
-                { userId: 1, name: "User 1", role: "WRITE", profileImage: FigmaIcons.avatar },
-                { userId: 2, name: "User 2", role: "WRITE", profileImage: FigmaIcons.avatar },
-                { userId: 3, name: "User 3", role: "READ", profileImage: FigmaIcons.avatar },
-                { userId: 4, name: "User 4", role: "READ", profileImage: FigmaIcons.avatar },
-                { userId: 5, name: "User 5", role: "READ", profileImage: FigmaIcons.avatar },
-                { userId: 6, name: "User 6", role: "READ", profileImage: FigmaIcons.avatar },
-              ]}
-              size="md"
-            />
-            <Avatar className="ml-3 h-8 w-8">
-              {/* todo: 현재 사용자로 교체 */}
-              <AvatarImage alt="현재 사용자 아바타" src={FigmaIcons.avatar} />
+            {!membersLoading && projectMembers.length > 0 && shouldShowAvatars && (
+              <ProjectAvatars
+                maxVisible={3}
+                members={projectMembers.map(member => ({
+                  userId: Number(member.userId),
+                  name: member.name,
+                  role: member.role,
+                  profileImage: member.profileImageUrl || FigmaIcons.avatar,
+                }))}
+                projectId={projectId}
+                size="md"
+              />
+            )}
+            <Avatar
+              className="ml-3 h-8 w-8 cursor-pointer border-2 border-white transition-opacity hover:opacity-80"
+              onClick={handleAvatarClick}
+            >
+              <AvatarImage
+                alt={userInfo?.name ? `${userInfo.name} 아바타` : "현재 사용자 아바타"}
+                src={userInfo?.profileImage || FigmaIcons.avatar}
+              />
               <AvatarFallback
                 className="bg-zinc-200 font-medium text-zinc-700"
                 style={{ fontSize: "11px" }}
               >
-                ME
+                {getInitials(userInfo?.name || "")}
               </AvatarFallback>
             </Avatar>
           </div>
@@ -52,6 +98,7 @@ export const TopBar = () => {
           {/* Exit Button */}
           <Button
             className="flex items-center gap-1 bg-zinc-50 px-3 text-zinc-900 hover:bg-zinc-200"
+            onClick={handleExitProject}
             size="sm"
             style={{
               fontSize: "12px",
@@ -60,7 +107,7 @@ export const TopBar = () => {
             variant="outline"
           >
             <LogOutIcon className="!h-3 shrink-0" />
-            프로젝트 나가기
+            Back to Projects
           </Button>
         </div>
       </div>

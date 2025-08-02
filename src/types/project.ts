@@ -49,3 +49,20 @@ export interface Project {
  * 프로젝트 필터 타입
  */
 export type ProjectFilter = "all" | "own" | "joined"
+
+/**
+ * 프로젝트 생성 요청 타입 (API 문서와 일치)
+ */
+export interface CreateProjectRequest {
+  projectName: string
+  description: string
+  imageId: number
+}
+
+/**
+ * 프로젝트 수정 요청 타입 (API 문서와 일치)
+ */
+export interface UpdateProjectRequest {
+  projectName: string
+  description: string
+}

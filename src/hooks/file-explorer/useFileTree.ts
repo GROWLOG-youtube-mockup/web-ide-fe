@@ -3,6 +3,7 @@ import {
   expandAllFeature,
   hotkeysCoreFeature,
   renamingFeature,
+  searchFeature, // 검색용
   selectionFeature,
   syncDataLoaderFeature,
   type TreeInstance, // TreeInstance 타입을 직접 참조할 수 있습니다.
@@ -32,7 +33,7 @@ const convertTreeNodeDtoToFileData = (nodes: TreeNodeDto[]): Record<string, File
     const name = isRoot && node.path === "" ? "root" : path.split("/").pop() || path
 
     const fileData: FileData = {
-      id: path,
+      id: node.id ? String(node.id) : path, // ID 우선 사용으로 처리, path는 임시
       name,
       type: node.type as "file" | "folder",
       path,
@@ -89,9 +90,13 @@ export const useFileTree = () => {
 
         // 트리 응답 구독
         client.subscribe(`/topic/projects/${projectId}/tree`, message => {
-          const data: WebSocketMessage = JSON.parse(message.body)
-          console.log("🔔 수신된 메시지:", data.type)
+          // 🔍 파싱 전 원본 문자열 확인
+          console.log("📥 받은 원본 메시지:", message.body)
 
+          const data: WebSocketMessage = JSON.parse(message.body)
+
+          // 🔍 파싱 후 확인
+          console.log("📦 파싱된 데이터:", data)
           if (data.type === "tree:init") {
             const backendNodes = data.payload as TreeNodeDto[]
             const convertedData = convertTreeNodeDtoToFileData(backendNodes)
@@ -204,6 +209,7 @@ export const useFileTree = () => {
       expandAllFeature,
       hotkeysCoreFeature,
       renamingFeature,
+      searchFeature, // 검색용
     ],
     canDrag: items => items.length > 0,
     canDrop: (_items, target) => target.item.getItemData().type === "folder",
@@ -272,5 +278,7 @@ export const useFileTree = () => {
     refreshTree,
     isLoading,
     isConnected,
+    treeData,
+    stompClient, // StompClient 추가
   }
 }

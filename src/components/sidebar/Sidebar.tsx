@@ -7,6 +7,7 @@ import { SidebarPanel } from "@/components/sidebar/SidebarPanel"
 import { SidebarPanels } from "@/components/sidebar/SidebarPanels"
 import { SidebarTab } from "@/components/sidebar/SidebarTab"
 import { SidebarTabs } from "@/components/sidebar/SidebarTabs"
+import { SearchPanel } from "@/components/sidebar/search/SearchPanel" //검색창
 import { Invitations } from "@/components/sidebar/share/InvitationsPanel"
 import { Members } from "@/components/sidebar/share/MembersPanel"
 import { useFileTree } from "@/hooks/file-explorer/useFileTree"
@@ -39,6 +40,7 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
     tree: fileTreeData.tree ? "존재함" : "null",
     isLoading: fileTreeData.isLoading,
     isConnected: fileTreeData.isConnected,
+    stompClient: fileTreeData.stompClient ? "존재함" : "null",
     timestamp: Date.now(),
   })
 
@@ -65,7 +67,6 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
           topPanels={
             fileTreeData.tree
               ? (() => {
-                  console.log("✅ FileExplorer 패널 생성됨, treeKey:")
                   return [
                     <SidebarPanel
                       actions={<FileExplorerActions {...fileTreeData} tree={fileTreeData.tree} />}
@@ -78,7 +79,7 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
                   ]
                 })()
               : (() => {
-                  console.log("❌ FileExplorer 패널 생성 안됨 - tree가 null")
+                  //디버깅용 주석처리(todo : 패널 생성 오류 패널): console.log("FileExplorer 패널 생성 안됨");
                   return []
                 })()
           }
@@ -87,8 +88,12 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
         <SidebarPanels
           tab="search"
           topPanels={[
-            <SidebarPanel id="search" key="search" title="search">
-              <PlaceholderPanel message="Search panel coming soon..." />
+            <SidebarPanel id="search" key="search" title="Search">
+              {fileTreeData.tree ? (
+                <SearchPanel tree={fileTreeData.tree} />
+              ) : (
+                <PlaceholderPanel message="Loading file tree..." />
+              )}
             </SidebarPanel>,
           ]}
         />

@@ -2,15 +2,20 @@ import { AvatarFallback } from "@radix-ui/react-avatar"
 import { Edit3, Plus } from "lucide-react"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useToast } from "@/components/common/ToastContext"
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/custom-button"
+import { projectApi } from "@/services/api/project-api"
+import { useProjectStore } from "@/stores/project-store"
 import { useUserStore } from "@/stores/user-store"
-import { ProjectDialog } from "./ProjectDialog"
+import { ProjectFormDialog } from "./ProjectFormDialog"
 
 export const ProjectListHeader = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [createLoading, setCreateLoading] = useState(false)
   const { userInfo } = useUserStore()
+  const { refreshProjects } = useProjectStore()
+  const { addToast } = useToast()
   const navigate = useNavigate()
 
   // 사용자 정보는 로그인 시 이미 가져왔으므로 추가 호출 불필요
@@ -22,13 +27,28 @@ export const ProjectListHeader = () => {
   const handleCreateConfirm = async (data: { name: string; description: string }) => {
     setCreateLoading(true)
     try {
-      // TODO: 실제 API 호출로 대체
-      console.log("새 프로젝트 생성:", data)
-      await new Promise(resolve => setTimeout(resolve, 1000)) // 임시 지연
+      await projectApi.createProject({
+        projectName: data.name,
+        description: data.description,
+        imageId: 1,
+      })
       setIsCreateDialogOpen(false)
+      // 프로젝트 목록 새로고침
+      await refreshProjects()
+      // 성공 토스트 메시지
+      addToast({
+        type: "success",
+        title: "successfully created project.",
+        duration: 3000,
+      })
     } catch (error) {
       console.error("프로젝트 생성 실패:", error)
-      // 에러 처리 로직 추가
+      // 실패 토스트 메시지
+      addToast({
+        type: "error",
+        title: "failed to create project. Please try again.",
+        duration: 3000,
+      })
     } finally {
       setCreateLoading(false)
     }
@@ -85,7 +105,7 @@ export const ProjectListHeader = () => {
       </div>
 
       {/* 프로젝트 생성 다이얼로그 */}
-      <ProjectDialog
+      <ProjectFormDialog
         isLoading={createLoading}
         mode="create"
         onConfirm={handleCreateConfirm}

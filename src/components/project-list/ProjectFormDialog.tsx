@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { PROJECT_STYLES } from "@/constants/project-styles"
 import type { Project } from "@/types/project"
 
-interface ProjectDialogProps {
+interface ProjectFormDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   mode: "edit" | "create"
@@ -14,14 +14,14 @@ interface ProjectDialogProps {
   isLoading?: boolean
 }
 
-export function ProjectDialog({
+export function ProjectFormDialog({
   open,
   onOpenChange,
   mode,
   initial = {},
   onConfirm,
   isLoading = false,
-}: ProjectDialogProps) {
+}: ProjectFormDialogProps) {
   const [name, setName] = useState(initial.name || "")
   const [description, setDescription] = useState(initial.description || "")
 
@@ -33,6 +33,20 @@ export function ProjectDialog({
     }
   }, [open, initial.name, initial.description])
 
+  // 로딩 중에는 다이얼로그 닫기 방지
+  const handleOpenChange = (open: boolean) => {
+    if (!isLoading) {
+      onOpenChange(open)
+    }
+  }
+
+  // 로딩 중에는 취소 버튼 클릭 방지
+  const handleCancel = () => {
+    if (!isLoading) {
+      onOpenChange(false)
+    }
+  }
+
   return (
     <AlertDialog
       cancelText="Cancel"
@@ -41,9 +55,9 @@ export function ProjectDialog({
       description={mode === "edit" ? "Edit your project details." : "Enter new project details."}
       isLoading={isLoading}
       isOpen={open}
-      onCancel={() => onOpenChange(false)}
+      onCancel={handleCancel}
       onConfirm={() => onConfirm({ name, description })}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleOpenChange}
       showCloseButton={false}
       title={mode === "edit" ? "Edit Project" : "Create Project"}
       variant="default"
@@ -55,6 +69,7 @@ export function ProjectDialog({
           </label>
           <Input
             className={`${PROJECT_STYLES.field} h-[35px]`}
+            disabled={isLoading}
             id="project-name"
             maxLength={32}
             onChange={e => setName(e.target.value)}
@@ -69,6 +84,7 @@ export function ProjectDialog({
           </label>
           <Textarea
             className={`${PROJECT_STYLES.field} field-sizing-fixed h-[80px] resize-none`}
+            disabled={isLoading}
             id="project-description"
             maxLength={150}
             onChange={e => setDescription(e.target.value)}
