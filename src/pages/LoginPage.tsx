@@ -34,7 +34,7 @@ export default function LoginPage() {
       addToast({
         type: "error",
         title: "Login failed, please check your email and password",
-        duration: 3000,
+        duration: 2000,
       })
     }
   }
@@ -42,7 +42,13 @@ export default function LoginPage() {
   const footer = (
     <div className={AUTH_STYLES.link}>
       <span className="font-medium">Don't have an account?</span>
-      <span className="cursor-pointer font-semibold underline">Sign Up</span>
+      <button
+        className="cursor-pointer border-none bg-transparent p-0 font-semibold underline"
+        onClick={() => navigate("/signup")}
+        type="button"
+      >
+        Sign Up
+      </button>
     </div>
   )
 

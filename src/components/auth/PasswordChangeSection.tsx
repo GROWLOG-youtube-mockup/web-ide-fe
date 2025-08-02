@@ -1,5 +1,6 @@
 import clsx from "clsx"
-import type { FieldError, FieldValues, Path, UseFormReturn } from "react-hook-form"
+import type { FieldValues, Path, UseFormReturn } from "react-hook-form"
+import { FormControl, FormField, FormItem } from "@/components/ui/custom-form"
 import { Input } from "@/components/ui/input"
 import { AUTH_STYLES } from "@/constants/auth-styles"
 
@@ -14,9 +15,6 @@ export function PasswordChangeSection<T extends FieldValues = FieldValues>({
   currentPasswordName,
   newPasswordName,
 }: PasswordChangeSectionProps<T>) {
-  const currentPasswordError = form.formState.errors[currentPasswordName] as FieldError | undefined
-  const newPasswordError = form.formState.errors[newPasswordName] as FieldError | undefined
-
   return (
     <div className="space-y-1.5">
       <div className="font-semibold text-[10.667px] text-zinc-950 leading-4">Password</div>
@@ -25,26 +23,46 @@ export function PasswordChangeSection<T extends FieldValues = FieldValues>({
           Must be at least 8 characters long, including both letters and numbers.
         </p>
         <div className="space-y-1.5">
-          <div className="flex flex-col">
-            <Input
-              {...form.register(currentPasswordName)}
-              className={clsx(AUTH_STYLES.field, currentPasswordError && AUTH_STYLES.errorField)}
-              placeholder="Enter your current password"
-              type="password"
-            />
-          </div>
-          <div className="flex flex-col">
-            <Input
-              {...form.register(newPasswordName)}
-              className={clsx(AUTH_STYLES.field, newPasswordError && AUTH_STYLES.errorField)}
-              placeholder="Enter your new password"
-              type="password"
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name={currentPasswordName}
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    {...field}
+                    className={clsx(AUTH_STYLES.field, fieldState.error && AUTH_STYLES.errorField)}
+                    placeholder="Enter your current password"
+                    type="password"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name={newPasswordName}
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    {...field}
+                    className={clsx(AUTH_STYLES.field, fieldState.error && AUTH_STYLES.errorField)}
+                    placeholder="Enter your new password"
+                    type="password"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
         </div>
         {/* 에러 메시지 영역 - 항상 공간 차지 */}
         <div className="min-h-[12px] text-[10px] text-red-500">
-          {currentPasswordError?.message || newPasswordError?.message || ""}
+          {String(
+            form.formState.errors[currentPasswordName]?.message ||
+              form.formState.errors[newPasswordName]?.message ||
+              ""
+          )}
         </div>
       </div>
     </div>

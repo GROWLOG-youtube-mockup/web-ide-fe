@@ -1,5 +1,6 @@
 import { Client, type IMessage } from "@stomp/stompjs"
-import { createConnectHeaders, getChatApiConfig, loadSockJs } from "@/services/chat/chat-api.config"
+import { SockJs } from "sockjs-client"
+import { createConnectHeaders, getChatApiConfig } from "@/services/chat/chat-api.config"
 import type { ChatSocketClient } from "@/services/chat/service/chat-service"
 import type { SocketClient, SocketClientOptions } from "@/types/cha-service"
 import { SocketConnectionError, SocketConnectionState } from "@/types/cha-service"
@@ -11,13 +12,7 @@ export class ApiChatSocketClient implements ChatSocketClient {
   }
   createProjectChatSocket(options: SocketClientOptions): SocketClient {
     const { projectId, onMessage, onError, host, jwt } = options
-    let SockJs: typeof import("sockjs-client") | undefined
-    try {
-      SockJs = loadSockJs()
-    } catch (e) {
-      SockJs = undefined
-      console.warn("SockJS load failed, fallback to native WebSocket only.", e)
-    }
+
     const connectHeaders = createConnectHeaders(jwt)
     const socketHost = host || this.config.socketHost
     const client = new Client({

@@ -1,7 +1,8 @@
 import axios from "axios"
 
 const apiClient = axios.create({
-  baseURL: "/api",
+  // biome-ignore lint/style/useNamingConvention: axios requires baseURL property name
+  baseURL: import.meta.env.DEV ? "/api" : "http://15.165.2.193:8080",
   headers: {
     "Content-Type": "application/json",
   },
@@ -12,6 +13,10 @@ apiClient.interceptors.request.use(config => {
   const token = localStorage.getItem("accessToken")
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
+  }
+  // FormData인 경우 Content-Type 헤더 제거 (axios가 자동 설정)
+  if (config.data instanceof FormData) {
+    delete config.headers["Content-Type"]
   }
   return config
 })

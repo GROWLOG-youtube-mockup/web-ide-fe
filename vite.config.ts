@@ -20,8 +20,8 @@ export default defineConfig({
         ws: true,
         changeOrigin: true,
         secure: false,
-        timeout: 0,
-        rewrite: path => path,
+        timeout: 0, // 타임아웃 제거
+        rewrite: path => path, // 경로 유지
       },
       "/api": {
         target: "http://15.165.2.193:8080",

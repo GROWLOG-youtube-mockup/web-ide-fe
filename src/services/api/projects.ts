@@ -4,7 +4,7 @@ import apiClient from "."
 export const getProjects = async (type?: "own" | "joined"): Promise<ProjectResponse[]> => {
   const params = type ? { type } : {}
   const response = await apiClient.get("/projects", { params })
-  return response.data
+  return response.data.data //프로젝트 목록 조회 배열만 반환
 }
 
 export const createProject = async (
@@ -35,6 +35,8 @@ export const updateProjectStatus = async (
   projectId: number,
   status: "ACTIVE" | "INACTIVE"
 ): Promise<ApiResponse<ProjectResponse>> => {
-  const response = await apiClient.patch(`/projects/${projectId}/status`, { status })
+  const response = await apiClient.patch(`/projects/${projectId}/status`, {
+    status,
+  })
   return response.data
 }

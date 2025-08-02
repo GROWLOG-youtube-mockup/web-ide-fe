@@ -39,14 +39,3 @@ export const createConnectHeaders = (jwt: string | undefined): Record<string, st
   }
   throw new SocketConnectionError("Failed to create connection headers", "HEADER_CREATION_ERROR")
 }
-
-/**
- * SockJS 라이브러리 동적 로딩
- */
-export const loadSockJs = (): typeof import("sockjs-client") | undefined => {
-  try {
-    return require("sockjs-client/dist/sockjs")
-  } catch {
-    return undefined
-  }
-}
