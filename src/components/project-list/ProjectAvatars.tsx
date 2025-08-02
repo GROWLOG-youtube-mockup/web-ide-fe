@@ -13,25 +13,19 @@ type DisplayMember =
     }
 
 interface ProjectAvatarsProps {
-  members?: ProjectMember[]
   projectId?: string
   maxVisible?: number
   size?: "sm" | "md" | "lg"
 }
 
-export const ProjectAvatars = ({
-  members,
-  projectId,
-  maxVisible = 3,
-  size = "md",
-}: ProjectAvatarsProps) => {
+export const ProjectAvatars = ({ projectId, maxVisible = 3, size = "md" }: ProjectAvatarsProps) => {
   const { getOnlineParticipants } = useParticipantsStore()
 
   // 프로젝트 ID가 있으면 온라인 참여자만 사용
   const onlineParticipants = projectId ? getOnlineParticipants(projectId) : []
 
-  // 실시간 온라인 참여자만 표시 (IDE 접속 시점부터는 본인 포함되므로 fallback 불필요)
-  const displayMembers: DisplayMember[] = projectId ? onlineParticipants : members || []
+  // 온라인 참여자가 2명 이상일 때만 표시
+  const displayMembers: DisplayMember[] = onlineParticipants.length >= 2 ? onlineParticipants : []
 
   const visibleMembers = displayMembers.slice(0, maxVisible)
   const remainingCount = Math.max(0, displayMembers.length - maxVisible)
