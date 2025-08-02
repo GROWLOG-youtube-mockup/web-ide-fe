@@ -1,25 +1,60 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/custom-button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { useChatSocket } from "@/hooks/chat/useChatSocket"
-import { chatService } from "@/services/chat/service/chat-service"
+
+import { useChatHistory } from "@/hooks/chat/useChatHistory"
 import type { ChatMessage } from "@/types/cha-service"
 
-// 메시지 리스트 컴포넌트
-const ChatMessageList = ({ messages }: { messages: ChatMessage[] }) => {
+interface ChatMessageListProps {
+  messages: ChatMessage[]
+  fetchNextPage: () => void
+  hasMore: boolean
+  isFetching: boolean
+}
+
+const ChatMessageList = ({
+  messages,
+  fetchNextPage,
+  hasMore,
+  isFetching,
+}: ChatMessageListProps) => {
+  const containerRef = useRef<HTMLDivElement>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
 
+  // 무한 스크롤: top 근처에서 이전 페이지 불러오기
   useEffect(() => {
-    if (messages.length > 0) {
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" })
+    const container = containerRef.current
+    if (!container) return
+
+    const handleScroll = () => {
+      if (container.scrollTop < 100 && hasMore && !isFetching) {
+        fetchNextPage()
+      }
     }
-  }) // 의존성 배열 제거 - 매 렌더링마다 실행
+    container.addEventListener("scroll", handleScroll)
+    return () => container.removeEventListener("scroll", handleScroll)
+  }, [fetchNextPage, hasMore, isFetching])
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <최신 메시지 보이기 목적, 의도적으로 messages만 의존>
+  useEffect(() => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "auto" })
+    }
+  }, [messages])
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-4 pt-4">
+    <div
+      ref={containerRef}
+      className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-4 pt-4"
+    >
+      {isFetching && hasMore && (
+        <div className="flex justify-center py-2 text-muted-foreground text-xs">
+          Loading more...
+        </div>
+      )}
       {messages.map((msg, idx) => (
         <div className="flex items-start gap-3" key={`${msg.sentAt}-${msg.username}-${idx}`}>
           <Avatar>
@@ -80,41 +115,25 @@ const ChatInput = ({ onSend, disabled }: { onSend: (msg: string) => void; disabl
 }
 
 export const Chats = () => {
-  // TODO: 실제 프로젝트 ID로 교체 필요
-  const projectId = 1
+  // 실제 프로젝트 ID로 교체 필요
+  const projectId = 3
 
-  const [messages, setMessages] = useState<ChatMessage[]>([])
-  const [loading, setLoading] = useState(true)
+  const { messages, setMessages, loading, error, fetchNextPage, hasMore, isFetching } =
+    useChatHistory(projectId, 30)
 
-  const onMessage = useCallback((msg: ChatMessage) => {
-    setMessages(prev => [...prev, msg])
-  }, [])
-
-  const onError = useCallback((err: unknown) => {
-    console.error("채팅 소켓 에러", err)
-  }, [])
-
-  const { connected, sendMessage, socketError } = useChatSocket({
-    projectId,
-    onMessage,
-    onError,
-  })
-
-  // 채팅 히스토리 로드
-  useEffect(() => {
-    setLoading(true)
-    chatService.rest
-      .fetchChatHistory(projectId, 0, 30)
-      .then((res: { content: ChatMessage[] }) => {
-        if (Array.isArray(res.content)) {
-          setMessages(res.content.reverse())
-        }
-      })
-      .catch((err: unknown) => {
-        console.error("채팅 히스토리 로드 실패:", err)
-      })
-      .finally(() => setLoading(false))
-  }, []) // projectId는 상수이므로 의존성에서 제거
+  // 입력은 ChatMessage 타입에 맞게 추가
+  const handleSend = (msg: string) => {
+    setMessages(prev => [
+      ...prev,
+      {
+        messageType: "TALK",
+        projectId,
+        username: "나",
+        content: msg,
+        sentAt: new Date().toISOString(),
+      },
+    ])
+  }
 
   return (
     <div className="flex h-full flex-col bg-[var(--background)]">
@@ -122,19 +141,19 @@ export const Chats = () => {
         <div className="flex flex-1 items-center justify-center text-muted-foreground">
           Loading...
         </div>
+      ) : error ? (
+        <div className="flex flex-1 items-center justify-center text-red-500">{error}</div>
       ) : (
-        <>
-          {socketError && (
-            <div className="flex items-center justify-center py-2 text-red-500 text-sm">
-              실시간 연결이 불안정합니다. 이전 메시지만 표시됩니다.
-            </div>
-          )}
-          <ChatMessageList messages={messages} />
-        </>
+        <ChatMessageList
+          messages={messages}
+          fetchNextPage={fetchNextPage}
+          hasMore={hasMore}
+          isFetching={isFetching}
+        />
       )}
       <div className="sticky bottom-0 shrink-0">
         <Separator />
-        <ChatInput onSend={sendMessage} disabled={!connected || !!socketError} />
+        <ChatInput onSend={handleSend} />
       </div>
     </div>
   )
