@@ -63,21 +63,26 @@ export function useProfileUpdate({ form, initialValues }: UseProfileUpdateProps)
       const axiosError = error as {
         response?: {
           status: number
-          data: { field?: string; message?: string }
+          data: {
+            error?: {
+              code?: string
+              message?: string
+            }
+          }
         }
       }
 
-      if (axiosError.response?.status === 400) {
-        const { field, message } = axiosError.response.data
+      if (axiosError.response?.status === 400 && axiosError.response.data.error) {
+        const { code, message } = axiosError.response.data.error
 
-        if (field === "currentPassword") {
+        if (code === "INVALID_PASSWORD") {
           form.setError("currentPassword", {
             message: message || "Current password is incorrect.",
             type: "server",
           })
-        } else if (field === "newPassword") {
+        } else if (code === "NEW_PASSWORD_SAME_AS_CURRENT") {
           form.setError("newPassword", {
-            message: message || "New password is invalid.",
+            message: message || "New password cannot be the same as the current one.",
             type: "server",
           })
         }
