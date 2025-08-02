@@ -42,6 +42,7 @@ export const TreeNode = ({ item }: TreeNodeProps): React.ReactElement => {
       isRenaming: nodeState?.isRenaming ?? false,
       level: nodeState?.level ?? 0,
       isInDropZone: nodeState?.isInDropZone ?? false,
+      isMatchingSearch: nodeState?.isMatchingSearch ?? false, //서치용
     }),
     [nodeState]
   )
@@ -56,7 +57,8 @@ export const TreeNode = ({ item }: TreeNodeProps): React.ReactElement => {
         TREE_STYLES.HOVER_BG,
         safeNodeState.isSelected && TREE_STYLES.SELECTED_BG,
         safeNodeState.isFocused && !safeNodeState.isRenaming && TREE_STYLES.FOCUS_BG,
-        safeNodeState.isInDropZone && TREE_STYLES.DRAG_TARGET_BG
+        safeNodeState.isInDropZone && TREE_STYLES.DRAG_TARGET_BG,
+        safeNodeState.isMatchingSearch && TREE_STYLES.DRAG_TARGET_BG
       ),
     [itemProps.className, safeNodeState]
   )

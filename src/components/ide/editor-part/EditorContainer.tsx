@@ -1,17 +1,32 @@
 // EditorContainer.tsx
 import { ClientSideSuspense } from "@liveblocks/react/suspense"
 import { Editor } from "@monaco-editor/react"
-import { useEffect, useState } from "react" // ✅ 추가
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
 import { Cursors } from "@/components/ide/editor-part/Cursors"
 import { useCollaborativeEditor } from "@/hooks/editor/useCollaborativeEditor"
+import { useFileTree } from "@/hooks/file-explorer/useFileTree"
+import { useProjectPermission } from "@/hooks/permissions/useProjectMembers"
 import { LiveblocksProvider, RoomProvider, useRoom } from "@/liveblocks.config"
 import { useEditorTabsStore } from "@/stores/editor-tabs-store"
 
-const CollaborativeEditor = ({ filePath }: { filePath: string }) => {
+const CollaborativeEditor = ({
+  filePath,
+  fileId,
+  isReadOnly = false,
+}: {
+  filePath: string
+  fileId: string
+  isReadOnly?: boolean
+}) => {
   const room = useRoom()
+  const { projectId } = useParams<{ projectId: string }>() // 추가
 
   const { handleOnMount, isLoading, yProvider } = useCollaborativeEditor(filePath)
-  const expectedRoomId = `room-${filePath.replace(/^\//, "")}`
+
+  // 수정: fileId 기반 룸ID 생성
+  const expectedRoomId = `room-${projectId}-${fileId}`
+
   if (room.id !== expectedRoomId) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -25,6 +40,12 @@ const CollaborativeEditor = ({ filePath }: { filePath: string }) => {
 
   return (
     <div className="relative h-full">
+      {/* 읽기전용 표시 추가 */}
+      {isReadOnly && (
+        <div className="absolute top-2 right-2 z-20 rounded bg-orange-100 px-2 py-1 text-orange-700 text-xs">
+          읽기 전용
+        </div>
+      )}
       <Cursors yProvider={yProvider} />
       {isLoading && (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/80">
@@ -41,6 +62,7 @@ const CollaborativeEditor = ({ filePath }: { filePath: string }) => {
         height="100%"
         onMount={handleOnMount}
         options={{
+          readOnly: isReadOnly, //  프롭스로 받은 값 사용
           automaticLayout: true,
           fontSize: 14,
           hover: { delay: 500, enabled: true, sticky: false },
@@ -58,8 +80,16 @@ const CollaborativeEditor = ({ filePath }: { filePath: string }) => {
 
 export const EditorContainer = () => {
   const { activeFile, openedFiles } = useEditorTabsStore()
+  const { treeData } = useFileTree() // 추가: treeData 가져오기
+  const { projectId } = useParams<{ projectId: string }>() // 추가
+
+  // 편집 권한 조회
+  const { data: permission, isLoading: permissionLoading } = useProjectPermission(projectId || "")
+  const isReadOnly = permission?.role === "READ"
+
   // 점진적 연결을 위한 상태 추가
   const [connectedFiles, setConnectedFiles] = useState<string[]>([])
+
   useEffect(() => {
     if (openedFiles.length === 0) {
       setConnectedFiles([])
@@ -95,35 +125,65 @@ export const EditorContainer = () => {
     }
   }, [openedFiles, activeFile])
 
+  // 권한 로딩 중 처리
+  if (permissionLoading) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <div className="flex items-center gap-2">
+          <div className="h-4 w-4 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
+          권한 확인 중...
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="editor-area !border-t-[var(--tab-accent)] flex h-full flex-col border-t-4 bg-[var(--tab-background)]">
       <main className="flex-1">
         {openedFiles.length > 0 ? (
           <LiveblocksProvider>
-            {openedFiles.map(filePath => (
-              <div
-                className={`h-full ${filePath === activeFile ? "block" : "hidden"}`}
-                key={filePath}
-              >
-                {connectedFiles.includes(filePath) && (
-                  <RoomProvider id={`room-${filePath.replace(/^\//, "")}`}>
-                    <ClientSideSuspense fallback={<div />}>
-                      <CollaborativeEditor filePath={filePath} />
-                    </ClientSideSuspense>
-                  </RoomProvider>
-                )}
+            {openedFiles.map(filePath => {
+              // 추가: path로 파일 데이터 조회하고 id 추출
+              const fileData = treeData[filePath]
+              const fileId = fileData?.id
 
-                {/* ✅ 연결 대기 중인 파일들 표시 */}
-                {!connectedFiles.includes(filePath) && filePath === activeFile && (
-                  <div className="flex h-full items-center justify-center">
-                    <div className="flex items-center gap-2">
-                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
-                      연결 준비 중...
+              // 추가: fileId가 없으면 해당 파일 건너뛰기 (또는 path 기반 fallback)
+              if (!fileId) {
+                console.warn(`파일 ID를 찾을 수 없음: ${filePath}`)
+                return null
+              }
+
+              return (
+                <div
+                  className={`h-full ${filePath === activeFile ? "block" : "hidden"}`}
+                  key={filePath}
+                >
+                  {connectedFiles.includes(filePath) && (
+                    // 수정: fileId 기반 룸ID 사용
+                    <RoomProvider id={`room-${projectId}-${fileId}`}>
+                      <ClientSideSuspense fallback={<div />}>
+                        {/* 수정: fileId props 추가 */}
+                        <CollaborativeEditor
+                          fileId={fileId}
+                          filePath={filePath}
+                          isReadOnly={isReadOnly}
+                        />
+                      </ClientSideSuspense>
+                    </RoomProvider>
+                  )}
+
+                  {/* ✅ 연결 대기 중인 파일들 표시 */}
+                  {!connectedFiles.includes(filePath) && filePath === activeFile && (
+                    <div className="flex h-full items-center justify-center">
+                      <div className="flex items-center gap-2">
+                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
+                        연결 준비 중...
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            ))}
+                  )}
+                </div>
+              )
+            })}
           </LiveblocksProvider>
         ) : (
           <div className="flex h-full items-center justify-center">

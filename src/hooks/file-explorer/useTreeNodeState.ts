@@ -14,6 +14,8 @@ export const useTreeNodeState = (item: ItemInstance<FileData> | null) => {
   const level = item?.getItemMeta().level ?? 0
   const isDragTarget = item?.isDragTarget() ?? false
 
+  const isMatchingSearch = item?.isMatchingSearch() ?? false //검색용 매칭
+
   const dragTarget = item?.getTree().getDragTarget()
   const isInDropZone = useMemo(() => {
     if (!item) return false
@@ -33,5 +35,6 @@ export const useTreeNodeState = (item: ItemInstance<FileData> | null) => {
     level,
     isDragTarget,
     isInDropZone,
+    isMatchingSearch,
   }
 }
