@@ -34,6 +34,14 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
   const { data: members = [] } = useProjectMembers(projectId || "") //멤버 수 가져오기
   const memberCount = members.length // 실제 멤버 수
 
+  // 👇 디버깅 로그 추가
+  console.log("🎨 Sidebar 렌더링:", {
+    tree: fileTreeData.tree ? "존재함" : "null",
+    isLoading: fileTreeData.isLoading,
+    isConnected: fileTreeData.isConnected,
+    timestamp: Date.now(),
+  })
+
   return (
     <div className="flex h-full">
       <SidebarTabs
@@ -63,16 +71,26 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
             </SidebarPanel>,
           ]}
           tab="files"
-          topPanels={[
-            <SidebarPanel
-              actions={<FileExplorerActions {...fileTreeData} />}
-              id="files"
-              key="files-tree"
-              title={projectTitle}
-            >
-              <FileExplorer tree={fileTreeData.tree} />
-            </SidebarPanel>,
-          ]}
+          topPanels={
+            fileTreeData.tree
+              ? (() => {
+                  console.log("✅ FileExplorer 패널 생성됨, treeKey:")
+                  return [
+                    <SidebarPanel
+                      actions={<FileExplorerActions {...fileTreeData} tree={fileTreeData.tree} />}
+                      id="files"
+                      key="files"
+                      title={projectTitle}
+                    >
+                      <FileExplorer tree={fileTreeData.tree} />
+                    </SidebarPanel>,
+                  ]
+                })()
+              : (() => {
+                  console.log("❌ FileExplorer 패널 생성 안됨 - tree가 null")
+                  return []
+                })()
+          }
         />
 
         <SidebarPanels

@@ -8,6 +8,7 @@ import type { FileData } from "@/types/file-explorer"
 
 interface FileExplorerProps {
   tree: TreeInstance<FileData>
+  treeKey?: number // ← 추가
 }
 
 /**
@@ -21,7 +22,8 @@ interface FileExplorerProps {
  * - Headless Tree의 getContainerProps()와 item.getProps()를 활용한 접근성 지원
  * - 각 트리 노드는 TreeNode 컴포넌트로 렌더링
  */
-export const FileExplorer = ({ tree }: FileExplorerProps): React.ReactElement => {
+export const FileExplorer = ({ tree, treeKey }: FileExplorerProps): React.ReactElement => {
+  const items = tree.getItems()
   const [contextMenuTarget, setContextMenuTarget] = useState<{
     filePath: string
     isFolder: boolean
@@ -44,7 +46,8 @@ export const FileExplorer = ({ tree }: FileExplorerProps): React.ReactElement =>
   }
 
   return (
-    <WithContextMenu menuItems={menuItems}>
+    <WithContextMenu key={treeKey} menuItems={menuItems}>
+      {" "}
       <nav
         aria-label="File Explorer"
         className="w-full"
@@ -52,9 +55,9 @@ export const FileExplorer = ({ tree }: FileExplorerProps): React.ReactElement =>
         {...tree.getContainerProps()}
       >
         <ul className="m-0 list-none">
-          {tree.getItems().map(item => (
-            <TreeNode item={item} key={item.getId()} />
-          ))}
+          {items.map(item => {
+            return <TreeNode item={item} key={item.getId()} />
+          })}
         </ul>
       </nav>
     </WithContextMenu>
