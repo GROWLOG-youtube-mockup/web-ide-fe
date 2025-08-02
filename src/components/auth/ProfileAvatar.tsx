@@ -3,12 +3,11 @@ import { useEffect, useRef, useState } from "react"
 import { useToast } from "@/components/common/ToastContext"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { AUTH_LAYOUT } from "@/constants/auth-styles"
-import { uploadProfileImage } from "@/services/api/users"
 
 interface ProfileAvatarProps {
   src?: string
   onImageChange?: (imageUrl: string) => void
-  onImageSelect?: (file: File) => void
+  onImageSelect: (file: File) => void // Required로 변경
 }
 
 export function ProfileAvatar({
@@ -17,7 +16,6 @@ export function ProfileAvatar({
   onImageSelect,
 }: ProfileAvatarProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [isUploading, setIsUploading] = useState(false)
   const [previewSrc, setPreviewSrc] = useState<string>(src)
   const [objectUrl, setObjectUrl] = useState<string | null>(null)
   const { addToast } = useToast()
@@ -37,9 +35,7 @@ export function ProfileAvatar({
   }, [objectUrl])
 
   const handleAvatarClick = () => {
-    if (!isUploading) {
-      fileInputRef.current?.click()
-    }
+    fileInputRef.current?.click()
   }
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,59 +65,23 @@ export function ProfileAvatar({
       return
     }
 
-    // 회원가입 중이라면 파일만 저장 (onImageSelect가 있는 경우)
-    if (onImageSelect) {
-      onImageSelect(file)
-      // 이전 Object URL 정리
-      if (objectUrl) {
-        URL.revokeObjectURL(objectUrl)
-      }
-      // 미리보기를 위해 새 URL 생성
-      const previewUrl = URL.createObjectURL(file)
-      setObjectUrl(previewUrl)
-      setPreviewSrc(previewUrl)
-      onImageChange?.(previewUrl)
-      return
+    // 파일 선택 처리: 업로드는 부모 컴포넌트에 위임
+    onImageSelect(file)
+    // 이전 Object URL 정리
+    if (objectUrl) {
+      URL.revokeObjectURL(objectUrl)
     }
-
-    // 로그인 후라면 바로 업로드 (기존 로직)
-    setIsUploading(true)
-    try {
-      const imageUrl = await uploadProfileImage(file)
-      // 이전 Object URL 정리
-      if (objectUrl) {
-        URL.revokeObjectURL(objectUrl)
-        setObjectUrl(null)
-      }
-      setPreviewSrc(imageUrl) // 업로드 성공 시 미리보기 업데이트
-      addToast({
-        type: "success",
-        title: "Profile image updated successfully!",
-        duration: 2000,
-      })
-      onImageChange?.(imageUrl)
-    } catch (error) {
-      console.error("Profile image upload failed:", error)
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to upload image. Please try again."
-      addToast({
-        type: "error",
-        title: errorMessage,
-        duration: 4000,
-      })
-    } finally {
-      setIsUploading(false)
-      // 파일 input 초기화
-      if (fileInputRef.current) {
-        fileInputRef.current.value = ""
-      }
-    }
+    // 미리보기를 위해 새 URL 생성
+    const previewUrl = URL.createObjectURL(file)
+    setObjectUrl(previewUrl)
+    setPreviewSrc(previewUrl)
+    onImageChange?.(previewUrl)
   }
 
   return (
     <div className={AUTH_LAYOUT.avatarWrapper}>
       <button
-        className={`${AUTH_LAYOUT.avatarInner} relative ${isUploading ? "cursor-wait" : "cursor-pointer"} group`}
+        className={`${AUTH_LAYOUT.avatarInner} group relative cursor-pointer`}
         onClick={handleAvatarClick}
         onKeyDown={e => {
           if (e.key === "Enter" || e.key === " ") {
@@ -138,21 +98,13 @@ export function ProfileAvatar({
 
         {/* 호버 시 반투명 오버레이 */}
         <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-          <Camera className={`h-6 w-6 text-white ${isUploading ? "animate-pulse" : ""}`} />
+          <Camera className="h-6 w-6 text-white" />
         </div>
-
-        {/* 업로드 중 로딩 오버레이 */}
-        {isUploading && (
-          <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/60">
-            <div className="h-6 w-6 animate-spin rounded-full border-white border-b-2"></div>
-          </div>
-        )}
 
         {/* 숨겨진 파일 입력 */}
         <input
           accept="image/*"
           className="hidden"
-          disabled={isUploading}
           onChange={handleFileChange}
           ref={fileInputRef}
           type="file"
