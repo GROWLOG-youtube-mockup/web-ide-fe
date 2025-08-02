@@ -27,12 +27,11 @@ export const ProjectAvatars = ({
 }: ProjectAvatarsProps) => {
   const { getOnlineParticipants } = useParticipantsStore()
 
-  // 프로젝트 ID가 있으면 온라인 참여자만 사용, 없으면 기본 members 사용
+  // 프로젝트 ID가 있으면 온라인 참여자만 사용
   const onlineParticipants = projectId ? getOnlineParticipants(projectId) : []
 
-  // 사용할 데이터 결정 (항상 온라인만)
-  const displayMembers: DisplayMember[] =
-    projectId && onlineParticipants.length > 0 ? onlineParticipants : members || []
+  // 실시간 온라인 참여자만 표시 (IDE 접속 시점부터는 본인 포함되므로 fallback 불필요)
+  const displayMembers: DisplayMember[] = projectId ? onlineParticipants : members || []
 
   const visibleMembers = displayMembers.slice(0, maxVisible)
   const remainingCount = Math.max(0, displayMembers.length - maxVisible)
