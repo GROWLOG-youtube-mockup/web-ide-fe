@@ -45,6 +45,7 @@ export enum SocketConnectionState {
 export interface ChatMessage {
   messageType: "ENTER" | "TALK" | "LEAVE"
   projectId: number
+  userId?: number
   username: string
   content: string
   sentAt: string
