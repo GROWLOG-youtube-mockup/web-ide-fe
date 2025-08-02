@@ -27,7 +27,7 @@ export const router = createBrowserRouter([
       },
       {
         element: <IdePage />,
-        path: "ide/:projectId",
+        path: "projects/:projectId/ide",
       },
       {
         element: <ProfileEditPage />,
