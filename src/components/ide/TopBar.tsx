@@ -22,20 +22,12 @@ export const TopBar = () => {
     navigate("/profile/edit")
   }
 
-  // 사용자 이름의 첫 글자들로 fallback 생성 (한글/영문 모두 지원)
+  // 사용자 이름의 첫 글자들로 fallback 생성 (한글/영문 모두 두 글자)
   const getInitials = (name: string) => {
     if (!name) return "ME"
 
-    // 한글인 경우 첫 글자만, 영문인 경우 각 단어의 첫 글자
-    if (/[가-힣]/.test(name)) {
-      return name.charAt(0)
-    }
-    return name
-      .split(" ")
-      .map(word => word.charAt(0))
-      .join("")
-      .toUpperCase()
-      .slice(0, 2)
+    // 한글, 영문 모두 처음 두 글자
+    return name.substring(0, 2).toUpperCase()
   }
 
   return (
