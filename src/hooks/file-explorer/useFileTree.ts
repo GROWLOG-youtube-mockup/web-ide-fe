@@ -272,5 +272,6 @@ export const useFileTree = () => {
     refreshTree,
     isLoading,
     isConnected,
+    stompClient, // StompClient 추가
   }
 }
