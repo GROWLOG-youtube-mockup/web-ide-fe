@@ -121,6 +121,7 @@
         "useNamingConvention": {
           "level": "warn",
           "options": {
+            "strictCase": false,
             "conventions": [
               {
                 // 변수는 camelCase, PascalCase, CONSTANT_CASE 모두 허용

@@ -1,4 +1,4 @@
-import { api } from "@/services/api/api-client"
+import api from "@/services/api"
 import type { ApiResponse, ProjectMember } from "@/types/api"
 
 export const projectApi = {

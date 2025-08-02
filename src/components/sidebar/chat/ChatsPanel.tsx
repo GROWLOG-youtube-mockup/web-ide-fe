@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/custom-button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { useChatSocket } from "@/hooks/chat/useChatSocket"
-import { type ChatMessage, chatService } from "@/services/api/chat-api"
+import { chatService } from "@/services/chat/service/chat-service"
+import type { ChatMessage } from "@/types/cha-service"
 
 // 메시지 리스트 컴포넌트
 const ChatMessageList = ({ messages }: { messages: ChatMessage[] }) => {
@@ -102,7 +103,7 @@ export const Chats = () => {
   // 채팅 히스토리 로드
   useEffect(() => {
     setLoading(true)
-    chatService
+    chatService.rest
       .fetchChatHistory(projectId, 0, 30)
       .then((res: { content: ChatMessage[] }) => {
         if (Array.isArray(res.content)) {

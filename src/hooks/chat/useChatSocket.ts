@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react"
-import { type ChatMessage, chatService, type SocketClient } from "@/services/api/chat-api"
+import { chatService } from "@/services/chat/service/chat-service"
+import type { ChatMessage, SocketClient } from "@/types/cha-service"
 
 export interface UseChatSocketReturn {
   connected: boolean
@@ -53,7 +54,7 @@ export function useChatSocket({ projectId, onMessage, onError }: UseChatSocketOp
     setSocketError(null)
 
     const wsHost = import.meta.env.PROD ? "http://15.165.2.193:8080/ws" : "/ws"
-    const client = chatService.createProjectChatSocket({
+    const client = chatService.socket.createProjectChatSocket({
       projectId,
       onMessage: (msg: ChatMessage) => {
         if (!isMounted) return
