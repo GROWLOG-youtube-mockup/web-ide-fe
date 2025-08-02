@@ -117,42 +117,87 @@ export const createFileSystemApi = (projectId: string, stompClient?: StompClient
     })
   },
 
-  // DELETE /projects/{projectId}/files/{filePath} - 삭제
+  // DELETE /projects/{projectId}/files - 삭제
   delete: async (filePath: string): Promise<void> => {
-    const cleanPath = filePath.startsWith("/") ? filePath.slice(1) : filePath
-
-    await apiClient.delete(`/projects/${projectId}/files/${encodeURIComponent(cleanPath)}`)
+    await apiClient.delete(`/projects/${projectId}/files`, {
+      params: {
+        path: filePath,
+      },
+    })
   },
 
-  // PATCH /projects/{projectId}/files/{filePath} - 이름 변경/이동
+  // PATCH /projects/{projectId}/files - 이름 변경/이동
+
   rename: async (oldPath: string, newName: string): Promise<void> => {
-    const directory = oldPath.substring(0, oldPath.lastIndexOf("/"))
-    const newPath = `${directory}/${newName}`
+    console.log("=== RENAME 디버깅 ===")
+    console.log("1. 입력값:")
+    console.log("   oldPath:", oldPath)
+    console.log("   newName:", newName)
 
-    await apiClient.patch(
-      `/projects/${projectId}/files/{filePath}`, // 실제 엔드포인트로 변경 필요
-      {
-        fromPath: oldPath,
-        toPath: newPath,
-      }
-    )
+    const pathParts = oldPath.split("/")
+    console.log("2. 경로 파싱:")
+    console.log("   pathParts:", pathParts)
+
+    pathParts.pop()
+    console.log("   pathParts after pop:", pathParts)
+
+    const parentPath = pathParts.join("/") || "/"
+    console.log("   parentPath:", parentPath)
+
+    const newPath = parentPath === "/" ? `/${newName}` : `${parentPath}/${newName}`
+    console.log("3. 최종 경로:")
+    console.log("   newPath:", newPath)
+
+    console.log("4. API 요청 파라미터:")
+    console.log("   fromPath:", oldPath)
+    console.log("   toPath:", newPath)
+    console.log("===================")
+
+    try {
+      await apiClient.patch(
+        `/projects/${projectId}/files`,
+        {},
+        {
+          params: {
+            fromPath: oldPath,
+            toPath: newPath,
+          },
+        }
+      )
+    } catch (error) {
+      console.error(`[ERROR] rename failed:`, error)
+      throw error
+    }
   },
 
-  move: async (sourcePath: string, targetPath: string): Promise<void> => {
-    await apiClient.patch(
-      `/projects/${projectId}/files/{filePath}`, // 실제 엔드포인트로 변경 필요
-      {
-        fromPath: sourcePath,
-        toPath: targetPath,
-      }
-    )
+  move: async (sourcePath: string, targetDirPath: string): Promise<void> => {
+    const fileName = sourcePath.split("/").pop()
+    const targetPath = targetDirPath === "/" ? `/${fileName}` : `${targetDirPath}/${fileName}`
+
+    console.log(`[DEBUG] move - sourcePath: "${sourcePath}", targetPath: "${targetPath}"`)
+
+    try {
+      await apiClient.patch(
+        `/projects/${projectId}/files`,
+        {},
+        {
+          params: {
+            fromPath: sourcePath,
+            toPath: targetPath,
+          },
+        }
+      )
+    } catch (error) {
+      console.error(`[ERROR] move failed:`, error)
+      throw error
+    }
   },
 
-  // GET /projects/{projectId}/files/search - 검색
+  // 검색 파라미터 수정
   searchFiles: async (query: string): Promise<FileSearchResponse[]> => {
     const response = await apiClient.get<ApiResponse<FileSearchResponse[]>>(
       `/projects/${projectId}/files/search`,
-      { params: { q: query } }
+      { params: { query: query } }
     )
     return response.data.data || []
   },
