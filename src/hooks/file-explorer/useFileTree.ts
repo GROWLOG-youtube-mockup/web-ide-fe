@@ -280,6 +280,5 @@ export const useFileTree = () => {
     isConnected,
     treeData,
     stompClient, // StompClient 추가
-
   }
 }

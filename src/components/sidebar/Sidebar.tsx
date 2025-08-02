@@ -1,14 +1,15 @@
 import { FilesIcon, FolderInputIcon, SearchIcon, SettingsIcon, Share2Icon } from "lucide-react"
 import { useParams } from "react-router-dom" // ":projectId" 부분을 가져옴
-import { FileExplorer } from "@/components/sidebar/file-explorer/FileExplorer"
+import { Chats } from "@/components/sidebar/chat/ChatsPanel"
 import { FileExplorerActions } from "@/components/sidebar/file-explorer/FileExplorerActions"
+import { FileExplorer } from "@/components/sidebar/file-explorer/FileExplorerPanel"
 import { SidebarPanel } from "@/components/sidebar/SidebarPanel"
 import { SidebarPanels } from "@/components/sidebar/SidebarPanels"
 import { SidebarTab } from "@/components/sidebar/SidebarTab"
 import { SidebarTabs } from "@/components/sidebar/SidebarTabs"
 import { SearchPanel } from "@/components/sidebar/search/SearchPanel" //검색창
-import { Invitations } from "@/components/sidebar/share/Invitations"
-import { Members } from "@/components/sidebar/share/Members"
+import { Invitations } from "@/components/sidebar/share/InvitationsPanel"
+import { Members } from "@/components/sidebar/share/MembersPanel"
 import { useFileTree } from "@/hooks/file-explorer/useFileTree"
 import { useProjectMembers } from "@/hooks/permissions/useProjectMembers" // 멤버수
 
@@ -31,8 +32,8 @@ const PlaceholderPanel = ({ message }: { message: string }) => (
  */
 export const Sidebar = ({ projectTitle }: SidebarProps) => {
   const fileTreeData = useFileTree()
-  const { projectId } = useParams<{ projectId: string }>() // URL에서 projectId 추출
-  const { data: members = [] } = useProjectMembers(projectId || "") //멤버 수 가져오기
+  const { projectId = "" } = useParams<{ projectId: string }>() // URL에서 projectId 추출
+  const { data: members = [] } = useProjectMembers(projectId) //멤버 수 가져오기
   const memberCount = members.length // 실제 멤버 수
 
   console.log("🎨 Sidebar 렌더링:", {
@@ -57,18 +58,9 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
 
       <div className="flex flex-1 flex-col">
         <SidebarPanels
-          tab="settings"
-          topPanels={[
-            <SidebarPanel id="settings" key="settings" title="settings">
-              <PlaceholderPanel message="Settings panel coming soon..." />
-            </SidebarPanel>,
-          ]}
-        />
-
-        <SidebarPanels
           bottomPanels={[
             <SidebarPanel id="chats" key="chats" title="chats">
-              <PlaceholderPanel message="Chat panel coming soon..." />
+              <Chats projectId={projectId} />
             </SidebarPanel>,
           ]}
           tab="files"
@@ -125,6 +117,20 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
           topPanels={[
             <SidebarPanel id="projects" key="projects" title="projects">
               <PlaceholderPanel message="Projects panel coming soon..." />
+            </SidebarPanel>,
+          ]}
+          bottomPanels={[
+            <SidebarPanel id="chats" key="chats" title="chats">
+              <Chats projectId={projectId} />
+            </SidebarPanel>,
+          ]}
+        />
+
+        <SidebarPanels
+          tab="settings"
+          topPanels={[
+            <SidebarPanel id="settings" key="settings" title="settings">
+              <PlaceholderPanel message="Settings panel coming soon..." />
             </SidebarPanel>,
           ]}
         />

@@ -13,9 +13,14 @@ export const SidebarPanels = ({ tab, topPanels, bottomPanels = [] }: SidebarPane
   if (activeTab !== tab) return null
 
   return (
-    <div className="sidebar-panels flex flex-1 flex-col justify-between" data-tab={tab}>
-      <div className="sidebar-panels-top flex flex-col ">{topPanels}</div>
-      <div className="sidebar-panels-bottom flex flex-col">{bottomPanels}</div>
+    <div
+      className="sidebar-panels flex min-h-0 flex-1 flex-col justify-between overflow-hidden"
+      data-tab={tab}
+    >
+      <div className="sidebar-panels-top flex min-h-0 flex-col overflow-hidden">{topPanels}</div>
+      <div className="sidebar-panels-bottom flex min-h-0 flex-col overflow-hidden">
+        {bottomPanels}
+      </div>
     </div>
   )
 }

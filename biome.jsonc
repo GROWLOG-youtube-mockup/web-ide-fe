@@ -5,8 +5,8 @@
       "source": {
         "organizeImports": "on",
         // 파일을 저장할 때 임포트 구문을 자동으로 정리하도록 설정합니다.
-        "recommended": true,
-        "useSortedAttributes": "on"
+        "recommended": true
+        // "useSortedAttributes": "on"
         // "useSortedKeys": "on", // 주석과 함께 사용 시 코드 구조를 망가뜨려서 비활성화
         // "useSortedProperties": "on" // 주석과 함께 사용 시 코드 구조를 망가뜨려서 비활성화
       }
@@ -121,6 +121,7 @@
         "useNamingConvention": {
           "level": "warn",
           "options": {
+            "strictCase": false,
             "conventions": [
               {
                 // 변수는 camelCase, PascalCase, CONSTANT_CASE 모두 허용

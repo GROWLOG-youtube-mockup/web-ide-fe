@@ -123,7 +123,6 @@ export function Invitations({ projectId }: { projectId: string }) {
                   <FormControl>
                     <Input
                       {...field}
-                      className="rounded-md"
                       disabled={isLoading}
                       placeholder="Invite by member email"
                       type="email"
@@ -148,6 +147,7 @@ export function Invitations({ projectId }: { projectId: string }) {
         </form>
       </Form>
       <EmailList />
+      <div className="min-h-[20px]">{"\u00A0"}</div>
       <InviteButton />
     </>
   )
