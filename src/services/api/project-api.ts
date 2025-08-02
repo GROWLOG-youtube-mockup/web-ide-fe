@@ -1,5 +1,6 @@
 import apiClient from "@/services/api/index"
 import type { ApiResponse, ProjectMember } from "@/types/api"
+import type { CreateProjectRequest, UpdateProjectRequest } from "@/types/project"
 
 export const projectApi = {
   // 프로젝트 사용자 초대
@@ -45,6 +46,24 @@ export const projectApi = {
       `/projects/${projectId}/permissions/me`
     )
     return response.data.data || { role: "READ" }
+  },
+
+  // 프로젝트 생성
+  createProject: async (projectData: CreateProjectRequest) => {
+    const response = await apiClient.post("/projects", projectData)
+    return response.data
+  },
+
+  // 프로젝트 수정
+  updateProject: async (projectId: number, projectData: UpdateProjectRequest) => {
+    const response = await apiClient.patch(`/projects/${projectId}`, projectData)
+    return response.data
+  },
+
+  // 프로젝트 삭제
+  deleteProject: async (projectId: number) => {
+    const response = await apiClient.delete(`/projects/${projectId}`)
+    return response.data
   },
 }
 
