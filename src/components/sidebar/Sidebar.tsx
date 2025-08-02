@@ -34,7 +34,6 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
   const { data: members = [] } = useProjectMembers(projectId || "") //멤버 수 가져오기
   const memberCount = members.length // 실제 멤버 수
 
-  // 👇 디버깅 로그 추가
   console.log("🎨 Sidebar 렌더링:", {
     tree: fileTreeData.tree ? "존재함" : "null",
     isLoading: fileTreeData.isLoading,

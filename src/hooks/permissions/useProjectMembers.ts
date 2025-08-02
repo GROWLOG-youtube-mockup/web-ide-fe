@@ -139,7 +139,7 @@ export const useRemoveMember = (projectId: string) => {
   const queryClient = useQueryClient()
   const { addToast } = useToast()
 
-  // ✨ 공통 함수 사용
+  // 공통 함수 사용
   const handleMutationError = createMutationErrorHandler(queryClient, addToast, projectId)
 
   return useMutation({

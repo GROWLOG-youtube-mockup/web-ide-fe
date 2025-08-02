@@ -66,7 +66,7 @@ export const useFileTree = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [isConnected, setIsConnected] = useState(false)
   const [stompClient, setStompClient] = useState<Client | null>(null)
-  const [isDataReady, setIsDataReady] = useState(false) // 🚀 데이터 준비 완료 상태 추가
+  const [isDataReady, setIsDataReady] = useState(false) // 데이터 준비 완료 상태 추가
 
   // WebSocket 연결 및 트리 데이터 구독
   useEffect(() => {
@@ -87,7 +87,7 @@ export const useFileTree = () => {
         setIsConnected(true)
         setStompClient(client)
 
-        // 📥 트리 응답 구독
+        // 트리 응답 구독
         client.subscribe(`/topic/projects/${projectId}/tree`, message => {
           const data: WebSocketMessage = JSON.parse(message.body)
           console.log("🔔 수신된 메시지:", data.type)
@@ -98,7 +98,7 @@ export const useFileTree = () => {
 
             setTreeData(convertedData)
             setIsLoading(false)
-            setIsDataReady(true) // 🚀 데이터가 성공적으로 로드되었음을 표시
+            setIsDataReady(true) // 데이터가 성공적으로 로드되었음을 표시
           } else if (data.type === "tree:add") {
             // 전체 트리 새로고침
             client.publish({
@@ -125,7 +125,7 @@ export const useFileTree = () => {
           }
         })
 
-        // 📤 초기 트리 요청
+        // 초기 트리 요청
         client.publish({
           destination: `/app/projects/${projectId}/tree/init`,
           body: "",
@@ -232,7 +232,7 @@ export const useFileTree = () => {
     canRename: item => item.getId() !== "/",
   })
 
-  // 🚀 데이터가 준비되면 트리를 명시적으로 재구성한다.
+  // 데이터가 준비되면 트리를 명시적으로 재구성한다.
   useEffect(() => {
     if (isDataReady && tree) {
       tree.rebuildTree()
