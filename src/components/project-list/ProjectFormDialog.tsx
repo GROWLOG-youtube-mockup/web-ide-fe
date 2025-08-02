@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { PROJECT_STYLES } from "@/constants/project-styles"
 import type { Project } from "@/types/project"
 
-interface ProjectDialogProps {
+interface ProjectFormDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   mode: "edit" | "create"
@@ -14,14 +14,14 @@ interface ProjectDialogProps {
   isLoading?: boolean
 }
 
-export function ProjectDialog({
+export function ProjectFormDialog({
   open,
   onOpenChange,
   mode,
   initial = {},
   onConfirm,
   isLoading = false,
-}: ProjectDialogProps) {
+}: ProjectFormDialogProps) {
   const [name, setName] = useState(initial.name || "")
   const [description, setDescription] = useState(initial.description || "")
 

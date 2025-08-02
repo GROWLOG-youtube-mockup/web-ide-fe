@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/custom-button"
 import { projectApi } from "@/services/api/project-api"
 import { useProjectStore } from "@/stores/project-store"
 import { useUserStore } from "@/stores/user-store"
-import { ProjectDialog } from "./ProjectDialog"
+import { ProjectFormDialog } from "./ProjectFormDialog"
 
 export const ProjectListHeader = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
@@ -105,7 +105,7 @@ export const ProjectListHeader = () => {
       </div>
 
       {/* 프로젝트 생성 다이얼로그 */}
-      <ProjectDialog
+      <ProjectFormDialog
         isLoading={createLoading}
         mode="create"
         onConfirm={handleCreateConfirm}

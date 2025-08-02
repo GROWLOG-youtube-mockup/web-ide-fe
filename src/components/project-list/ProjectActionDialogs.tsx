@@ -1,6 +1,6 @@
 import { AlertDialog } from "@/components/common/AlertDialog"
 import type { Project } from "@/types/project"
-import { ProjectDialog } from "./ProjectDialog"
+import { ProjectFormDialog } from "./ProjectFormDialog"
 
 // 프로젝트 폼 데이터 타입
 type ProjectFormData = {
@@ -8,7 +8,7 @@ type ProjectFormData = {
   description: string
 }
 
-interface ProjectDialogsProps {
+interface ProjectActionDialogsProps {
   project: Project
   isToggled: boolean
   dialogStates: {
@@ -33,13 +33,13 @@ interface ProjectDialogsProps {
   }
 }
 
-export function ProjectDialogs({
+export function ProjectActionDialogs({
   project,
   isToggled,
   dialogStates,
   loadingStates,
   handlers,
-}: ProjectDialogsProps) {
+}: ProjectActionDialogsProps) {
   const {
     isToggleDialogOpen,
     setIsToggleDialogOpen,
@@ -73,7 +73,7 @@ export function ProjectDialogs({
       />
 
       {/* 프로젝트 수정 다이얼로그 */}
-      <ProjectDialog
+      <ProjectFormDialog
         initial={{ name: project.name, description: project.description }}
         isLoading={editLoading}
         mode="edit"

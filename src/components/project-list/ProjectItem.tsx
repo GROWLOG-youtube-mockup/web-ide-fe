@@ -3,8 +3,8 @@ import { useState } from "react"
 import { useProjectActions } from "@/hooks/project/useProjectActions"
 import { cn } from "@/lib/utils"
 import type { Project } from "@/types/project"
+import { ProjectActionDialogs } from "./ProjectActionDialogs"
 import { ProjectAvatars } from "./ProjectAvatars"
-import { ProjectDialogs } from "./ProjectDialogs"
 import { ProjectToggle } from "./ProjectToggle"
 
 interface ProjectItemProps {
@@ -111,7 +111,7 @@ export default function ProjectItem({
       </button>
 
       {/* 다이얼로그들 - 별도 컴포넌트로 분리 */}
-      <ProjectDialogs
+      <ProjectActionDialogs
         dialogStates={dialogStates}
         handlers={handlers}
         isToggled={isToggled}
