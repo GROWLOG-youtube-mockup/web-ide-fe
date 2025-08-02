@@ -39,6 +39,7 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
     tree: fileTreeData.tree ? "존재함" : "null",
     isLoading: fileTreeData.isLoading,
     isConnected: fileTreeData.isConnected,
+    stompClient: fileTreeData.stompClient ? "존재함" : "null",
     timestamp: Date.now(),
   })
 

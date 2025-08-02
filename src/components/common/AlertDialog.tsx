@@ -156,7 +156,7 @@ export function AlertDialog({
               onClick={handleConfirm}
               type="button"
             >
-              {isLoading ? "처리중..." : confirmText}
+              {isLoading ? "loading..." : confirmText}
             </button>
           )}
         </div>
