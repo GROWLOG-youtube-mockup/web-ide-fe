@@ -1,17 +1,41 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useParticipantsStore } from "@/stores/participants-store"
 import type { ProjectMember } from "@/types/project"
 
+// 참여자와 프로젝트 멤버를 모두 처리할 수 있는 타입
+type DisplayMember =
+  | ProjectMember
+  | {
+      userId: number
+      name: string
+      profileImageUrl?: string
+      isOnline?: boolean
+    }
+
 interface ProjectAvatarsProps {
-  members?: ProjectMember[] // optional로 변경
-  maxVisible?: number // 최대 표시할 아바타 수 (기본: 3)
-  size?: "sm" | "md" | "lg" // 아바타 크기 옵션
+  members?: ProjectMember[]
+  projectId?: string
+  maxVisible?: number
+  size?: "sm" | "md" | "lg"
 }
 
-export const ProjectAvatars = ({ members, maxVisible = 3, size = "md" }: ProjectAvatarsProps) => {
-  // members가 undefined이거나 null인 경우 빈 배열로 처리
-  const safeMembers = members || []
-  const visibleMembers = safeMembers.slice(0, maxVisible)
-  const remainingCount = Math.max(0, safeMembers.length - maxVisible)
+export const ProjectAvatars = ({
+  members,
+  projectId,
+  maxVisible = 3,
+  size = "md",
+}: ProjectAvatarsProps) => {
+  const { getOnlineParticipants } = useParticipantsStore()
+
+  // 프로젝트 ID가 있으면 온라인 참여자만 사용, 없으면 기본 members 사용
+  const onlineParticipants = projectId ? getOnlineParticipants(projectId) : []
+
+  // 사용할 데이터 결정 (항상 온라인만)
+  const displayMembers: DisplayMember[] =
+    projectId && onlineParticipants.length > 0 ? onlineParticipants : members || []
+
+  const visibleMembers = displayMembers.slice(0, maxVisible)
+  const remainingCount = Math.max(0, displayMembers.length - maxVisible)
 
   // 크기에 따른 스타일 클래스
   const sizeClasses = {
@@ -25,19 +49,59 @@ export const ProjectAvatars = ({ members, maxVisible = 3, size = "md" }: Project
   return (
     <div className="-space-x-2 flex items-center">
       {visibleMembers.map(member => (
-        <Avatar className={`${currentSize.avatar} border-2 border-white`} key={member.userId}>
-          <AvatarImage alt={member.name} src={member.profileImage || `/api/placeholder/32/32`} />
-          <AvatarFallback className={`bg-gray-200 ${currentSize.text} text-gray-700`}>
-            {member.name.slice(0, 2)}
-          </AvatarFallback>
-        </Avatar>
+        <div className="group relative" key={member.userId}>
+          <Avatar
+            className={`${currentSize.avatar} cursor-pointer border-2 border-white transition-transform hover:scale-110`}
+          >
+            <AvatarImage
+              alt={member.name}
+              src={
+                "profileImage" in member
+                  ? member.profileImage || `/api/placeholder/32/32`
+                  : (member as { profileImageUrl?: string }).profileImageUrl ||
+                    `/api/placeholder/32/32`
+              }
+            />
+            <AvatarFallback className={`bg-gray-200 ${currentSize.text} text-gray-700`}>
+              {member.name.slice(0, 2)}
+            </AvatarFallback>
+          </Avatar>
+
+          {/* 호버 툴팁 */}
+          <div className="-translate-x-1/2 pointer-events-none absolute top-full left-1/2 z-50 mt-2 transform whitespace-nowrap rounded-lg bg-gray-900 px-3 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100">
+            <div className="font-medium">{member.name}</div>
+            <div className="mt-1 text-gray-300 text-xs">
+              <span className="flex items-center gap-1">
+                <div className="h-2 w-2 rounded-full bg-green-400"></div>
+                온라인
+              </span>
+            </div>
+            {/* 툴팁 화살표 */}
+            <div className="-translate-x-1/2 absolute bottom-full left-1/2 h-0 w-0 transform border-r-[4px] border-r-transparent border-b-[4px] border-b-gray-900 border-l-[4px] border-l-transparent"></div>
+          </div>
+        </div>
       ))}
 
       {remainingCount > 0 && (
         <div
-          className={`flex ${currentSize.counter} items-center justify-center rounded-full border-2 border-white bg-gray-100`}
+          className={`flex ${currentSize.counter} group relative cursor-pointer items-center justify-center rounded-full border-2 border-white bg-gray-100`}
         >
           <span className="font-medium text-gray-600">+{remainingCount}</span>
+
+          {/* 나머지 멤버들 툴팁 */}
+          <div className="-translate-x-1/2 pointer-events-none absolute top-full left-1/2 z-50 mt-2 transform whitespace-nowrap rounded-lg bg-gray-900 px-3 py-2 text-sm text-white opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100">
+            <div className="font-medium">나머지 {remainingCount}명</div>
+            <div className="mt-1 max-w-48 text-gray-300 text-xs">
+              {displayMembers.slice(maxVisible).map(member => (
+                <div className="truncate" key={member.userId}>
+                  {member.name}
+                  <span className="ml-1 text-green-400">●</span>
+                </div>
+              ))}
+            </div>
+            {/* 툴팁 화살표 */}
+            <div className="-translate-x-1/2 absolute bottom-full left-1/2 h-0 w-0 transform border-r-[4px] border-r-transparent border-b-[4px] border-b-gray-900 border-l-[4px] border-l-transparent"></div>
+          </div>
         </div>
       )}
     </div>

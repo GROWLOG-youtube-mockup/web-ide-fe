@@ -4,6 +4,8 @@ import LogoSvg from "@/assets/logo.svg"
 import { ProjectAvatars } from "@/components/project-list/ProjectAvatars"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/custom-button"
+import { useFileTree } from "@/hooks/file-explorer/useFileTree"
+import { useParticipantTracking } from "@/hooks/participants/useParticipantTracking"
 import { useProjectMembers } from "@/hooks/permissions/useProjectMembers"
 import { useUserStore } from "@/stores/user-store"
 
@@ -13,13 +15,23 @@ export const TopBar = () => {
   const { projectId } = useParams<{ projectId: string }>()
   const { userInfo } = useUserStore()
 
+  // WebSocket 연결을 위한 파일 트리 훅
+  const fileTreeData = useFileTree()
+
   // React Query를 사용한 프로젝트 멤버 데이터
   const { data: projectMembers = [], isLoading: membersLoading } = useProjectMembers(
     projectId || ""
   )
 
+  // 실시간 참여자 추적 훅
+  useParticipantTracking(projectId || "", fileTreeData.stompClient)
+
   const handleAvatarClick = () => {
     navigate("/profile/edit")
+  }
+
+  const handleExitProject = () => {
+    navigate("/projects")
   }
 
   // 사용자 이름의 첫 글자들로 fallback 생성 (한글/영문 모두 두 글자)
@@ -56,11 +68,12 @@ export const TopBar = () => {
                   role: member.role,
                   profileImage: member.profileImageUrl || FigmaIcons.avatar,
                 }))}
+                projectId={projectId}
                 size="md"
               />
             )}
             <Avatar
-              className="ml-3 h-7 w-7 cursor-pointer transition-opacity hover:opacity-80"
+              className="ml-3 h-8 w-8 cursor-pointer border-2 border-white transition-opacity hover:opacity-80"
               onClick={handleAvatarClick}
             >
               <AvatarImage
@@ -79,6 +92,7 @@ export const TopBar = () => {
           {/* Exit Button */}
           <Button
             className="flex items-center gap-1 bg-zinc-50 px-3 text-zinc-900 hover:bg-zinc-200"
+            onClick={handleExitProject}
             size="sm"
             style={{
               fontSize: "12px",
@@ -87,7 +101,7 @@ export const TopBar = () => {
             variant="outline"
           >
             <LogOutIcon className="!h-3 shrink-0" />
-            프로젝트 나가기
+            Back to Projects
           </Button>
         </div>
       </div>
