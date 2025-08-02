@@ -14,6 +14,7 @@ import { deleteAccount } from "@/services/api/users"
 import { useUserStore } from "@/stores/user-store"
 
 export default function ProfileEditPage() {
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null)
   const [deletePassword, setDeletePassword] = useState("")
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -30,7 +31,11 @@ export default function ProfileEditPage() {
   } as const
 
   const form = useAuthForm(profileEditFormSchema, initialValues)
-  const { updateProfile, isSaving } = useProfileUpdate({ form, initialValues })
+  const { updateProfile, isSaving } = useProfileUpdate({
+    form,
+    initialValues,
+    profileImageFile: selectedImageFile,
+  })
 
   const onDeleteAccount = async () => {
     if (!deletePassword.trim()) {
@@ -69,14 +74,7 @@ export default function ProfileEditPage() {
   return (
     <AuthForm
       avatarComponent={
-        <ProfileAvatar
-          onImageChange={() => {
-            // 프로필 이미지 업로드 성공 후 사용자 정보 다시 가져오기
-            // ProfileAvatar 컴포넌트에서 이미 uploadProfileImage API를 호출하므로
-            // 여기서는 사용자 정보만 다시 가져오면 됨
-          }}
-          src={userInfo?.profileImage}
-        />
+        <ProfileAvatar onImageSelect={setSelectedImageFile} src={userInfo?.profileImage} />
       }
       form={form}
       onSubmit={updateProfile}

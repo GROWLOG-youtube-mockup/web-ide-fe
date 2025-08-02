@@ -1,16 +1,17 @@
 import { useState } from "react"
 import type { UseFormReturn } from "react-hook-form"
 import { useToast } from "@/components/common/ToastContext"
-import { updateName, updatePassword } from "@/services/api/users"
+import { updateName, updatePassword, uploadProfileImage } from "@/services/api/users"
 import { useUserStore } from "@/stores/user-store"
 import type { ProfileEditFormData } from "@/types/auth"
 
 interface UseProfileUpdateProps {
   form: UseFormReturn<ProfileEditFormData>
   initialValues: ProfileEditFormData
+  profileImageFile?: File | null
 }
 
-export function useProfileUpdate({ form, initialValues }: UseProfileUpdateProps) {
+export function useProfileUpdate({ form, initialValues, profileImageFile }: UseProfileUpdateProps) {
   const [isSaving, setIsSaving] = useState(false)
   const { addToast } = useToast()
   const { fetchUserInfo } = useUserStore()
@@ -32,7 +33,7 @@ export function useProfileUpdate({ form, initialValues }: UseProfileUpdateProps)
         updates.newPassword = data.newPassword
       }
 
-      if (Object.keys(updates).length === 0) {
+      if (Object.keys(updates).length === 0 && !profileImageFile) {
         addToast({ type: "info", title: "No changes detected." })
         return
       }
@@ -46,61 +47,37 @@ export function useProfileUpdate({ form, initialValues }: UseProfileUpdateProps)
         await updatePassword(updates.currentPassword, updates.newPassword)
       }
 
+      if (profileImageFile) {
+        await uploadProfileImage(profileImageFile)
+      }
+
       // 성공 시 사용자 정보 다시 가져오기
       await fetchUserInfo()
 
-      addToast({ type: "success", title: "Profile updated successfully." })
+      addToast({
+        type: "success",
+        title: "Profile updated successfully!",
+      })
 
-      // 비밀번호 필드 초기화
-      if (updates.newPassword) {
-        form.reset({
-          ...data,
-          currentPassword: "",
-          newPassword: "",
-        })
-      }
-    } catch (error: unknown) {
-      const axiosError = error as {
-        response?: {
-          status: number
-          data: {
-            error?: {
-              code?: string
-              message?: string
-            }
-          }
-        }
-      }
-
-      if (axiosError.response?.status === 400 && axiosError.response.data.error) {
-        const { code, message } = axiosError.response.data.error
-
-        if (code === "INVALID_PASSWORD") {
-          form.setError("currentPassword", {
-            message: message || "Current password is incorrect.",
-            type: "server",
-          })
-        } else if (code === "NEW_PASSWORD_SAME_AS_CURRENT") {
-          form.setError("newPassword", {
-            message: message || "New password cannot be the same as the current one.",
-            type: "server",
-          })
-        }
-
-        addToast({
-          type: "error",
-          title: message || "Please check your input.",
-        })
-      } else {
-        addToast({ type: "error", title: "An error occurred while updating." })
-      }
+      // 비밀번호 필드는 초기화하고, 다른 필드는 최신 상태로 유지
+      form.reset({
+        ...data,
+        currentPassword: "",
+        newPassword: "",
+      })
+    } catch (error) {
+      console.error("Profile update failed:", error)
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to update profile. Please try again."
+      addToast({
+        type: "error",
+        title: errorMessage,
+        duration: 4000,
+      })
     } finally {
       setIsSaving(false)
     }
   }
 
-  return {
-    updateProfile,
-    isSaving,
-  }
+  return { updateProfile, isSaving }
 }
