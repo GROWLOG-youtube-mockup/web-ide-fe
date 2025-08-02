@@ -1,5 +1,6 @@
 import { Circle, Edit3, LogOut, Trash } from "lucide-react"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { AlertDialog } from "@/components/common/AlertDialog"
 import { cn } from "@/lib/utils"
 import type { Project } from "@/types/project"
@@ -30,6 +31,7 @@ export default function ProjectItem({
   onNewProject,
   onLeave,
 }: ProjectItemProps) {
+  const navigate = useNavigate() // 프로젝트 이동용
   const [isHovered, setIsHovered] = useState(false)
 
   // 다이얼로그 상태들 - 한눈에 보기 쉽게
@@ -42,6 +44,10 @@ export default function ProjectItem({
   const isHost = project.myRole === "OWNER"
 
   // 핸들러 함수들 - 직관적으로 이해하기 쉽게
+  const handleProjectClick = () => {
+    navigate(`/projects/${project.id}/ide`)
+  } //라우터 추가
+
   const handleToggleClick = () => setIsToggleDialogOpen(true)
   const handleToggleConfirm = () => {
     onToggle?.(project.id)
@@ -87,6 +93,7 @@ export default function ProjectItem({
           "flex w-full cursor-pointer items-center justify-between border-[#e2e2e2] border-b bg-transparent px-3 py-2 text-left transition-colors",
           isHovered && "bg-[rgba(238,238,238,0.5)]"
         )}
+        onClick={handleProjectClick}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         type="button"
