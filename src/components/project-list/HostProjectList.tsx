@@ -61,14 +61,6 @@ export const HostProjectList = ({ searchQuery }: HostProjectListProps) => {
     }
   }
 
-  const handleEdit = (_id: number) => {
-    // TODO: 프로젝트 편집 모달 또는 페이지로 이동
-  }
-
-  const handleNewProject = (_id: number) => {
-    // TODO: 기존 프로젝트를 기반으로 새 프로젝트 생성
-  }
-
   if (loading) {
     return (
       <div className="flex w-[850px] flex-col items-center justify-start gap-2">
@@ -113,8 +105,6 @@ export const HostProjectList = ({ searchQuery }: HostProjectListProps) => {
             <ProjectItem
               isToggled={toggledProjects[project.id] || false}
               key={project.id}
-              onEdit={handleEdit}
-              onNewProject={handleNewProject}
               onToggle={handleToggle}
               project={project}
             />
