@@ -52,6 +52,7 @@ export const Chats = ({ projectId }: { projectId: string }) => {
           fetchNextPage={fetchNextPage}
           hasMore={hasMore}
           isFetching={isFetching}
+          projectId={projectId}
         />
       )}
       <div className="sticky bottom-0 shrink-0">

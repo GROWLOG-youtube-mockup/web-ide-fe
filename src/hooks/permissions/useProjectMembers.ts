@@ -76,6 +76,7 @@ export const useInviteUser = (projectId: string) => {
   })
 }
 
+// TODO: IDE 페이지 여러 곳에서 사용 중 페이지 진입 시 한번만 받고 캐싱하기
 export const useProjectMembers = (projectId: string) => {
   return useQuery<ProjectMember[]>({
     queryKey: projectQueryKeys.members(projectId),

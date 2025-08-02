@@ -1,6 +1,7 @@
-import { useRef } from "react"
+import { useMemo, useRef } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent } from "@/components/ui/card"
+import { useProjectMembers } from "@/hooks/permissions/useProjectMembers"
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
 import { useUserStore } from "@/stores/user-store"
 import type { ChatMessage } from "@/types/chat"
@@ -12,6 +13,7 @@ interface ChatMessageListProps {
   fetchNextPage: () => void
   hasMore: boolean
   isFetching: boolean
+  projectId: string
 }
 
 // 날짜 라벨 내부 컴포넌트
@@ -31,10 +33,22 @@ const ChatMessageList = ({
   fetchNextPage,
   hasMore,
   isFetching,
+  projectId,
 }: ChatMessageListProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const endRef = useRef<HTMLDivElement>(null)
   const { userInfo } = useUserStore()
+  const { data: members } = useProjectMembers(projectId)
+
+  // userId(number)를 키로 하는 프로필 이미지 Map 생성
+  const profileImageMap = useMemo(() => {
+    return new Map(
+      members?.map(member => [
+        Number(member.userId), // string을 number로 변환
+        member.profileImageUrl,
+      ])
+    )
+  }, [members])
 
   useInfiniteScroll({
     itemsLength: messages.length,
@@ -63,21 +77,22 @@ const ChatMessageList = ({
         group.messages.map((msg, idx) => {
           const isOwnMessage = msg.userId === userInfo?.userId
           const showDateLabel = idx === 0
+
+          // 프로필 이미지 가져오기
+          const profileImage = msg.userId ? profileImageMap.get(msg.userId) : null
+          const fallbackImage = msg.username
+            ? `https://api.dicebear.com/7.x/identicon/svg?seed=${msg.username}`
+            : undefined
+
           return (
             <>
               {showDateLabel && <DateLabel date={msg.sentAt} key={`date-${group.date}`} />}
               <div
-                className={`flex items-start gap-3 px-4 pb-4 ${isOwnMessage ? "flex-row-reverse" : ""}`}
+                className={`flex items-start gap-3 px-2 pb-4 ${isOwnMessage ? "flex-row-reverse" : ""}`}
                 key={`${msg.sentAt}-${msg.username}-${groupIdx}-${idx}`}
               >
-                <Avatar>
-                  <AvatarImage
-                    src={
-                      msg.username
-                        ? `https://api.dicebear.com/7.x/identicon/svg?seed=${msg.username}`
-                        : undefined
-                    }
-                  />
+                <Avatar className="h-10 w-10 rounded-full">
+                  <AvatarImage src={profileImage || fallbackImage} />
                   <AvatarFallback>{msg.username?.[0] ?? "?"}</AvatarFallback>
                 </Avatar>
                 <Card

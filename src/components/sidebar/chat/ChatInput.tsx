@@ -24,13 +24,13 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
       onSubmit={handleSubmit}
     >
       <Input
-        placeholder="메시지를 입력하세요..."
+        placeholder="Type your message..."
         value={value}
         onChange={e => setValue(e.target.value)}
         disabled={disabled}
       />
       <Button type="submit" className="rounded-lg px-6" disabled={disabled || !value.trim()}>
-        전송
+        Send
       </Button>
     </form>
   )
