@@ -1,11 +1,42 @@
+import { useNavigate, useParams } from "react-router-dom"
 import { FigmaIcons, LucideIcons } from "@/assets/icons"
 import LogoSvg from "@/assets/logo.svg"
 import { ProjectAvatars } from "@/components/project-list/ProjectAvatars"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/custom-button"
+import { useProjectMembers } from "@/hooks/permissions/useProjectMembers"
+import { useUserStore } from "@/stores/user-store"
 
 export const TopBar = () => {
   const LogOutIcon = LucideIcons.logOut
+  const navigate = useNavigate()
+  const { projectId } = useParams<{ projectId: string }>()
+  const { userInfo } = useUserStore()
+
+  // React Query를 사용한 프로젝트 멤버 데이터
+  const { data: projectMembers = [], isLoading: membersLoading } = useProjectMembers(
+    projectId || ""
+  )
+
+  const handleAvatarClick = () => {
+    navigate("/profile/edit")
+  }
+
+  // 사용자 이름의 첫 글자들로 fallback 생성 (한글/영문 모두 지원)
+  const getInitials = (name: string) => {
+    if (!name) return "ME"
+
+    // 한글인 경우 첫 글자만, 영문인 경우 각 단어의 첫 글자
+    if (/[가-힣]/.test(name)) {
+      return name.charAt(0)
+    }
+    return name
+      .split(" ")
+      .map(word => word.charAt(0))
+      .join("")
+      .toUpperCase()
+      .slice(0, 2)
+  }
 
   return (
     <div
@@ -24,27 +55,31 @@ export const TopBar = () => {
         <div className="flex items-center gap-6">
           {/* Project Members */}
           <div className="flex items-center gap-3">
-            {/* todo: 실제 프로젝트 멤버 데이터로 교체 */}
-            <ProjectAvatars
-              maxVisible={3}
-              members={[
-                { userId: 1, name: "User 1", role: "WRITE", profileImage: FigmaIcons.avatar },
-                { userId: 2, name: "User 2", role: "WRITE", profileImage: FigmaIcons.avatar },
-                { userId: 3, name: "User 3", role: "READ", profileImage: FigmaIcons.avatar },
-                { userId: 4, name: "User 4", role: "READ", profileImage: FigmaIcons.avatar },
-                { userId: 5, name: "User 5", role: "READ", profileImage: FigmaIcons.avatar },
-                { userId: 6, name: "User 6", role: "READ", profileImage: FigmaIcons.avatar },
-              ]}
-              size="md"
-            />
-            <Avatar className="ml-3 h-8 w-8">
-              {/* todo: 현재 사용자로 교체 */}
-              <AvatarImage alt="현재 사용자 아바타" src={FigmaIcons.avatar} />
+            {!membersLoading && projectMembers.length > 0 && (
+              <ProjectAvatars
+                maxVisible={3}
+                members={projectMembers.map(member => ({
+                  userId: Number(member.userId),
+                  name: member.name,
+                  role: member.role,
+                  profileImage: member.profileImageUrl || FigmaIcons.avatar,
+                }))}
+                size="md"
+              />
+            )}
+            <Avatar
+              className="ml-3 h-7 w-7 cursor-pointer transition-opacity hover:opacity-80"
+              onClick={handleAvatarClick}
+            >
+              <AvatarImage
+                alt={userInfo?.name ? `${userInfo.name} 아바타` : "현재 사용자 아바타"}
+                src={userInfo?.profileImage || FigmaIcons.avatar}
+              />
               <AvatarFallback
                 className="bg-zinc-200 font-medium text-zinc-700"
                 style={{ fontSize: "11px" }}
               >
-                ME
+                {getInitials(userInfo?.name || "")}
               </AvatarFallback>
             </Avatar>
           </div>
