@@ -2,19 +2,13 @@ import { useMemo, useRef } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent } from "@/components/ui/card"
 import { useProjectMembers } from "@/hooks/permissions/useProjectMembers"
+import { useDelayedLoading } from "@/hooks/useDelayedLoading"
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll"
 import { useUserStore } from "@/stores/user-store"
-import type { ChatMessage } from "@/types/chat"
-import { getDateLabel, groupMessagesByDate } from "@/utils/chat-date"
+import type { ParsedChatMessage } from "@/types/chat"
+import { getDateLabel, groupMessagesByDateWithParsedContent } from "@/utils/chat-parser"
 import { formatTime } from "@/utils/format-time"
-
-interface ChatMessageListProps {
-  messages: ChatMessage[]
-  fetchNextPage: () => void
-  hasMore: boolean
-  isFetching: boolean
-  projectId: string
-}
+import ChatMessageContent from "./ChatMessageContent"
 
 // 날짜 라벨 내부 컴포넌트
 const DateLabel = ({ date }: { date: string }) => (
@@ -27,6 +21,14 @@ const DateLabel = ({ date }: { date: string }) => (
     </span>
   </div>
 )
+
+interface ChatMessageListProps {
+  messages: ParsedChatMessage[]
+  fetchNextPage: () => void
+  hasMore: boolean
+  isFetching: boolean
+  projectId: string
+}
 
 const ChatMessageList = ({
   messages,
@@ -50,6 +52,9 @@ const ChatMessageList = ({
     )
   }, [members])
 
+  // 500ms 이상 fetch가 지속될 때만 로딩 표시 (커스텀 훅 사용)
+  const delayedLoading = useDelayedLoading(isFetching, 500)
+
   useInfiniteScroll({
     itemsLength: messages.length,
     hasMore,
@@ -65,7 +70,7 @@ const ChatMessageList = ({
       style={{ boxSizing: "border-box", padding: 0 }}
       className="flex h-[400px] min-h-0 flex-col gap-5 overflow-y-auto"
     >
-      {isFetching && hasMore && (
+      {delayedLoading && hasMore && (
         <div
           className="flex justify-center py-2 text-xs"
           style={{ color: "var(--muted-foreground)" }}
@@ -73,10 +78,12 @@ const ChatMessageList = ({
           Loading more...
         </div>
       )}
-      {groupMessagesByDate(messages).map((group, groupIdx) =>
+      {groupMessagesByDateWithParsedContent(messages).map((group, groupIdx, groupsArr) =>
         group.messages.map((msg, idx) => {
           const isOwnMessage = msg.userId === userInfo?.userId
-          const showDateLabel = idx === 0
+          const isLastGroup = groupIdx === groupsArr.length - 1
+          // 마지막 그룹이면 hasMore === false일 때만, 그 외 그룹은 항상 첫 메시지 위에 날짜 라벨
+          const showDateLabel = idx === 0 && (!isLastGroup || (isLastGroup && !hasMore))
 
           // 프로필 이미지 가져오기
           const profileImage = msg.userId ? profileImageMap.get(msg.userId) : null
@@ -104,7 +111,9 @@ const ChatMessageList = ({
                   }
                 >
                   <CardContent className="flex flex-col gap-2 px-3 py-1">
-                    <div className="text-sm leading-relaxed">{msg.content}</div>
+                    <div className="text-sm leading-relaxed">
+                      {msg.parts ? <ChatMessageContent parts={msg.parts} /> : msg.content}
+                    </div>
                     <div
                       className="mt-1 w-full text-right text-xs"
                       style={{

@@ -3,6 +3,7 @@ import { Separator } from "@/components/ui/separator"
 import { useChatHistory } from "@/hooks/chat/useChatHistory"
 import { useChatSocket } from "@/hooks/chat/useChatSocket"
 import type { ChatMessage } from "@/types/chat"
+import { toParsedChatMessage } from "@/utils/chat-parser"
 import ChatInput from "./ChatInput"
 import ChatMessageList from "./ChatMessageList"
 
@@ -48,7 +49,7 @@ export const Chats = ({ projectId }: { projectId: string }) => {
         <div className="flex flex-1 items-center justify-center text-red-500">{error}</div>
       ) : (
         <ChatMessageList
-          messages={messages}
+          messages={messages.map(toParsedChatMessage)}
           fetchNextPage={fetchNextPage}
           hasMore={hasMore}
           isFetching={isFetching}

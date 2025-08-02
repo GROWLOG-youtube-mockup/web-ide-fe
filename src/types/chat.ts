@@ -1,4 +1,7 @@
 import type { IMessage, StompSubscription } from "@stomp/stompjs"
+import type { ParsedCodeLink } from "@/utils/utils"
+// 메시지 본문 파싱 결과 타입 (텍스트/링크 조각)
+export type ChatMessagePart = { type: "text"; value: string } | ({ type: "link" } & ParsedCodeLink)
 
 // ===== 에러 타입 =====
 export class ChatApiError extends Error {
@@ -87,6 +90,16 @@ export interface ChatHistoryResponse {
  */
 export interface ChatSearchResponse {
   results: SearchChatMessage[]
+}
+
+/**
+ * 프론트엔드 파싱/렌더링용 채팅 메시지 타입
+ * @property links 코드 링크 파싱 결과
+ * @property parts 텍스트/링크 조각 배열
+ */
+export interface ParsedChatMessage extends ChatMessage {
+  links?: ParsedCodeLink[]
+  parts?: ChatMessagePart[]
 }
 
 // ===== 소켓 클라이언트 관련 타입 =====
