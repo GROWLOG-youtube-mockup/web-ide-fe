@@ -11,7 +11,7 @@ export interface ChatApiConfig {
  * 기본 Chat API 설정
  */
 export const defaultChatApiConfig: ChatApiConfig = {
-  socketHost: "/api/ws",
+  socketHost: "/ws",
   reconnectDelay: 5000,
   heartbeatIncoming: 10000,
   heartbeatOutgoing: 10000,

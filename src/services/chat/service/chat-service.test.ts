@@ -1,12 +1,13 @@
-import * as dotenv from "dotenv"
 import { beforeEach, describe, expect, it } from "vitest"
 import { type ChatMessage, SocketConnectionState } from "@/types/cha-service"
 import { ApiChatSocketClient } from "../client/chat-socket-client"
 
 // .env.test 파일에서 환경변수 로드
-dotenv.config({ path: ".env.test" })
-const TEST_JWT_TOKEN = process.env.TEST_JWT_TOKEN || ""
-const TEST_PROJECT_ID = process.env.TEST_PROJECT_ID ? Number(process.env.TEST_PROJECT_ID) : 1
+const TEST_JWT_TOKEN =
+  "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzU0MTQzMDM3LCJleHAiOjE3NTQxNDY2Mzd9.rYHGxbwsRR-WuF-Mr7DZgQyM-iUFa5LC7bUKAjk2wAQ"
+const TEST_PROJECT_ID = 3
+// 테스트에서는 프록시가 아닌 실제 주소를 사용해야 함
+const WS_HOST = "http://15.165.2.193:8080/ws"
 
 describe("ApiChatSocketClient WebSocket", () => {
   let socketClient: ApiChatSocketClient
@@ -21,6 +22,7 @@ describe("ApiChatSocketClient WebSocket", () => {
     const errors: Error[] = []
     const socket = socketClient.createProjectChatSocket({
       projectId: TEST_PROJECT_ID,
+      host: WS_HOST,
       jwt: TEST_JWT_TOKEN,
       onMessage: (msg: ChatMessage) => {
         received.push(msg)
@@ -41,6 +43,8 @@ describe("ApiChatSocketClient WebSocket", () => {
       await new Promise(res => setTimeout(res, 100))
       tries++
     }
+
+    console.log("WebSocket 연결 상태:", socket.connectionState)
 
     expect(socket.connected, `WebSocket 연결 실패: ${socket.connectionState}`).toBe(true)
 

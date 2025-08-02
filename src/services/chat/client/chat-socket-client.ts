@@ -10,7 +10,7 @@ export class ApiChatSocketClient implements ChatSocketClient {
     this.config = getChatApiConfig(configOverrides)
   }
   createProjectChatSocket(options: SocketClientOptions): SocketClient {
-    const { projectId, onMessage, onError, host = this.config.socketHost, jwt } = options
+    const { projectId, onMessage, onError, host, jwt } = options
     let SockJs: typeof import("sockjs-client") | undefined
     try {
       SockJs = loadSockJs()
@@ -19,9 +19,10 @@ export class ApiChatSocketClient implements ChatSocketClient {
       console.warn("SockJS load failed, fallback to native WebSocket only.", e)
     }
     const connectHeaders = createConnectHeaders(jwt)
+    const socketHost = host || this.config.socketHost
     const client = new Client({
-      webSocketFactory: SockJs ? () => new SockJs(host) : undefined,
-      brokerURL: SockJs ? undefined : host,
+      webSocketFactory: SockJs ? () => new SockJs(socketHost) : undefined,
+      brokerURL: SockJs ? undefined : socketHost,
       connectHeaders,
       reconnectDelay: this.config.reconnectDelay,
       heartbeatIncoming: this.config.heartbeatIncoming,
@@ -122,12 +123,9 @@ export class ApiChatSocketClient implements ChatSocketClient {
     }
     client.onWebSocketError = event => {
       connectionState = SocketConnectionState.Error
-      const error = new SocketConnectionError(
-        "WebSocket connection error",
-        "WebSocket connection failed",
-        event
-      )
+      const error = new SocketConnectionError("WebSocket connection error", event)
       socket.onWebSocketError?.(error)
+      console.error("[WebSocket ERROR]", event)
       onError?.(error)
     }
     return socket

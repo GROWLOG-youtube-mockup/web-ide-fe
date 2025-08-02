@@ -5,16 +5,24 @@ import { defineConfig } from "vite"
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  define: {
+    global: "globalThis", // 추가
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  define: {
-    global: "globalThis",
-  },
   server: {
     proxy: {
+      "/ws": {
+        target: "http://15.165.2.193:8080",
+        ws: true,
+        changeOrigin: true,
+        secure: false,
+        timeout: 0,
+        rewrite: path => path,
+      },
       "/api": {
         target: "http://15.165.2.193:8080",
         changeOrigin: true,
