@@ -2,7 +2,10 @@ import { Circle, Edit3, LogOut, Trash } from "lucide-react"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { AlertDialog } from "@/components/common/AlertDialog"
+import { useToast } from "@/components/common/ToastContext"
 import { cn } from "@/lib/utils"
+import { projectApi } from "@/services/api/project-api"
+import { useProjectStore } from "@/stores/project-store"
 import type { Project } from "@/types/project"
 import { ProjectAvatars } from "./ProjectAvatars"
 import { ProjectDialog } from "./ProjectDialog"
@@ -18,7 +21,6 @@ interface ProjectItemProps {
   project: Project
   isToggled?: boolean
   onToggle?: (id: number) => void
-  onEdit?: (id: number, data: ProjectFormData) => void
   onNewProject?: (id: number) => void
   onLeave?: (id: number) => void
 }
@@ -27,12 +29,13 @@ export default function ProjectItem({
   project,
   isToggled = false,
   onToggle,
-  onEdit,
   onNewProject,
   onLeave,
 }: ProjectItemProps) {
   const navigate = useNavigate() // 프로젝트 이동용
   const [isHovered, setIsHovered] = useState(false)
+  const { refreshProjects } = useProjectStore()
+  const { addToast } = useToast()
 
   // 다이얼로그 상태들 - 한눈에 보기 쉽게
   const [isToggleDialogOpen, setIsToggleDialogOpen] = useState(false)
@@ -61,8 +64,27 @@ export default function ProjectItem({
   const handleEditConfirm = async (data: ProjectFormData) => {
     setEditLoading(true)
     try {
-      await onEdit?.(project.id, data)
+      await projectApi.updateProject(project.id, {
+        projectName: data.name,
+        description: data.description,
+      })
       setIsEditDialogOpen(false)
+      // 프로젝트 목록 새로고침
+      await refreshProjects()
+      // 성공 토스트 메시지
+      addToast({
+        type: "success",
+        title: "프로젝트가 성공적으로 수정되었습니다.",
+        duration: 3000,
+      })
+    } catch (error) {
+      console.error("프로젝트 수정 실패:", error)
+      // 실패 토스트 메시지
+      addToast({
+        type: "error",
+        title: "프로젝트 수정에 실패했습니다.",
+        duration: 3000,
+      })
     } finally {
       setEditLoading(false)
     }
