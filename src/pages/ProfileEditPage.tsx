@@ -1,26 +1,21 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
 import { AuthForm } from "@/components/auth/AuthForm"
 import { AuthFormField } from "@/components/auth/AuthFormField"
 import { PasswordChangeSection } from "@/components/auth/PasswordChangeSection"
 import { ProfileAvatar } from "@/components/auth/ProfileAvatar"
 import { AlertDialog } from "@/components/common/AlertDialog"
-import { useToast } from "@/components/common/ToastContext"
 import { Input } from "@/components/ui/input"
 import { useAuthForm } from "@/hooks/auth/useAuthForm"
+import { useDeleteAccount } from "@/hooks/auth/useDeleteAccount"
 import { useProfileUpdate } from "@/hooks/auth/useProfileUpdate"
 import { profileEditFormSchema } from "@/lib/auth-schemas"
-import { deleteAccount } from "@/services/api/users"
 import { useUserStore } from "@/stores/user-store"
 
 export default function ProfileEditPage() {
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null)
   const [deletePassword, setDeletePassword] = useState("")
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [isDeleting, setIsDeleting] = useState(false)
-  const { addToast } = useToast()
-  const { userInfo, logoutUser } = useUserStore()
-  const navigate = useNavigate()
+  const { userInfo } = useUserStore()
 
   // 초기값 정의 (실제 사용자 정보 사용)
   const initialValues = {
@@ -36,39 +31,19 @@ export default function ProfileEditPage() {
     initialValues,
     profileImageFile: selectedImageFile,
   })
+  const { isDeleting, handleDeleteAccount } = useDeleteAccount()
 
-  const onDeleteAccount = async () => {
-    if (!deletePassword.trim()) {
-      addToast({ type: "error", title: "비밀번호를 입력해주세요." })
-      return
-    }
-
-    setIsDeleting(true)
-    try {
-      // API 문서에 따른 실제 계정 삭제 API 호출
-      await deleteAccount(deletePassword)
-
-      addToast({ type: "success", title: "계정이 성공적으로 삭제되었습니다." })
-
-      // 로그아웃 처리 및 로그인 페이지로 이동
-      logoutUser()
-      navigate("/login")
-    } catch (error) {
-      console.error("계정 삭제 오류:", error)
-      addToast({
-        type: "error",
-        title: "계정 삭제 중 오류가 발생했습니다. 비밀번호를 확인해주세요.",
-      })
-    } finally {
-      setIsDeleting(false)
-      setDeletePassword("") // 입력 필드 초기화
+  const onConfirmDelete = async () => {
+    const success = await handleDeleteAccount(deletePassword)
+    if (success) {
       setIsDeleteDialogOpen(false)
+      setDeletePassword("")
     }
   }
 
-  const handleCancelDelete = () => {
-    setDeletePassword("") // 취소 시 입력 초기화
+  const onCancelDelete = () => {
     setIsDeleteDialogOpen(false)
+    setDeletePassword("")
   }
 
   return (
@@ -105,8 +80,8 @@ export default function ProfileEditPage() {
           description="Once deleted, the data cannot be recovered."
           isLoading={isDeleting}
           isOpen={isDeleteDialogOpen}
-          onCancel={handleCancelDelete}
-          onConfirm={onDeleteAccount}
+          onCancel={onCancelDelete}
+          onConfirm={onConfirmDelete}
           onOpenChange={setIsDeleteDialogOpen}
           showCloseButton={false}
           title="Delete account" // 내부 필드에 커스텀 스타일 적용
