@@ -17,7 +17,6 @@ export const useAwareness = (
 
   useEffect(() => {
     if (!userInfo) {
-      console.log("👤 사용자 정보가 아직 없음, awareness 설정 대기 중...")
       return
     }
 
@@ -28,8 +27,6 @@ export const useAwareness = (
       roomId: room.id, // 현재 협업 방 ID
       timestamp: Date.now(), // 현재 시간 (마지막 활동 시간)
     }
-
-    console.log("👤 Awareness 설정:", awarenessData)
 
     // Y.js awareness에 로컬 사용자 상태 설정
     // 다른 사용자들이 이 정보를 실시간으로 볼 수 있음

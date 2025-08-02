@@ -65,6 +65,7 @@ export const TopBar = () => {
         <div className="flex items-center gap-6">
           {/* Project Members */}
           <div className="flex items-center gap-3">
+
             {!membersLoading && projectMembers.length > 0 && shouldShowAvatars && (
               <ProjectAvatars
                 maxVisible={3}
