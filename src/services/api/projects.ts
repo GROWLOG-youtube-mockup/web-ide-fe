@@ -4,7 +4,7 @@ import apiClient from "."
 export const getProjects = async (type?: "own" | "joined"): Promise<ProjectResponse[]> => {
   const params = type ? { type } : {}
   const response = await apiClient.get("/projects", { params })
-  return response.data
+  return response.data.data
 }
 
 export const createProject = async (
