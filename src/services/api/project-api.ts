@@ -59,6 +59,12 @@ export const projectApi = {
     const response = await apiClient.patch(`/projects/${projectId}`, projectData)
     return response.data
   },
+
+  // 프로젝트 삭제
+  deleteProject: async (projectId: number) => {
+    const response = await apiClient.delete(`/projects/${projectId}`)
+    return response.data
+  },
 }
 
 export interface UserPermission {

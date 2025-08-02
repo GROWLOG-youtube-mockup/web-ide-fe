@@ -21,7 +21,6 @@ interface ProjectItemProps {
   project: Project
   isToggled?: boolean
   onToggle?: (id: number) => void
-  onNewProject?: (id: number) => void
   onLeave?: (id: number) => void
 }
 
@@ -29,7 +28,6 @@ export default function ProjectItem({
   project,
   isToggled = false,
   onToggle,
-  onNewProject,
   onLeave,
 }: ProjectItemProps) {
   const navigate = useNavigate() // 프로젝트 이동용
@@ -43,6 +41,7 @@ export default function ProjectItem({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isLeaveDialogOpen, setIsLeaveDialogOpen] = useState(false)
   const [editLoading, setEditLoading] = useState(false)
+  const [deleteLoading, setDeleteLoading] = useState(false)
 
   const isHost = project.myRole === "OWNER"
 
@@ -94,9 +93,29 @@ export default function ProjectItem({
     e.stopPropagation()
     setIsDeleteDialogOpen(true)
   }
-  const handleDeleteConfirm = () => {
-    onNewProject?.(project.id)
-    setIsDeleteDialogOpen(false)
+  const handleDeleteConfirm = async () => {
+    setDeleteLoading(true)
+    try {
+      await projectApi.deleteProject(project.id)
+      setIsDeleteDialogOpen(false)
+      // 프로젝트 목록 새로고침
+      await refreshProjects()
+      // 성공 토스트 메시지
+      addToast({
+        type: "success",
+        title: "project deleted successfully.",
+        duration: 3000,
+      })
+    } catch (_error) {
+      // 실패 토스트 메시지
+      addToast({
+        type: "error",
+        title: "project deletion failed.",
+        duration: 3000,
+      })
+    } finally {
+      setDeleteLoading(false)
+    }
   }
 
   const handleLeaveClick = (e: React.MouseEvent) => {
@@ -219,6 +238,7 @@ export default function ProjectItem({
         cancelText="Cancel"
         confirmText="Delete"
         description="Are you sure you want to delete this project?"
+        isLoading={deleteLoading}
         isOpen={isDeleteDialogOpen}
         onCancel={() => setIsDeleteDialogOpen(false)}
         onConfirm={handleDeleteConfirm}
