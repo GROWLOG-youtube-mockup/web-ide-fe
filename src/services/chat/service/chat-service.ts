@@ -5,11 +5,11 @@ import type {
   ChatSearchResponse,
   SocketClient,
   SocketClientOptions,
-} from "@/types/cha-service"
+} from "@/types/chat"
 
 export interface ChatRestClient {
-  fetchChatHistory(projectId: number, page?: number, size?: number): Promise<ChatHistoryResponse>
-  searchChatMessages(projectId: number, keyword: string): Promise<ChatSearchResponse>
+  fetchChatHistory(projectId: string, page?: number, size?: number): Promise<ChatHistoryResponse>
+  searchChatMessages(projectId: string, keyword: string): Promise<ChatSearchResponse>
 }
 
 export interface ChatSocketClient {

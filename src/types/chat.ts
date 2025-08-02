@@ -1,4 +1,4 @@
-import type { StompSubscription } from "@stomp/stompjs"
+import type { IMessage, StompSubscription } from "@stomp/stompjs"
 
 // ===== 에러 타입 =====
 export class ChatApiError extends Error {
@@ -103,7 +103,7 @@ export interface SocketClient {
   activate: () => void
   publish: (destination: string, body: string) => void
   deactivate: () => void
-  subscribe: (destination: string, callback: (message: ChatMessage) => void) => StompSubscription
+  subscribe: (destination: string, callback: (message: IMessage) => void) => StompSubscription
   unsubscribe: (subscription: StompSubscription) => void
   connectionState: SocketConnectionState
   connected: boolean
@@ -124,7 +124,7 @@ export interface SocketClient {
  * @property jwt 인증 토큰(선택)
  */
 export interface SocketClientOptions {
-  projectId: number
+  projectId: string
   onMessage?: (msg: ChatMessage) => void
   onError?: (err: SocketConnectionError) => void
   host?: string

@@ -1,20 +1,17 @@
-import { useCallback } from "react"
-
+import { useCallback, useRef } from "react"
 import { Separator } from "@/components/ui/separator"
 import { useChatHistory } from "@/hooks/chat/useChatHistory"
 import { useChatSocket } from "@/hooks/chat/useChatSocket"
-import type { ChatMessage } from "@/types/cha-service"
+import type { ChatMessage } from "@/types/chat"
 import ChatInput from "./ChatInput"
 import ChatMessageList from "./ChatMessageList"
 
-export const Chats = () => {
-  // 실제 프로젝트 ID로 교체 필요
-  const projectId = 3
-
+export const Chats = ({ projectId }: { projectId: string }) => {
   const { messages, setMessages, loading, error, fetchNextPage, hasMore, isFetching } =
-    useChatHistory(projectId, 30)
+    useChatHistory(projectId, 5)
 
-  // 메시지 수신 시 바로 추가
+  const shouldScrollToBottomRef = useRef(false)
+
   const handleReceive = useCallback(
     (msg: ChatMessage) => {
       setMessages(prev => [...prev, msg])
@@ -22,21 +19,24 @@ export const Chats = () => {
     [setMessages]
   )
 
-  const { sendMessage, connected } = useChatSocket({
+  const { sendMessage } = useChatSocket({
     projectId,
     onMessage: handleReceive,
   })
 
   const handleSend = useCallback(
     (msg: string) => {
-      if (!connected) {
-        alert("채팅 서버에 연결되지 않았습니다. 잠시 후 다시 시도해 주세요.")
-        return
-      }
       sendMessage(msg)
+      shouldScrollToBottomRef.current = true
     },
-    [sendMessage, connected]
+    [sendMessage]
   )
+
+  // Only scroll to bottom if a new message was sent by the user
+  const shouldScrollToBottom = shouldScrollToBottomRef.current
+  if (shouldScrollToBottom) {
+    shouldScrollToBottomRef.current = false
+  }
 
   return (
     <div className="flex h-full flex-col bg-[var(--background)]">
@@ -56,7 +56,7 @@ export const Chats = () => {
       )}
       <div className="sticky bottom-0 shrink-0">
         <Separator />
-        <ChatInput onSend={handleSend} disabled={!connected} />
+        <ChatInput onSend={handleSend} />
       </div>
     </div>
   )

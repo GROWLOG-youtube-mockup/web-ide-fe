@@ -31,8 +31,8 @@ const PlaceholderPanel = ({ message }: { message: string }) => (
  */
 export const Sidebar = ({ projectTitle }: SidebarProps) => {
   const fileTreeData = useFileTree()
-  const { projectId } = useParams<{ projectId: string }>() // URL에서 projectId 추출
-  const { data: members = [] } = useProjectMembers(projectId || "") //멤버 수 가져오기
+  const { projectId = "" } = useParams<{ projectId: string }>() // URL에서 projectId 추출
+  const { data: members = [] } = useProjectMembers(projectId) //멤버 수 가져오기
   const memberCount = members.length // 실제 멤버 수
 
   console.log("🎨 Sidebar 렌더링:", {
@@ -58,7 +58,7 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
         <SidebarPanels
           bottomPanels={[
             <SidebarPanel id="chats" key="chats" title="chats">
-              <Chats />
+              <Chats projectId={projectId} />
             </SidebarPanel>,
           ]}
           tab="files"
@@ -116,7 +116,7 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
           ]}
           bottomPanels={[
             <SidebarPanel id="chats" key="chats" title="chats">
-              <Chats />
+              <Chats projectId={projectId} />
             </SidebarPanel>,
           ]}
         />

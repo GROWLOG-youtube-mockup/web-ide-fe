@@ -1,4 +1,4 @@
-import { SocketConnectionError } from "@/types/cha-service"
+import { SocketConnectionError } from "@/types/chat"
 
 export interface ChatApiConfig {
   socketHost: string

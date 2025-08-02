@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent } from "@/components/ui/card"
 
-import type { ChatMessage } from "@/types/cha-service"
+import type { ChatMessage } from "@/types/chat"
 
 interface ChatMessageListProps {
   messages: ChatMessage[]
@@ -18,32 +18,54 @@ const ChatMessageList = ({
   isFetching,
 }: ChatMessageListProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
-  const bottomRef = useRef<HTMLDivElement>(null)
+  const endRef = useRef<HTMLDivElement>(null)
+  const isFirstLoadRef = useRef(true)
 
+  // 최초 진입 하단 이동, 페이징 후 위치 보정 모두 하나의 useEffect에서 처리
+  const prevHeightRef = useRef<number>(0)
+  const prevMsgLen = useRef(messages.length)
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    // 최초 진입 시 맨 아래로 이동
+    if (isFirstLoadRef.current && endRef.current) {
+      endRef.current.scrollIntoView({ block: "end" })
+      isFirstLoadRef.current = false
+      prevMsgLen.current = messages.length
+      return
+    }
+
+    // messages가 늘어나면(페이징) 기존 위치 보정
+    if (messages.length > prevMsgLen.current) {
+      const diff = container.scrollHeight - prevHeightRef.current
+      if (diff > 0) container.scrollTop = diff
+    }
+    prevMsgLen.current = messages.length
+  }, [messages.length])
+
+  // 무한 스크롤 (위로 스크롤 시 이전 메시지 로드)
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
 
     const handleScroll = () => {
-      if (container.scrollTop < 100 && hasMore && !isFetching) {
+      if (container.scrollTop === 0 && hasMore && !isFetching) {
+        prevHeightRef.current = container.scrollHeight
         fetchNextPage()
       }
     }
     container.addEventListener("scroll", handleScroll)
-    return () => container.removeEventListener("scroll", handleScroll)
-  }, [fetchNextPage, hasMore, isFetching])
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <최신 메시지 보이기 목적, 의도적으로 messages만 의존>
-  useEffect(() => {
-    if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: "auto" })
+    return () => {
+      container.removeEventListener("scroll", handleScroll)
     }
-  }, [messages])
+  }, [fetchNextPage, hasMore, isFetching])
 
   return (
     <div
       ref={containerRef}
-      className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-4 pt-4"
+      style={{ boxSizing: "border-box", padding: 0 }}
+      className="flex h-[400px] min-h-0 flex-col gap-5 overflow-y-auto"
     >
       {isFetching && hasMore && (
         <div className="flex justify-center py-2 text-muted-foreground text-xs">
@@ -51,7 +73,12 @@ const ChatMessageList = ({
         </div>
       )}
       {messages.map((msg, idx) => (
-        <div className="flex items-start gap-3" key={`${msg.sentAt}-${msg.username}-${idx}`}>
+        <div
+          className="flex items-start gap-3 px-4 pt-4"
+          key={`${msg.sentAt}-${msg.username}-${idx}`}
+        >
+          {" "}
+          {/* 메시지 wrapper에만 padding 적용 */}
           <Avatar>
             <AvatarImage
               src={
@@ -74,7 +101,7 @@ const ChatMessageList = ({
           </Card>
         </div>
       ))}
-      <div ref={bottomRef} />
+      <div ref={endRef} />
     </div>
   )
 }

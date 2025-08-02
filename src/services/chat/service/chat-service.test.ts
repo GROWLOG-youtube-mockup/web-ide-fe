@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest"
-import { type ChatMessage, SocketConnectionState } from "@/types/cha-service"
+import { type ChatMessage, SocketConnectionState } from "@/types/chat"
 import { ApiChatSocketClient } from "../client/chat-socket-client"
 
 // .env.test 파일에서 환경변수 로드
