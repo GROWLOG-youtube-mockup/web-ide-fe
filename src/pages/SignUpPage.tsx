@@ -1,19 +1,24 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { AuthForm } from "@/components/auth/AuthForm"
 import { AuthFormField } from "@/components/auth/AuthFormField"
 import { EmailVerify } from "@/components/auth/EmailVerify"
+import { ProfileAvatar } from "@/components/auth/ProfileAvatar"
 import { useToast } from "@/components/common/ToastContext"
 import { AUTH_STYLES } from "@/constants/auth-styles"
 import { useAuthForm } from "@/hooks/auth/useAuthForm"
 import { signUpFormSchema } from "@/lib/auth-schemas"
-import { signUp } from "@/services/api/auth"
+import { signUp } from "@/services/api/users"
+import { useUserStore } from "@/stores/user-store"
 import type { SignUpFormData } from "@/types/auth"
+import { savePendingProfileImage } from "@/utils/pending-profile-image"
 
 export default function SignUpPage() {
   const navigate = useNavigate()
   const { addToast } = useToast()
   const [isEmailVerified, setIsEmailVerified] = useState(false)
+  const [pendingProfileImage, setPendingProfileImage] = useState<File | null>(null)
+  const { loginUser } = useUserStore()
 
   const form = useAuthForm(signUpFormSchema, {
     email: "",
@@ -34,6 +39,7 @@ export default function SignUpPage() {
     }
 
     try {
+      // 1. 회원가입 먼저 진행
       const response = await signUp({
         email: data.email,
         password: data.password,
@@ -41,23 +47,43 @@ export default function SignUpPage() {
       })
 
       if (response.success) {
-        addToast({
-          type: "success",
-          title: "회원가입이 완료되었습니다! 로그인해주세요.",
-          duration: 3000,
+        // 2. 프로필 이미지가 있다면 localStorage에 저장
+        if (pendingProfileImage) {
+          await savePendingProfileImage(pendingProfileImage)
+        }
+
+        // 3. 자동 로그인 진행
+        const loginSuccess = await loginUser({
+          email: data.email,
+          password: data.password,
         })
-        navigate("/login")
+
+        if (loginSuccess) {
+          addToast({
+            type: "success",
+            title: "sign up completed! Welcome",
+            duration: 3000,
+          })
+          navigate("/") // 프로젝트 리스트 페이지로 바로 이동
+        } else {
+          addToast({
+            type: "error",
+            title: "Sign up was successful, but the automatic login failed",
+            duration: 4000,
+          })
+          navigate("/login")
+        }
       } else {
         addToast({
           type: "error",
-          title: response.error?.message || "회원가입에 실패했습니다.",
+          title: response.error?.message || "failed to sign up.",
           duration: 3000,
         })
       }
     } catch (_error) {
       addToast({
         type: "error",
-        title: "회원가입 중 오류가 발생했습니다.",
+        title: "An error occurred during sign up.",
         duration: 3000,
       })
     }
@@ -66,15 +92,21 @@ export default function SignUpPage() {
   const footer = (
     <div className={AUTH_STYLES.link}>
       <span className="font-medium">Already have an account?</span>
-      <span className="cursor-pointer font-semibold underline">Sign In</span>
+      <Link className="ml-1 cursor-pointer font-semibold underline" to="/login">
+        Sign In
+      </Link>
     </div>
   )
 
   return (
     <AuthForm<SignUpFormData>
+      avatarComponent={
+        <ProfileAvatar onImageSelect={(file: File) => setPendingProfileImage(file)} />
+      }
       footer={footer}
       form={form}
       onSubmit={onSubmit}
+      showAvatar={true}
       submitText="Sign Up"
       subtitle="Enter your information to sign up!"
       title="Sign up"

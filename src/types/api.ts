@@ -76,6 +76,11 @@ export interface EmailVerifyRequest {
   code: string
 }
 
+// 프로필 이미지 업로드 응답 타입
+export interface ProfileImageResponse {
+  profileImageUrl: string
+}
+
 // 사용자 정보 관련 타입
 export interface UserInfoResponse {
   userId: number

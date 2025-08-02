@@ -14,6 +14,10 @@ apiClient.interceptors.request.use(config => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
+  // FormData인 경우 Content-Type 헤더 제거 (axios가 자동 설정)
+  if (config.data instanceof FormData) {
+    delete config.headers["Content-Type"]
+  }
   return config
 })
 

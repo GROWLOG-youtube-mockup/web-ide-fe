@@ -3,6 +3,7 @@ import { AuthRoute, ProtectedRoute } from "@/components/auth/ProtectedRoute"
 import { DevNavigationPage } from "@/pages/DevNavigationPage"
 import { ErrorPage } from "@/pages/ErrorPage"
 import { IdePage } from "@/pages/IdePage"
+import LandingPage from "@/pages/LandingPage"
 import LoginPage from "@/pages/LoginPage"
 import ProfileEditPage from "@/pages/ProfileEditPage"
 import ProjectListPage from "@/pages/ProjectListPage"
@@ -19,15 +20,10 @@ export const router = createBrowserRouter([
   {
     element: <ProtectedRoute />,
     errorElement: <ErrorPage />,
-    path: "/",
     children: [
       {
         element: <ProjectListPage />,
-        index: true, // "/" 경로
-      },
-      {
-        element: <ProjectListPage />,
-        path: "projects",
+        path: "/projects",
       },
       {
         element: <IdePage />,
@@ -43,6 +39,10 @@ export const router = createBrowserRouter([
   {
     element: <AuthRoute />,
     children: [
+      {
+        element: <LandingPage />,
+        path: "/",
+      },
       {
         element: <LoginPage />,
         path: "/login",

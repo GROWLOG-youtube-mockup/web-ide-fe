@@ -1,8 +1,10 @@
 import type { JsonObject } from "@liveblocks/client"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
-import { getUserInfo, login } from "@/services/api/auth"
+import { login } from "@/services/api/auth"
+import { getMyInfo, uploadProfileImage } from "@/services/api/users"
 import type { LoginRequest } from "@/types/api"
+import { clearPendingProfileImage, getPendingProfileImage } from "@/utils/pending-profile-image"
 
 export interface UserInfo {
   userId?: number // 사용자 ID
@@ -78,7 +80,22 @@ export const useUserStore = create<UserStore>()(
             set({ userInfo, isLoading: false })
 
             // 로그인 성공 후 상세 정보 가져오기
-            get().fetchUserInfo()
+            await get().fetchUserInfo()
+
+            // 회원가입 시 저장된 프로필 이미지가 있다면 자동 업로드
+            try {
+              const pendingImage = await getPendingProfileImage()
+              if (pendingImage) {
+                await uploadProfileImage(pendingImage)
+                // 업로드 성공 후 저장된 데이터 삭제
+                clearPendingProfileImage()
+                // 프로필 정보 다시 가져오기
+                await get().fetchUserInfo()
+              }
+            } catch (error) {
+              console.error("프로필 이미지 자동 업로드 실패:", error)
+              // 실패해도 로그인은 성공으로 처리
+            }
 
             return true
           }
@@ -125,18 +142,18 @@ export const useUserStore = create<UserStore>()(
 
       fetchUserInfo: async () => {
         try {
-          const response = await getUserInfo()
-          if (response.success && response.data) {
-            const { userId, name, email, profileImage } = response.data
-            const userInfo: UserInfo = {
-              userId,
-              name,
-              email,
-              profileImage,
-              color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-            }
-            set({ userInfo })
+          const userInfo = await getMyInfo()
+          const currentUserInfo = get().userInfo
+          const formattedUserInfo: UserInfo = {
+            userId: userInfo.userId,
+            name: userInfo.name,
+            email: userInfo.email,
+            profileImage: userInfo.profileImage,
+            // 기존 색상이 있으면 유지, 없으면 새로 생성
+            color:
+              currentUserInfo?.color || `#${Math.floor(Math.random() * 16777215).toString(16)}`,
           }
+          set({ userInfo: formattedUserInfo })
         } catch (error) {
           console.error("사용자 정보 조회 실패:", error)
         }
