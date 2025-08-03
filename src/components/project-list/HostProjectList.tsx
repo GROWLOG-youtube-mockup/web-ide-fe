@@ -51,6 +51,8 @@ export const HostProjectList = ({ searchQuery }: HostProjectListProps) => {
 
       // 프로젝트 목록 새로고침 (서버 상태와 동기화)
       await refreshProjects()
+      // 서버 상태 반영을 위해 토글 UI 상태 초기화
+      setToggledProjects({})
     } catch (error) {
       console.error("프로젝트 상태 변경 실패:", error)
       addToast({
@@ -103,7 +105,11 @@ export const HostProjectList = ({ searchQuery }: HostProjectListProps) => {
         ) : (
           filteredProjects.map(project => (
             <ProjectItem
-              isToggled={toggledProjects[project.id] || false}
+              isToggled={
+                toggledProjects[project.id] !== undefined
+                  ? toggledProjects[project.id]
+                  : project.status === "ACTIVE"
+              }
               key={project.id}
               onToggle={handleToggle}
               project={project}

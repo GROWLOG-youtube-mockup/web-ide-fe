@@ -35,8 +35,11 @@ export const updateProjectStatus = async (
   projectId: number,
   status: "ACTIVE" | "INACTIVE"
 ): Promise<ApiResponse<ProjectResponse>> => {
-  const response = await apiClient.patch(`/projects/${projectId}/status`, {
-    status,
-  })
+  let response: { data: ApiResponse<ProjectResponse> }
+  if (status === "ACTIVE") {
+    response = await apiClient.post(`/projects/${projectId}/open`)
+  } else {
+    response = await apiClient.post(`/projects/${projectId}/close`)
+  }
   return response.data
 }

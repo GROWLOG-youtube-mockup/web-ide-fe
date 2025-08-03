@@ -15,16 +15,21 @@ export const ProjectToggle = ({ checked, onCheckedChange, className }: ProjectTo
         checked ? "bg-green-500" : "bg-gray-400",
         className
       )}
-      onClick={() => onCheckedChange(!checked)}
+      onClick={e => {
+        e.stopPropagation()
+        onCheckedChange(!checked)
+      }}
       role="switch"
       type="button"
     >
       <span
         className={cn(
-          "pointer-events-none block h-2 w-2 rounded-full bg-white shadow-sm transition-transform",
-          "absolute top-[1.182px]", // (10.364 - 8) / 2 = 1.182px for vertical centering
-          checked ? "left-[9px]" : "left-[1.182px]" // 19 - 8 - 1.182 = 9.818 ≈ 9px for right position
+          "block h-2 w-2 rounded-full bg-white shadow-sm transition-transform",
+          "absolute top-[1.182px] z-10",
+          checked ? "left-[9px]" : "left-[1.182px]"
         )}
+        aria-hidden="true"
+        style={{ pointerEvents: "none" }}
       />
     </button>
   )
