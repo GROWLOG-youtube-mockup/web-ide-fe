@@ -3,10 +3,10 @@ import {
   expandAllFeature,
   hotkeysCoreFeature,
   renamingFeature,
-  searchFeature, // 검색용
+  searchFeature,
   selectionFeature,
   syncDataLoaderFeature,
-  type TreeInstance, // TreeInstance 타입을 직접 참조할 수 있습니다.
+  type TreeInstance,
 } from "@headless-tree/core"
 import { useTree } from "@headless-tree/react"
 import { Client } from "@stomp/stompjs"
@@ -14,32 +14,24 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { useParams } from "react-router-dom"
 import SockJs from "sockjs-client"
 import { createFileSystemService } from "@/services/api/file-system-api"
+import { useEditorTabsStore } from "@/stores/editor-tabs-store"
 import { useFileTreeStore } from "@/stores/file-tree-store"
 import type { TreeNodeDto, WebSocketMessage } from "@/types/api"
 import type { FileData } from "@/types/file-explorer"
 
-/**
- * TreeNodeDto를 기존 변환 로직과 호환되는 형태로 변환한다.
- * @param nodes - 서버에서 받은 원본 트리 노드 배열
- * @returns treeData 형태로 변환된 객체
- */
 const convertTreeNodeDtoToFileData = (nodes: TreeNodeDto[]): Record<string, FileData> => {
   const result: Record<string, FileData> = {}
-
   const processNode = (node: TreeNodeDto, isRoot = false) => {
     const path =
       isRoot && node.path === "" ? "/" : node.path.startsWith("/") ? node.path : `/${node.path}`
-
     const name = isRoot && node.path === "" ? "root" : path.split("/").pop() || path
-
     const fileData: FileData = {
-      id: node.id ? String(node.id) : path, // ID 우선 사용으로 처리, path는 임시
+      id: node.id ? String(node.id) : path,
       name,
       type: node.type as "file" | "folder",
       path,
       children: [],
     }
-
     if (node.children) {
       node.children.forEach(child => {
         const childPath = child.path.startsWith("/") ? child.path : `/${child.path}`
@@ -47,32 +39,23 @@ const convertTreeNodeDtoToFileData = (nodes: TreeNodeDto[]): Record<string, File
         processNode(child)
       })
     }
-
     result[path] = fileData
   }
-
   nodes.forEach(node => processNode(node, true))
-
   return result
 }
 
-/**
- * 파일 탐색기용 Headless Tree 인스턴스를 생성하고 상태를 관리하는 커스텀 훅이다.
- */
 export const useFileTree = () => {
   const { projectId } = useParams<{ projectId: string }>()
   const { expandedItems, setExpandedItems, focusedItem, setFocusedItem } = useFileTreeStore()
-
   const [treeData, setTreeData] = useState<Record<string, FileData>>({})
   const [isLoading, setIsLoading] = useState(true)
   const [isConnected, setIsConnected] = useState(false)
   const [stompClient, setStompClient] = useState<Client | null>(null)
-  const [isDataReady, setIsDataReady] = useState(false) // 데이터 준비 완료 상태 추가
+  const [isDataReady, setIsDataReady] = useState(false)
 
-  // WebSocket 연결 및 트리 데이터 구독
   useEffect(() => {
     if (!projectId) return
-
     const client = new Client({
       webSocketFactory: () => new SockJs("/ws"),
       connectHeaders: {
@@ -81,79 +64,42 @@ export const useFileTree = () => {
       reconnectDelay: 10000,
       heartbeatIncoming: 20000,
       heartbeatOutgoing: 20000,
-
       onConnect: () => {
         setIsConnected(true)
         setStompClient(client)
-
-        // 트리 응답 구독
         client.subscribe(`/topic/projects/${projectId}/tree`, message => {
-          // 🔍 파싱 전 원본 문자열 확인
           console.log("📥 받은 원본 메시지:", message.body)
-
           const data: WebSocketMessage = JSON.parse(message.body)
-
-          // 🔍 파싱 후 확인
           console.log("📦 파싱된 데이터:", data)
           if (data.type === "tree:init") {
             const backendNodes = data.payload as TreeNodeDto[]
             const convertedData = convertTreeNodeDtoToFileData(backendNodes)
-
             setTreeData(convertedData)
+            useEditorTabsStore.getState().updateTreeData(convertedData)
             setIsLoading(false)
-            setIsDataReady(true) // 데이터가 성공적으로 로드되었음을 표시
-          } else if (data.type === "tree:add") {
-            // 전체 트리 새로고침
-            client.publish({
-              destination: `/app/projects/${projectId}/tree/init`,
-              body: "",
-            })
-          } else if (data.type === "tree:move") {
-            // 전체 트리 새로고침
-            client.publish({
-              destination: `/app/projects/${projectId}/tree/init`,
-              body: "",
-            })
-          } else if (data.type === "tree:remove") {
-            // 전체 트리 새로고침
-            client.publish({
-              destination: `/app/projects/${projectId}/tree/init`,
-              body: "",
-            })
-          } else {
-            client.publish({
-              destination: `/app/projects/${projectId}/tree/init`,
-              body: "",
-            })
+            setIsDataReady(true)
           }
         })
-
-        // 초기 트리 요청
         client.publish({
           destination: `/app/projects/${projectId}/tree/init`,
           body: "",
         })
       },
-
       onStompError: () => {
         setIsLoading(false)
         setIsConnected(false)
       },
-
       onDisconnect: () => {
         setIsConnected(false)
         setStompClient(null)
       },
     })
-
     client.activate()
-
     return () => {
       client.deactivate()
     }
   }, [projectId])
 
-  // fileSystemService 생성 (STOMP 클라이언트 전달)
   const fileSystemService = useMemo(() => {
     const stompAdapter = stompClient
       ? {
@@ -165,29 +111,26 @@ export const useFileTree = () => {
           },
         }
       : undefined
-
     return createFileSystemService(projectId || "", stompAdapter)
   }, [projectId, stompClient])
 
-  // dataLoader - WebSocket 데이터 또는 Mock 데이터 사용
+  // ✅ 수정된 부분: dataLoader를 더 안정적으로 만듭니다.
   const dataLoader = useMemo(() => {
-    if (Object.keys(treeData).length > 0) {
-      return {
-        getItem: (itemId: string) => treeData[itemId],
-        getChildren: (itemId: string) => treeData[itemId]?.children || [],
-      }
-    }
-
-    // 데이터가 아직 없을 때를 위한 기본 로더
     return {
-      getItem: (itemId: string) => ({
-        id: itemId,
-        name: "Loading...",
-        type: "folder" as const,
-        path: itemId,
-        children: [],
-      }),
-      getChildren: () => [],
+      getItem: (itemId: string) => {
+        if (treeData[itemId]) {
+          return treeData[itemId]
+        }
+        // 데이터가 일시적으로 없을 때 크래시를 방지하기 위한 폴백(fallback) 데이터
+        return {
+          id: itemId,
+          name: "...",
+          type: "file" as const,
+          path: itemId,
+          children: [],
+        }
+      },
+      getChildren: (itemId: string) => treeData[itemId]?.children || [],
     }
   }, [treeData])
 
@@ -207,7 +150,7 @@ export const useFileTree = () => {
       expandAllFeature,
       hotkeysCoreFeature,
       renamingFeature,
-      searchFeature, // 검색용
+      searchFeature,
     ],
     canDrag: items => items.length > 0,
     canDrop: (_items, target) => target.item.getItemData().type === "folder",
@@ -236,14 +179,12 @@ export const useFileTree = () => {
     canRename: item => item.getId() !== "/",
   })
 
-  // 데이터가 준비되면 트리를 명시적으로 재구성한다.
   useEffect(() => {
     if (isDataReady && tree) {
       tree.rebuildTree()
     }
-  }, [isDataReady, tree]) // isDataReady 또는 tree 인스턴스가 변경될 때 실행
+  }, [isDataReady, tree])
 
-  // //추가! treeData가 변경될 때마다 트리 강제 재구성
   useEffect(() => {
     if (Object.keys(treeData).length > 0 && tree) {
       setTimeout(() => {
@@ -277,6 +218,6 @@ export const useFileTree = () => {
     isLoading,
     isConnected,
     treeData,
-    stompClient, // StompClient 추가
+    stompClient,
   }
 }
