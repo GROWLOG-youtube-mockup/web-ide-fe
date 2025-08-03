@@ -29,6 +29,13 @@ export const Members = ({ projectId }: MembersProps) => {
 
   const handleCancelRemove = () => setRemoveDialogOpen(null)
 
+  // owner가 최상단에 오도록 정렬
+  const sortedMembers = [...members].sort((a, b) => {
+    if (a.role === "OWNER") return -1
+    if (b.role === "OWNER") return 1
+    return 0
+  })
+
   return (
     <div className="mb-4 h-[500px] min-h-[500px] overflow-y-auto">
       <div className="space-y-2 px-2">
@@ -40,12 +47,12 @@ export const Members = ({ projectId }: MembersProps) => {
           <div className="flex items-center justify-center py-4 text-[var(--color-destructive)] text-sm">
             Failed to load members
           </div>
-        ) : members.length === 0 ? (
+        ) : sortedMembers.length === 0 ? (
           <div className="flex items-center justify-center py-4 text-[var(--color-muted-foreground)] text-sm">
             No members found
           </div>
         ) : (
-          members.map(member => (
+          sortedMembers.map(member => (
             <MemberRow
               handleCancelRemove={handleCancelRemove}
               handleRemoveMember={handleRemoveMember}
