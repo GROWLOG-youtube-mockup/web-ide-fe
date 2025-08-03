@@ -17,7 +17,8 @@ interface MemberResponse {
  */
 export function useParticipantTracking(projectId: string, stompClient?: Client | null) {
   const { userInfo } = useUserStore()
-  const { setParticipants, updateParticipantStatus } = useParticipantsStore()
+  const { setParticipants, updateParticipantStatus, hasAnnouncedTo, markAnnouncedTo } =
+    useParticipantsStore()
 
   // 프로젝트 멤버 목록 가져오기
   const fetchProjectMembers = useCallback(async () => {
@@ -46,11 +47,15 @@ export function useParticipantTracking(projectId: string, stompClient?: Client |
     const subscription = stompClient.subscribe(`/topic/projects/${projectId}/chat`, message => {
       try {
         const data = JSON.parse(message.body)
+
         if (data.messageType === "ENTER") {
+          // 참여자 상태 업데이트
           updateParticipantStatus(projectId, data.userId, true)
 
-          // 다른 사용자가 입장하면 내 존재를 알림 (랜덤 딜레이로 동시 전송 방지)
-          if (data.userId !== userInfo.userId) {
+          // 새로 들어온 사용자에게 기존 참여자들의 존재를 알리기 위한 재알림
+          // (본인이 아닌 경우에만, 그리고 중복 방지)
+          if (data.userId !== userInfo.userId && !hasAnnouncedTo(projectId, data.userId)) {
+            markAnnouncedTo(projectId, data.userId)
             setTimeout(
               () => {
                 stompClient.publish({
@@ -59,9 +64,10 @@ export function useParticipantTracking(projectId: string, stompClient?: Client |
                 })
               },
               1000 + Math.random() * 1000
-            )
+            ) // 1-2초 사이 랜덤 지연
           }
         } else if (data.messageType === "LEAVE") {
+          // 참여자 상태 업데이트
           updateParticipantStatus(projectId, data.userId, false)
         }
       } catch (error) {
@@ -83,7 +89,7 @@ export function useParticipantTracking(projectId: string, stompClient?: Client |
       })
       subscription?.unsubscribe()
     }
-  }, [stompClient, projectId, userInfo, updateParticipantStatus])
+  }, [stompClient, projectId, userInfo, updateParticipantStatus, hasAnnouncedTo, markAnnouncedTo])
 
   // 프로젝트 멤버 목록 초기 로드
   useEffect(() => {
