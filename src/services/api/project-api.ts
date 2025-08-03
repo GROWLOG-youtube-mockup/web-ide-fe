@@ -49,9 +49,12 @@ export const projectApi = {
   },
 
   // 프로젝트 생성
-  createProject: async (projectData: CreateProjectRequest) => {
+  createProject: async (projectData: CreateProjectRequest): Promise<{ projectId: string }> => {
     const response = await apiClient.post("/projects", projectData)
-    return response.data
+    const projectId = response.data?.data?.projectId
+    await apiClient.post(`/projects/${projectId}/open`)
+
+    return { projectId }
   },
 
   // 프로젝트 수정
