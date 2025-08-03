@@ -28,7 +28,7 @@ export const TopBar = () => {
   // 실시간 참여자 추적 훅
   useParticipantTracking(projectId || "", fileTreeData.stompClient)
 
-  // 온라인 참여자 수 확인 (2명 이상일 때만 표시)
+  // 온라인 참여자 수 확인 (나 포함 2명 이상일 때만 표시)
   const onlineParticipants = projectId ? getOnlineParticipants(projectId) : []
   const shouldShowAvatars = onlineParticipants.length >= 2
 
@@ -68,12 +68,19 @@ export const TopBar = () => {
             {!membersLoading && projectMembers.length > 0 && shouldShowAvatars && (
               <ProjectAvatars
                 maxVisible={3}
-                members={projectMembers.map(member => ({
-                  userId: Number(member.userId),
-                  name: member.name,
-                  role: member.role,
-                  profileImage: member.profileImageUrl || FigmaIcons.avatar,
-                }))}
+                members={projectMembers
+                  .filter(member => Number(member.userId) !== userInfo?.userId) // 나를 제외
+                  .filter(member =>
+                    onlineParticipants.some(
+                      participant => participant.userId === Number(member.userId)
+                    )
+                  ) // 온라인 상태인 멤버만
+                  .map(member => ({
+                    userId: Number(member.userId),
+                    name: member.name,
+                    role: member.role,
+                    profileImage: member.profileImageUrl || FigmaIcons.avatar,
+                  }))}
                 projectId={projectId}
                 size="md"
               />
