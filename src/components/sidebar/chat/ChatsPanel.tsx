@@ -16,7 +16,7 @@ export const Chats = ({ projectId }: { projectId: string }) => {
 
   const handleReceive = useCallback(
     (msg: ChatMessage) => {
-      setMessages(prev => [...prev, msg])
+      setMessages(msg) // 이제 단일 메시지를 추가하는 방식
     },
     [setMessages]
   )

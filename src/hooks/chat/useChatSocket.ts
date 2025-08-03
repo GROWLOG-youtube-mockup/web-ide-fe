@@ -78,7 +78,7 @@ export function useChatSocket({ projectId, onMessage, onError }: UseChatSocketOp
           // 파싱 실패시 무시
         }
       })
-      socket.publish(`/app/projects/${projectId}/chat/enter`, "")
+      // ENTER 메시지는 TopBar의 useParticipantTracking에서 관리하므로 여기서는 제거
     }
     socket.onDisconnect = () => {
       setConnected(false)
