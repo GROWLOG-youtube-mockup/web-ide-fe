@@ -152,9 +152,6 @@ export const createFileSystemApi = (projectId: string, stompClient?: StompClient
   move: async (sourcePath: string, targetDirPath: string): Promise<void> => {
     const fileName = sourcePath.split("/").pop()
     const targetPath = targetDirPath === "/" ? `/${fileName}` : `${targetDirPath}/${fileName}`
-
-    console.log(`[DEBUG] move - sourcePath: "${sourcePath}", targetPath: "${targetPath}"`)
-
     try {
       const response = await apiClient.patch(
         `/projects/${projectId}/files`,

@@ -68,9 +68,7 @@ export const useFileTree = () => {
         setIsConnected(true)
         setStompClient(client)
         client.subscribe(`/topic/projects/${projectId}/tree`, message => {
-          console.log("📥 받은 원본 메시지:", message.body)
           const data: WebSocketMessage = JSON.parse(message.body)
-          console.log("📦 파싱된 데이터:", data)
           if (data.type === "tree:init") {
             const backendNodes = data.payload as TreeNodeDto[]
             const convertedData = convertTreeNodeDtoToFileData(backendNodes)
