@@ -11,7 +11,7 @@ export interface ChatApiConfig {
  * 기본 Chat API 설정
  */
 export const defaultChatApiConfig: ChatApiConfig = {
-  socketHost: import.meta.env.DEV ? "/ws" : "wss://growlog-web-ide.duckdns.org/ws",
+  socketHost: import.meta.env.DEV ? "/ws" : "https://growlog-web-ide.duckdns.org/ws",
   reconnectDelay: 5000,
   heartbeatIncoming: 10000,
   heartbeatOutgoing: 10000,

@@ -58,7 +58,7 @@ export const useFileTree = () => {
     if (!projectId) return
     const client = new Client({
       webSocketFactory: () =>
-        new SockJs(import.meta.env.DEV ? "/ws" : "wss://growlog-web-ide.duckdns.org/ws"),
+        new SockJs(import.meta.env.DEV ? "/ws" : "https://growlog-web-ide.duckdns.org/ws"),
       connectHeaders: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
