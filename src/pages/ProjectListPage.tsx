@@ -6,6 +6,7 @@ import { HostProjectList } from "@/components/project-list/HostProjectList"
 import { InvitedProjectList } from "@/components/project-list/InvitedProjectList"
 import { ProjectListHeader } from "@/components/project-list/ProjectListHeader"
 import { ProjectSearch } from "@/components/project-list/ProjectSearch"
+import { Button } from "@/components/ui/custom-button"
 import { useLogout } from "@/hooks/auth/useLogout"
 import { useProjectStore } from "@/stores/project-store"
 
@@ -26,14 +27,15 @@ export const ProjectListPage = () => {
           <img alt="Growlog IDE" className="h-[32px] dark:hidden" src={logoSvg} />
           {/* 다크 모드 로고 */}
           <img alt="Growlog IDE" className="hidden h-[32px] dark:block" src={logoWhiteSvg} />
-          <button
-            className="rounded p-1 transition-opacity duration-200 hover:bg-gray-100 group-hover:opacity-100"
+          <Button
+            className="rounded-full p-1"
             onClick={() => logout()}
-            title="로그아웃"
+            title="Logout"
             type="button"
+            variant={"ghost"}
           >
-            <LogOut className="h-4 w-4 text-gray-500 hover:text-red-500" />
-          </button>
+            <LogOut className="h-4 w-4" />
+          </Button>
         </div>
       </div>
 

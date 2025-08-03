@@ -20,6 +20,7 @@ interface MemberRowProps {
   setRemoveDialogOpen: (id: string | null) => void
   handleCancelRemove: () => void
   handleRemoveMember: (userId: string) => void
+  isCurrentUserOwner: boolean
 }
 
 const MemberRow = ({
@@ -31,6 +32,7 @@ const MemberRow = ({
   setRemoveDialogOpen,
   handleCancelRemove,
   handleRemoveMember,
+  isCurrentUserOwner,
 }: MemberRowProps) => (
   <div className="flex items-center gap-2 rounded border border-[var(--color-border)] bg-[var(--color-background)] px-3 py-1 hover:bg-[var(--color-muted)]">
     <Avatar className="h-8 w-8">
@@ -56,7 +58,12 @@ const MemberRow = ({
           Owner 👑
         </Badge>
       ) : (
-        <RoleSelect handleRoleChange={handleRoleChange} member={member} updateRole={updateRole} />
+        <RoleSelect
+          handleRoleChange={handleRoleChange}
+          isCurrentUserOwner={isCurrentUserOwner}
+          member={member}
+          updateRole={updateRole}
+        />
       )}
       <RemoveButton
         handleCancelRemove={handleCancelRemove}

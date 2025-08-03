@@ -1,5 +1,6 @@
-import { Circle, Edit3, LogOut, Trash } from "lucide-react"
+import { Edit3, LogOut, Trash } from "lucide-react"
 import { useState } from "react"
+import { Button } from "@/components/ui/custom-button"
 import { useProjectActions } from "@/hooks/project/useProjectActions"
 import { cn } from "@/lib/utils"
 import type { Project } from "@/types/project"
@@ -32,15 +33,15 @@ export default function ProjectItem({
 
   return (
     <>
-      <button
+      <Button
         className={cn(
-          "flex w-full cursor-pointer items-center justify-between border-[#e2e2e2] border-b bg-transparent px-3 py-2 text-left transition-colors",
-          isHovered && "bg-[rgba(238,238,238,0.5)]"
+          "flex h-full w-full cursor-pointer items-center justify-between border-[#e2e2e2] border-b bg-transparent px-3 py-2 text-left transition-colors"
         )}
         onClick={handlers.handleProjectClick}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         type="button"
+        variant={"ghost"}
       >
         {/* Left Section - Project Info */}
         <div className="flex items-center gap-3">
@@ -56,9 +57,7 @@ export default function ProjectItem({
               {isHost && onToggle ? (
                 <ProjectToggle checked={isToggled} onCheckedChange={handlers.handleToggleClick} />
               ) : (
-                <div className="flex h-3 w-3 items-center justify-center">
-                  <Circle className="h-2 w-2 fill-green-500 text-green-500" />
-                </div>
+                <div className="h-2.5 w-2.5 rounded-full bg-green-500"></div>
               )}
             </div>
           </div>
@@ -72,13 +71,14 @@ export default function ProjectItem({
               {project.description}
             </p>
             {isHovered && isHost && (
-              <button
+              <Button
                 className="flex h-3.5 w-3.5 items-center justify-center"
                 onClick={handlers.handleEditClick}
                 type="button"
+                variant={"secondary"}
               >
-                <Edit3 className="h-4 w-4 text-gray-400" />
-              </button>
+                <Edit3 className="h-4 w-4" />
+              </Button>
             )}
           </div>
 
@@ -87,28 +87,30 @@ export default function ProjectItem({
             {isHovered && (
               <div className="mr-2 flex items-center gap-1">
                 {isHost ? (
-                  <button
+                  <Button
                     className="flex h-3.5 w-3.5 items-center justify-center"
                     onClick={handlers.handleDeleteClick}
                     type="button"
+                    variant={"secondary"}
                   >
-                    <Trash className="h-4 w-4 text-gray-400" />
-                  </button>
+                    <Trash className="h-4 w-4" />
+                  </Button>
                 ) : (
-                  <button
+                  <Button
                     className="flex h-3.5 w-3.5 items-center justify-center"
                     onClick={handlers.handleLeaveClick}
                     type="button"
+                    variant={"ghost"}
                   >
-                    <LogOut className="h-4 w-4 text-gray-400" />
-                  </button>
+                    <LogOut className="h-4 w-4 " />
+                  </Button>
                 )}
               </div>
             )}
             <ProjectAvatars maxVisible={3} members={project.members} />
           </div>
         </div>
-      </button>
+      </Button>
 
       {/* 다이얼로그들 - 별도 컴포넌트로 분리 */}
       <ProjectActionDialogs

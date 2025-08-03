@@ -1,6 +1,7 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { XIcon } from "lucide-react"
 import type * as React from "react"
+import { Button } from "@/components/ui/custom-button"
 import {
   Dialog,
   DialogDescription,
@@ -140,24 +141,24 @@ export function AlertDialog({
         {/* Figma 디자인: button section */}
         <div className="relative box-border flex w-full shrink-0 flex-row content-stretch items-center justify-end gap-2 p-0">
           {onCancel && (
-            <button
+            <Button
               className={`${AUTH_STYLES.btnSmDialog} ${styles.cancelButtonClass} h-[35px] w-[56px]`}
               disabled={isLoading}
               onClick={onCancel}
               type="button"
             >
               {cancelText}
-            </button>
+            </Button>
           )}
           {onConfirm && (
-            <button
+            <Button
               className={`${AUTH_STYLES.btnSmDialog} ${styles.confirmButtonClass} h-[35px] w-[56px]`}
               disabled={confirmDisabled || isLoading}
               onClick={handleConfirm}
               type="button"
             >
               {isLoading ? "loading..." : confirmText}
-            </button>
+            </Button>
           )}
         </div>
       </CustomDialogContent>

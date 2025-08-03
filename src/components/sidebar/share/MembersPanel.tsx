@@ -5,6 +5,7 @@ import {
   useRemoveMember,
   useUpdateMemberRole,
 } from "@/hooks/permissions/useProjectMembers"
+import { useUserStore } from "@/stores/user-store"
 
 type WritableRole = "READ" | "WRITE"
 interface MembersProps {
@@ -16,6 +17,12 @@ export const Members = ({ projectId }: MembersProps) => {
   const { data: members = [], isLoading, error } = useProjectMembers(projectId)
   const updateRole = useUpdateMemberRole(projectId)
   const removeMember = useRemoveMember(projectId)
+  const { userInfo } = useUserStore()
+
+  // 현재 사용자가 프로젝트 오너인지 확인
+  const isCurrentUserOwner = members.some(
+    member => member.userId === userInfo?.userId?.toString() && member.role === "OWNER"
+  )
 
   const handleRoleChange = (userId: string, newRole: WritableRole) => {
     updateRole.mutate({ userId, role: newRole })
@@ -57,6 +64,7 @@ export const Members = ({ projectId }: MembersProps) => {
               handleCancelRemove={handleCancelRemove}
               handleRemoveMember={handleRemoveMember}
               handleRoleChange={handleRoleChange}
+              isCurrentUserOwner={isCurrentUserOwner}
               key={member.userId}
               member={member}
               removeDialogOpen={removeDialogOpen}

@@ -16,11 +16,17 @@ interface RoleSelectProps {
   member: ProjectMember
   updateRole: UpdateRole
   handleRoleChange: (userId: string, newRole: WritableRole) => void
+  isCurrentUserOwner: boolean
 }
 
-const RoleSelect = ({ member, updateRole, handleRoleChange }: RoleSelectProps) => (
+const RoleSelect = ({
+  member,
+  updateRole,
+  handleRoleChange,
+  isCurrentUserOwner,
+}: RoleSelectProps) => (
   <Select
-    disabled={updateRole.isPending}
+    disabled={updateRole.isPending || !isCurrentUserOwner}
     onValueChange={(newRole: WritableRole) => handleRoleChange(member.userId, newRole)}
     value={member.role}
   >
