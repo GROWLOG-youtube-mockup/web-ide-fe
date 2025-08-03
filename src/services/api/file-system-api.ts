@@ -129,44 +129,23 @@ export const createFileSystemApi = (projectId: string, stompClient?: StompClient
   // PATCH /projects/{projectId}/files - 이름 변경/이동
 
   rename: async (oldPath: string, newName: string): Promise<void> => {
-    console.log("=== RENAME 디버깅 ===")
-    console.log("1. 입력값:")
-    console.log("   oldPath:", oldPath)
-    console.log("   newName:", newName)
-
     const pathParts = oldPath.split("/")
-    console.log("2. 경로 파싱:")
-    console.log("   pathParts:", pathParts)
-
     pathParts.pop()
-    console.log("   pathParts after pop:", pathParts)
-
     const parentPath = pathParts.join("/") || "/"
-    console.log("   parentPath:", parentPath)
-
     const newPath = parentPath === "/" ? `/${newName}` : `${parentPath}/${newName}`
-    console.log("3. 최종 경로:")
-    console.log("   newPath:", newPath)
+    const response = await apiClient.patch(
+      `/projects/${projectId}/files`,
+      {},
+      {
+        params: {
+          fromPath: oldPath,
+          toPath: newPath,
+        },
+      }
+    )
 
-    console.log("4. API 요청 파라미터:")
-    console.log("   fromPath:", oldPath)
-    console.log("   toPath:", newPath)
-    console.log("===================")
-
-    try {
-      await apiClient.patch(
-        `/projects/${projectId}/files`,
-        {},
-        {
-          params: {
-            fromPath: oldPath,
-            toPath: newPath,
-          },
-        }
-      )
-    } catch (error) {
-      console.error(`[ERROR] rename failed:`, error)
-      throw error
+    if (!response.data.success) {
+      throw new Error(response.data.error?.message || "Rename failed")
     }
   },
 
@@ -177,7 +156,7 @@ export const createFileSystemApi = (projectId: string, stompClient?: StompClient
     console.log(`[DEBUG] move - sourcePath: "${sourcePath}", targetPath: "${targetPath}"`)
 
     try {
-      await apiClient.patch(
+      const response = await apiClient.patch(
         `/projects/${projectId}/files`,
         {},
         {
@@ -187,6 +166,10 @@ export const createFileSystemApi = (projectId: string, stompClient?: StompClient
           },
         }
       )
+
+      if (!response.data.success) {
+        throw new Error(response.data.error?.message || "Move failed")
+      }
     } catch (error) {
       console.error(`[ERROR] move failed:`, error)
       throw error
