@@ -30,7 +30,7 @@ export const Members = ({ projectId }: MembersProps) => {
   const handleCancelRemove = () => setRemoveDialogOpen(null)
 
   return (
-    <div className="mb-4 max-h-48 overflow-y-auto">
+    <div className="mb-4 h-[500px] min-h-[500px] overflow-y-auto">
       <div className="space-y-2 px-2">
         {isLoading ? (
           <div className="flex items-center justify-center py-4 text-[var(--color-muted-foreground)] text-sm">

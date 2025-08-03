@@ -18,11 +18,13 @@ export const IdeLayout = () => {
       <TopBar />
       <main className="flex min-h-0 flex-1">
         <ResizablePanelGroup direction="horizontal">
-          <ResizablePanel collapsedSize={30} maxSize={45} minSize={0}>
-            <Sidebar projectTitle={projectTitle} />
+          <ResizablePanel defaultSize={35} maxSize={45} minSize={3.5}>
+            <div className="h-full min-w-56">
+              <Sidebar projectTitle={projectTitle} />
+            </div>
           </ResizablePanel>
 
-          <ResizableHandle className="bg-zinc-200 transition-all duration-150 hover:scale-x-500 hover:bg-zinc-300" />
+          <ResizableHandle className="bg-muted-foreground/20 transition-all duration-150 hover:scale-x-500 hover:bg-muted-foreground/40" />
 
           <ResizablePanel>
             <CodeEditor />

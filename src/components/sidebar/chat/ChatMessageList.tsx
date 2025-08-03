@@ -70,7 +70,7 @@ const ChatMessageList = ({
     <div
       ref={containerRef}
       style={{ boxSizing: "border-box" }}
-      className="flex h-[400px] min-h-0 flex-col gap-5 overflow-y-auto px-4"
+      className="flex h-[420px] flex-col gap-5 overflow-y-auto px-4"
     >
       {delayedLoading && hasMore && (
         <div

@@ -55,19 +55,21 @@ export const Chats = ({ projectId }: { projectId: string }) => {
       ) : error ? (
         <div className="flex flex-1 items-center justify-center text-red-500">{error}</div>
       ) : (
-        <ChatMessageList
-          messages={messages.map(toParsedChatMessage)}
-          fetchNextPage={fetchNextPage}
-          hasMore={hasMore}
-          isFetching={isFetching}
-          projectId={projectId}
-          onCodeLinkClick={handleCodeLinkClick}
-        />
+        <>
+          <ChatMessageList
+            messages={messages.map(toParsedChatMessage)}
+            fetchNextPage={fetchNextPage}
+            hasMore={hasMore}
+            isFetching={isFetching}
+            projectId={projectId}
+            onCodeLinkClick={handleCodeLinkClick}
+          />
+          <div className="sticky bottom-0 shrink-0">
+            <Separator />
+            <ChatInput onSend={handleSend} />
+          </div>
+        </>
       )}
-      <div className="sticky bottom-0 shrink-0">
-        <Separator />
-        <ChatInput onSend={handleSend} />
-      </div>
     </div>
   )
 }
