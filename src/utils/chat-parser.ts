@@ -116,8 +116,30 @@ export const getDateLabel = (dateString: string) => {
 }
 
 export const groupMessagesByDateWithParsedContent = (messages: ParsedChatMessage[]) => {
+  // 각 사용자별로 마지막 메시지 타입을 추적하여 중복 ENTER 필터링
+  const userLastMessageType: Record<number, "ENTER" | "LEAVE"> = {}
+
+  const filteredMessages = messages.filter(msg => {
+    // ENTER/LEAVE가 아닌 메시지는 그대로 포함
+    if (msg.messageType !== "ENTER" && msg.messageType !== "LEAVE") return true
+
+    // userId가 없으면 그대로 포함
+    if (!msg.userId) return true
+
+    const lastType = userLastMessageType[msg.userId]
+
+    // 첫 번째 메시지이거나, 이전과 다른 타입이면 포함
+    if (!lastType || lastType !== msg.messageType) {
+      userLastMessageType[msg.userId] = msg.messageType
+      return true
+    }
+
+    // 같은 타입의 연속 메시지는 제외 (ENTER->ENTER 또는 LEAVE->LEAVE)
+    return false
+  })
+
   const groups: { date: string; messages: ParsedChatMessage[] }[] = []
-  messages.forEach(msg => {
+  filteredMessages.forEach(msg => {
     const date = new Date(msg.sentAt)
     if (Number.isNaN(date.getTime())) return
     const dateKey = date.toISOString().slice(0, 10) // YYYY-MM-DD

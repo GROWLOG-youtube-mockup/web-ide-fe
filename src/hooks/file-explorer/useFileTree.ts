@@ -75,8 +75,6 @@ export const useFileTree = () => {
 
     const client = new Client({
       webSocketFactory: () => new SockJs("/ws"),
-
-      //프록시로!      webSocketFactory: () => new SockJs("http://15.165.2.193:8080/ws"),
       connectHeaders: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },

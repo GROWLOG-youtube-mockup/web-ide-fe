@@ -5,7 +5,7 @@ import { ApiChatSocketClient } from "../client/chat-socket-client"
 // .env.test 파일에서 환경변수 로드
 const TEST_JWT_TOKEN =
   "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzU0MTQzMDM3LCJleHAiOjE3NTQxNDY2Mzd9.rYHGxbwsRR-WuF-Mr7DZgQyM-iUFa5LC7bUKAjk2wAQ"
-const TEST_PROJECT_ID = 3
+const TEST_PROJECT_ID = "3"
 // 테스트에서는 프록시가 아닌 실제 주소를 사용해야 함
 const WS_HOST = "http://15.165.2.193:8080/ws"
 

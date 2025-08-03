@@ -28,6 +28,7 @@ interface ChatMessageListProps {
   hasMore: boolean
   isFetching: boolean
   projectId: string
+  onCodeLinkClick?: (filePath: string, lineNumber: number) => void
 }
 
 const ChatMessageList = ({
@@ -36,6 +37,7 @@ const ChatMessageList = ({
   hasMore,
   isFetching,
   projectId,
+  onCodeLinkClick,
 }: ChatMessageListProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const endRef = useRef<HTMLDivElement>(null)
@@ -118,7 +120,7 @@ const ChatMessageList = ({
                 )}
                 {/* 메시지 카드 */}
                 <Card
-                  className={`min-w-[40%] max-w-[60%] rounded-2xl py-2 ${isOwnMessage ? "ml-20 self-end" : "mr-20 self-start"}`}
+                  className={`ml-20 min-w-[40%] max-w-[60%] rounded-2xl py-2 ${isOwnMessage ? "self-end" : "self-start"}`}
                   style={{
                     background: isOwnMessage ? "var(--primary)" : "var(--muted)",
                     color: isOwnMessage ? "var(--primary-foreground)" : "var(--card-foreground)",
@@ -126,7 +128,11 @@ const ChatMessageList = ({
                 >
                   <CardContent className="flex flex-col gap-2 px-3 py-1 text-left">
                     <div className="text-sm leading-relaxed">
-                      {msg.parts ? <ChatMessageContent parts={msg.parts} /> : msg.content}
+                      {msg.parts ? (
+                        <ChatMessageContent parts={msg.parts} onCodeLinkClick={onCodeLinkClick} />
+                      ) : (
+                        msg.content
+                      )}
                     </div>
                     <div
                       className="mt-1 w-full text-right text-xs"
