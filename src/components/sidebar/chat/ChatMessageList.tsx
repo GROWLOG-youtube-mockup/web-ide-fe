@@ -67,8 +67,8 @@ const ChatMessageList = ({
   return (
     <div
       ref={containerRef}
-      style={{ boxSizing: "border-box", padding: 0 }}
-      className="flex h-[400px] min-h-0 flex-col gap-5 overflow-y-auto"
+      style={{ boxSizing: "border-box" }}
+      className="flex h-[400px] min-h-0 flex-col gap-5 overflow-y-auto px-4"
     >
       {delayedLoading && hasMore && (
         <div
@@ -95,22 +95,36 @@ const ChatMessageList = ({
             <>
               {showDateLabel && <DateLabel date={msg.sentAt} key={`date-${group.date}`} />}
               <div
-                className={`flex items-start gap-3 px-2 pb-4 ${isOwnMessage ? "flex-row-reverse" : ""}`}
+                className={`flex flex-col gap-1 px-2 pb-4 ${isOwnMessage ? "items-end" : "items-start"}`}
                 key={`${msg.sentAt}-${msg.username}-${groupIdx}-${idx}`}
               >
-                <Avatar className="h-10 w-10 rounded-full">
-                  <AvatarImage src={profileImage || fallbackImage} />
-                  <AvatarFallback>{msg.username?.[0] ?? "?"}</AvatarFallback>
-                </Avatar>
+                {/* 아바타와 이름을 위에 배치 */}
+                {!isOwnMessage && (
+                  <div
+                    className="mb-1 flex items-center justify-start gap-2"
+                    style={{ minWidth: 48, width: "100%" }}
+                  >
+                    <Avatar className="h-10 w-10 rounded-full">
+                      <AvatarImage src={profileImage || fallbackImage} />
+                      <AvatarFallback>{msg.username?.[0] ?? "?"}</AvatarFallback>
+                    </Avatar>
+                    <span
+                      className="mt-1 max-w-[80px] truncate font-medium text-muted-foreground text-xs"
+                      title={msg.username}
+                    >
+                      {msg.username}
+                    </span>
+                  </div>
+                )}
+                {/* 메시지 카드 */}
                 <Card
-                  className="min-w-[30%] max-w-[70%] rounded-2xl py-2"
-                  style={
-                    isOwnMessage
-                      ? { background: "var(--primary)", color: "var(--primary-foreground)" }
-                      : { background: "var(--muted)", color: "var(--card-foreground)" }
-                  }
+                  className={`min-w-[40%] max-w-[60%] rounded-2xl py-2 ${isOwnMessage ? "ml-20 self-end" : "mr-20 self-start"}`}
+                  style={{
+                    background: isOwnMessage ? "var(--primary)" : "var(--muted)",
+                    color: isOwnMessage ? "var(--primary-foreground)" : "var(--card-foreground)",
+                  }}
                 >
-                  <CardContent className="flex flex-col gap-2 px-3 py-1">
+                  <CardContent className="flex flex-col gap-2 px-3 py-1 text-left">
                     <div className="text-sm leading-relaxed">
                       {msg.parts ? <ChatMessageContent parts={msg.parts} /> : msg.content}
                     </div>
