@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { AuthForm } from "@/components/auth/AuthForm"
 import { AuthFormField } from "@/components/auth/AuthFormField"
 import { PasswordChangeSection } from "@/components/auth/PasswordChangeSection"
@@ -16,6 +17,7 @@ export default function ProfileEditPage() {
   const [deletePassword, setDeletePassword] = useState("")
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const { userInfo } = useUserStore()
+  const navigate = useNavigate()
 
   // 초기값 정의 (실제 사용자 정보 사용)
   const initialValues = {
@@ -30,6 +32,7 @@ export default function ProfileEditPage() {
     form,
     initialValues,
     profileImageFile: selectedImageFile,
+    onSuccess: () => navigate(-1), // 이전 페이지로 이동
   })
   const { isDeleting, handleDeleteAccount } = useDeleteAccount()
 

@@ -9,9 +9,15 @@ interface UseProfileUpdateProps {
   form: UseFormReturn<ProfileEditFormData>
   initialValues: ProfileEditFormData
   profileImageFile?: File | null
+  onSuccess?: () => void
 }
 
-export function useProfileUpdate({ form, initialValues, profileImageFile }: UseProfileUpdateProps) {
+export function useProfileUpdate({
+  form,
+  initialValues,
+  profileImageFile,
+  onSuccess,
+}: UseProfileUpdateProps) {
   const [isSaving, setIsSaving] = useState(false)
   const { addToast } = useToast()
   const { fetchUserInfo } = useUserStore()
@@ -65,6 +71,9 @@ export function useProfileUpdate({ form, initialValues, profileImageFile }: UseP
         currentPassword: "",
         newPassword: "",
       })
+
+      // 성공 콜백 호출
+      onSuccess?.()
     } catch (error) {
       console.error("Profile update failed:", error)
       const errorMessage =
