@@ -10,7 +10,7 @@ import ChatMessageList from "./ChatMessageList"
 
 export const Chats = ({ projectId }: { projectId: string }) => {
   const { messages, setMessages, loading, error, fetchNextPage, hasMore, isFetching } =
-    useChatHistory(projectId, 5)
+    useChatHistory(projectId, 30)
 
   const shouldScrollToBottomRef = useRef(false)
 
