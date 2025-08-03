@@ -5,7 +5,7 @@ import { createLiveblocksContext, createRoomContext } from "@liveblocks/react"
 //라이브 블록 관련 설정파일입니다. api키는 일단 여기서 관리하고 공식 문서상에서 권장하는 방식대로 설정파일에서 라이브블록과 룸관련 컨텍스트를 관리합니다.
 
 const client = createClient({
-  publicApiKey: "pk_dev_lWz_vEA2Xx6PMB60x9l8v8gggPv0ttPTJ7pCvm5etnhIZXYbcsSALmQF7-qdql7G",
+  publicApiKey: "pk_dev_PzxM2n6kPhOCMF7URZ5DUmCwVguBW8LyYrPgvTtKdUbIFZc64fro1SpYWEtZKs8X",
 })
 
 // Room 컨텍스트 (개별 방 관련)

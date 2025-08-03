@@ -16,7 +16,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/ws": {
-        target: "https://growlog-web-ide.duckdns.org",
+        target: process.env.VITE_API_BASE_URL,
         ws: true,
         changeOrigin: true,
         secure: false,
@@ -24,7 +24,7 @@ export default defineConfig({
         rewrite: path => path, // 경로 유지
       },
       "/api": {
-        target: "https://growlog-web-ide.duckdns.org",
+        target: process.env.VITE_API_BASE_URL,
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, ""),
       },

@@ -2,7 +2,7 @@ import axios from "axios"
 
 const apiClient = axios.create({
   // biome-ignore lint/style/useNamingConvention: axios requires baseURL property name
-  baseURL: import.meta.env.DEV ? "/api" : "http://15.165.2.193:8080",
+  baseURL: import.meta.env.DEV ? "/api" : import.meta.env.VITE_API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
