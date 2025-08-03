@@ -37,7 +37,7 @@ export default function ProjectItem({
         className={cn(
           "flex h-full w-full cursor-pointer items-center justify-between border-[#e2e2e2] border-b bg-transparent px-3 py-2 text-left transition-colors"
         )}
-        onClick={handlers.handleProjectClick}
+        onClick={project.status === "INACTIVE" ? undefined : handlers.handleProjectClick}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         type="button"
@@ -54,10 +54,12 @@ export default function ProjectItem({
               </div>
 
               {/* Toggle/Status Icon */}
-              {isHost && onToggle ? (
+              {isHost ? (
                 <ProjectToggle checked={isToggled} onCheckedChange={handlers.handleToggleClick} />
-              ) : (
+              ) : onToggle ? (
                 <div className="h-2.5 w-2.5 rounded-full bg-green-500"></div>
+              ) : (
+                <div className="h-2.5 w-2.5 rounded-full bg-gray-300"></div>
               )}
             </div>
           </div>
