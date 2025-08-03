@@ -154,6 +154,12 @@
   },
   "overrides": [
     {
+      // 마크다운 파일은 린트와 포맷터 모두 비활성화
+      "includes": ["**/*.md"],
+      "linter": { "enabled": false },
+      "formatter": { "enabled": false }
+    },
+    {
       // 1. 컴포넌트는 'kebab-case' 또는 'PascalCase'
       "includes": ["src/components/**/*.tsx"],
       "linter": {

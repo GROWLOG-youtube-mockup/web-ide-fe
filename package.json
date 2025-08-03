@@ -76,7 +76,7 @@
     "vitest": "^3.2.4"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx,json,md}": [
+    "*.{ts,tsx,js,jsx,json}": [
       "biome check --write --unsafe"
     ]
   },
