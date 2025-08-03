@@ -27,7 +27,7 @@ export const ProjectListPage = () => {
           {/* 다크 모드 로고 */}
           <img alt="Growlog IDE" className="hidden h-[32px] dark:block" src={logoWhiteSvg} />
           <button
-            className="rounded p-1 opacity-0 transition-opacity duration-200 hover:bg-gray-100 group-hover:opacity-100"
+            className="rounded p-1 transition-opacity duration-200 hover:bg-gray-100 group-hover:opacity-100"
             onClick={() => logout()}
             title="로그아웃"
             type="button"

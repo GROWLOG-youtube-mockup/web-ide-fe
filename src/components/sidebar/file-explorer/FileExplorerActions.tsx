@@ -46,7 +46,8 @@ const ActionButton = ({ icon: Icon, title, onClick, disabled = false }: ActionBu
 )
 
 interface FileExplorerActionsProps {
-  tree: TreeInstance<FileData>
+  // tree가 null일 수 있음을 타입에 명시
+  tree: TreeInstance<FileData> | null
   collapseAll: () => void
   expandAll: () => void
   startRenaming: (itemId: string) => void
@@ -74,7 +75,8 @@ export const FileExplorerActions = ({ tree, collapseAll, expandAll }: FileExplor
         disabled={isLoading}
         icon={FilePlusIcon}
         onClick={() => {
-          const targetPath = getTargetPathInFileTree(tree)
+          // tree가 없으면 기본 경로를 '/'로 사용
+          const targetPath = tree ? getTargetPathInFileTree(tree) : "/"
           const fileName = prompt("Enter file name:")
           if (fileName) {
             createFileItem(targetPath, fileName)
@@ -86,7 +88,8 @@ export const FileExplorerActions = ({ tree, collapseAll, expandAll }: FileExplor
         disabled={isLoading}
         icon={FolderPlusIcon}
         onClick={() => {
-          const targetPath = getTargetPathInFileTree(tree)
+          // tree가 없으면 기본 경로를 '/'로 사용
+          const targetPath = tree ? getTargetPathInFileTree(tree) : "/"
           const folderName = prompt("Enter folder name:")
           if (folderName) {
             createFolderItem(targetPath, folderName)
@@ -102,8 +105,14 @@ export const FileExplorerActions = ({ tree, collapseAll, expandAll }: FileExplor
         }}
         title="Refresh"
       />
-      <ActionButton icon={CopyPlusIcon} onClick={expandAll} title="Expand All" />
-      <ActionButton icon={CopyMinusIcon} onClick={collapseAll} title="Collapse All" />
+      {/* tree가 없을 때 'Expand All', 'Collapse All' 버튼 비활성화 */}
+      <ActionButton disabled={!tree} icon={CopyPlusIcon} onClick={expandAll} title="Expand All" />
+      <ActionButton
+        disabled={!tree}
+        icon={CopyMinusIcon}
+        onClick={collapseAll}
+        title="Collapse All"
+      />
     </>
   )
 }

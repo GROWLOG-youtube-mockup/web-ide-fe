@@ -1,27 +1,18 @@
 import { create } from "zustand"
 import { devtools, persist } from "zustand/middleware"
+import type { FileData } from "@/types/file-explorer"
 
 interface EditorTabsState {
   openedFiles: string[]
   activeFile: string | null
-
-  /** 활성 파일 변경 */
+  treeData: Record<string, FileData> | null
   setActiveFile: (filePath: string) => void
-
-  /** 파일을 에디터에서 열기 */
   openFileInEditor: (filePath: string) => void
-
-  /** 에디터에서 파일 닫기 */
   closeTab: (filePath: string) => void
-
-  /** 모든 탭 닫기 */
   closeAllTabs: () => void
-
-  /** 다른 모든 탭 닫기 (지정된 파일만 유지) */
   closeOtherTabs: (keepFilePath: string) => void
-
-  /** 오른쪽 탭들 닫기 */
   closeTabsToTheRight: (fromFilePath: string) => void
+  updateTreeData: (treeData: Record<string, FileData>) => void
 }
 
 export const useEditorTabsStore = create<EditorTabsState>()(
@@ -30,9 +21,17 @@ export const useEditorTabsStore = create<EditorTabsState>()(
       (set, get): EditorTabsState => ({
         openedFiles: [],
         activeFile: null,
+        treeData: null,
 
         openFileInEditor: (filePath: string) => {
-          const { openedFiles } = get()
+          const { openedFiles, treeData } = get()
+          if (treeData) {
+            const fileExists = treeData[filePath] && treeData[filePath].type === "file"
+            if (!fileExists) {
+              console.warn(`❌ 파일이 트리에 존재하지 않습니다: ${filePath}`)
+              return
+            }
+          }
           if (openedFiles.includes(filePath)) {
             set({ activeFile: filePath })
           } else {
@@ -41,21 +40,18 @@ export const useEditorTabsStore = create<EditorTabsState>()(
               openedFiles: [...openedFiles, filePath],
             })
           }
-          console.log("Opening file in editor:", filePath)
+          console.log("✅ Opening file in editor:", filePath)
         },
 
         closeTab: (filePath: string) => {
           const { openedFiles, activeFile } = get()
           const newOpenedFiles = openedFiles.filter(file => file !== filePath)
-
           if (activeFile !== filePath) {
             set({ openedFiles: newOpenedFiles })
             return
           }
-
           const newActiveFile =
             newOpenedFiles.length > 0 ? newOpenedFiles[newOpenedFiles.length - 1] : null
-
           set({
             activeFile: newActiveFile,
             openedFiles: newOpenedFiles,
@@ -86,14 +82,32 @@ export const useEditorTabsStore = create<EditorTabsState>()(
         closeTabsToTheRight: (fromFilePath: string) => {
           const { openedFiles, activeFile } = get()
           const currentIndex = openedFiles.findIndex(file => file === fromFilePath)
-
           if (currentIndex === -1) return
-
           const filesToKeep = openedFiles.slice(0, currentIndex + 1)
-
           set({
             openedFiles: filesToKeep,
             activeFile: activeFile && filesToKeep.includes(activeFile) ? activeFile : fromFilePath,
+          })
+        },
+
+        // ✅ 수정된 부분
+        updateTreeData: (newTreeData: Record<string, FileData>) => {
+          set(state => {
+            // 1. 새 트리 데이터에 더 이상 존재하지 않는 파일들을 열린 탭 목록에서 제거합니다.
+            const newOpenedFiles = state.openedFiles.filter(filePath => newTreeData[filePath])
+
+            // 2. 현재 활성 탭이 제거되었는지 확인하고, 그렇다면 새로운 활성 탭을 지정합니다.
+            let newActiveFile = state.activeFile
+            if (state.activeFile && !newOpenedFiles.includes(state.activeFile)) {
+              newActiveFile =
+                newOpenedFiles.length > 0 ? newOpenedFiles[newOpenedFiles.length - 1] : null
+            }
+
+            return {
+              treeData: newTreeData,
+              openedFiles: newOpenedFiles,
+              activeFile: newActiveFile,
+            }
           })
         },
       }),

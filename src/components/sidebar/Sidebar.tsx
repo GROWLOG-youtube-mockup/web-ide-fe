@@ -18,7 +18,7 @@ interface SidebarProps {
 }
 
 const PlaceholderPanel = ({ message }: { message: string }) => (
-  <div className="p-4 text-gray-500">{message}</div>
+  <div className="p-4 text-gray-500 text-sm">{message}</div>
 )
 
 /**
@@ -35,14 +35,6 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
   const { projectId = "" } = useParams<{ projectId: string }>() // URL에서 projectId 추출
   const { data: members = [] } = useProjectMembers(projectId) //멤버 수 가져오기
   const memberCount = members.length // 실제 멤버 수
-
-  console.log("🎨 Sidebar 렌더링:", {
-    tree: fileTreeData.tree ? "존재함" : "null",
-    isLoading: fileTreeData.isLoading,
-    isConnected: fileTreeData.isConnected,
-    stompClient: fileTreeData.stompClient ? "존재함" : "null",
-    timestamp: Date.now(),
-  })
 
   return (
     <div className="flex h-full">
@@ -64,25 +56,31 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
             </SidebarPanel>,
           ]}
           tab="files"
-          topPanels={
-            fileTreeData.tree
-              ? (() => {
-                  return [
-                    <SidebarPanel
-                      actions={<FileExplorerActions {...fileTreeData} tree={fileTreeData.tree} />}
-                      id="files"
-                      key="files"
-                      title={projectTitle}
-                    >
-                      <FileExplorer tree={fileTreeData.tree} />
-                    </SidebarPanel>,
-                  ]
-                })()
-              : (() => {
-                  //디버깅용 주석처리(todo : 패널 생성 오류 패널): console.log("FileExplorer 패널 생성 안됨");
-                  return []
-                })()
-          }
+          topPanels={[
+            // 항상 SidebarPanel을 렌더링하도록 수정
+            <SidebarPanel
+              actions={
+                // FileExplorerActions는 항상 렌더링하되, tree가 null일 수 있음을 전달
+                <FileExplorerActions
+                  tree={fileTreeData.tree}
+                  collapseAll={fileTreeData.collapseAll}
+                  expandAll={fileTreeData.expandAll}
+                  startRenaming={fileTreeData.startRenaming}
+                />
+              }
+              id="files"
+              key="files"
+              title={projectTitle}
+            >
+              {/* tree가 있을 때만 FileExplorer를 렌더링 */}
+              {fileTreeData.tree ? (
+                <FileExplorer tree={fileTreeData.tree} />
+              ) : (
+                // tree가 없으면 사용자에게 안내 메시지 표시
+                <PlaceholderPanel message="Project is empty. Create a file or folder." />
+              )}
+            </SidebarPanel>,
+          ]}
         />
 
         <SidebarPanels

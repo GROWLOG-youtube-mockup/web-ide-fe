@@ -30,8 +30,9 @@ export const ProjectAvatars = ({
   // 프로젝트 ID가 있으면 온라인 참여자만 사용
   const onlineParticipants = projectId ? getOnlineParticipants(projectId) : []
 
-  // 실시간 온라인 참여자 표시
-  const displayMembers: DisplayMember[] = projectId ? onlineParticipants : members || []
+  // members prop이 있으면 그것을 우선 사용 (이미 필터링된 상태)
+  const displayMembers: DisplayMember[] =
+    members && members.length > 0 ? members : projectId ? onlineParticipants : []
 
   const visibleMembers = displayMembers.slice(0, maxVisible)
   const remainingCount = Math.max(0, displayMembers.length - maxVisible)

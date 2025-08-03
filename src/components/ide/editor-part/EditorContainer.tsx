@@ -1,4 +1,3 @@
-// EditorContainer.tsx
 import { ClientSideSuspense } from "@liveblocks/react/suspense"
 import { Editor } from "@monaco-editor/react"
 import { useEffect, useState } from "react"
@@ -20,11 +19,10 @@ const CollaborativeEditor = ({
   isReadOnly?: boolean
 }) => {
   const room = useRoom()
-  const { projectId } = useParams<{ projectId: string }>() // 추가
+  const { projectId } = useParams<{ projectId: string }>()
 
   const { handleOnMount, isLoading, yProvider } = useCollaborativeEditor(filePath)
 
-  // 수정: fileId 기반 룸ID 생성
   const expectedRoomId = `room-${projectId}-${fileId}`
 
   if (room.id !== expectedRoomId) {
@@ -40,7 +38,6 @@ const CollaborativeEditor = ({
 
   return (
     <div className="relative h-full">
-      {/* 읽기전용 표시 추가 */}
       {isReadOnly && (
         <div className="absolute top-2 right-2 z-20 rounded bg-orange-100 px-2 py-1 text-orange-700 text-xs">
           읽기 전용
@@ -62,7 +59,7 @@ const CollaborativeEditor = ({
         height="100%"
         onMount={handleOnMount}
         options={{
-          readOnly: isReadOnly, //  프롭스로 받은 값 사용
+          readOnly: isReadOnly,
           automaticLayout: true,
           fontSize: 14,
           hover: { delay: 500, enabled: true, sticky: false },
@@ -80,14 +77,13 @@ const CollaborativeEditor = ({
 
 export const EditorContainer = () => {
   const { activeFile, openedFiles } = useEditorTabsStore()
-  const { treeData } = useFileTree() // 추가: treeData 가져오기
-  const { projectId } = useParams<{ projectId: string }>() // 추가
+  // ✅ 1. useFileTree에서 isLoading 상태를 함께 가져옵니다.
+  const { treeData, isLoading: isTreeLoading } = useFileTree()
+  const { projectId } = useParams<{ projectId: string }>()
 
-  // 편집 권한 조회
   const { data: permission, isLoading: permissionLoading } = useProjectPermission(projectId || "")
   const isReadOnly = permission?.role === "READ"
 
-  // 점진적 연결을 위한 상태 추가
   const [connectedFiles, setConnectedFiles] = useState<string[]>([])
 
   useEffect(() => {
@@ -96,12 +92,10 @@ export const EditorContainer = () => {
       return
     }
 
-    // 1. 활성 파일은 즉시 연결
     if (activeFile) {
       setConnectedFiles([activeFile])
     }
 
-    // 2. 나머지 파일들을 순차적으로 연결 (500ms 간격)
     const timers: NodeJS.Timeout[] = []
 
     openedFiles.forEach((filePath, index) => {
@@ -110,12 +104,12 @@ export const EditorContainer = () => {
       const timer = setTimeout(
         () => {
           setConnectedFiles(prev => {
-            if (prev.includes(filePath)) return prev // 중복 방지
+            if (prev.includes(filePath)) return prev
             return [...prev, filePath]
           })
         },
         (index + 1) * 500
-      ) // 500ms 간격
+      )
 
       timers.push(timer)
     })
@@ -125,13 +119,13 @@ export const EditorContainer = () => {
     }
   }, [openedFiles, activeFile])
 
-  // 권한 로딩 중 처리
-  if (permissionLoading) {
+  // 권한 또는 파일 트리 로딩 중일 때 로딩 화면을 표시합니다.
+  if (permissionLoading || (isTreeLoading && openedFiles.length > 0)) {
     return (
       <div className="flex h-full items-center justify-center">
         <div className="flex items-center gap-2">
           <div className="h-4 w-4 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
-          권한 확인 중...
+          {permissionLoading ? "권한 확인 중..." : "파일 목록 로딩 중..."}
         </div>
       </div>
     )
@@ -143,12 +137,12 @@ export const EditorContainer = () => {
         {openedFiles.length > 0 ? (
           <LiveblocksProvider>
             {openedFiles.map(filePath => {
-              // 추가: path로 파일 데이터 조회하고 id 추출
+              // ✅ 2. 이 로직은 이제 isTreeLoading이 false일 때만 실행되어 안전합니다.
               const fileData = treeData[filePath]
               const fileId = fileData?.id
 
-              // 추가: fileId가 없으면 해당 파일 건너뛰기 (또는 path 기반 fallback)
               if (!fileId) {
+                // 이 경고는 이제 데이터 불일치 시에만 드물게 나타날 것입니다.
                 console.warn(`파일 ID를 찾을 수 없음: ${filePath}`)
                 return null
               }
@@ -159,10 +153,8 @@ export const EditorContainer = () => {
                   key={filePath}
                 >
                   {connectedFiles.includes(filePath) && (
-                    // 수정: fileId 기반 룸ID 사용
                     <RoomProvider id={`room-${projectId}-${fileId}`}>
                       <ClientSideSuspense fallback={<div />}>
-                        {/* 수정: fileId props 추가 */}
                         <CollaborativeEditor
                           fileId={fileId}
                           filePath={filePath}
@@ -171,8 +163,6 @@ export const EditorContainer = () => {
                       </ClientSideSuspense>
                     </RoomProvider>
                   )}
-
-                  {/* ✅ 연결 대기 중인 파일들 표시 */}
                   {!connectedFiles.includes(filePath) && filePath === activeFile && (
                     <div className="flex h-full items-center justify-center">
                       <div className="flex items-center gap-2">
@@ -187,7 +177,7 @@ export const EditorContainer = () => {
           </LiveblocksProvider>
         ) : (
           <div className="flex h-full items-center justify-center">
-            <div className="text-black/60">파일 경로를 입력하고 '파일 열기'를 클릭하세요</div>
+            <div className="text-black/60">파일을 선택하거나 생성하여 시작하세요.</div>
           </div>
         )}
       </main>
