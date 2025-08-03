@@ -1,6 +1,7 @@
 import { getYjsProviderForRoom } from "@liveblocks/yjs"
 import type { editor } from "monaco-editor"
 import { useCallback, useMemo, useState } from "react"
+import { useLineSharing } from "@/hooks/editor/line-sharing/useLineSharing"
 import { useRoom } from "@/liveblocks.config"
 import { useAwareness } from "./useAwareness"
 import { useMonacoBinding } from "./useMonacoBinding"
@@ -31,9 +32,11 @@ export const useCollaborativeEditor = (filePath: string) => {
   // 다른 사용자들에게 현재 사용자의 활동 상태 알림
   useAwareness(yProvider, filePath)
 
-  // Monaco Editor와 Y.js 바인딩 설정
-  // 텍스트 변경사항을 실시간으로 동기화
+  // Monaco Editor와 Y.js 바인딩 설정, 텍스트 변경사항을 실시간으로 동기화
   useMonacoBinding(localEditorRef, yProvider)
+
+  // 라인 공유 기능
+  useLineSharing(filePath, localEditorRef, !isLoading && !!localEditorRef)
 
   // Monaco Editor가 마운트될 때 호출되는 콜백 함수
   const handleOnMount = useCallback((editor: editor.IStandaloneCodeEditor) => {

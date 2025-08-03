@@ -9,8 +9,9 @@ interface ChatMessageContentProps {
 
 export default function ChatMessageContent({ parts, onCodeLinkClick }: ChatMessageContentProps) {
   const handleClick = (filePath: string, lineNumber: number) => {
+    const normalizedPath = `/${filePath}`
     if (onCodeLinkClick) {
-      onCodeLinkClick(filePath, lineNumber)
+      onCodeLinkClick(normalizedPath, lineNumber)
     } else {
       console.log(`[코드 링크 클릭]`, { filePath, lineNumber })
     }
