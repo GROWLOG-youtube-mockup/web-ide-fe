@@ -97,7 +97,7 @@ const ChatMessageList = ({
             <>
               {showDateLabel && <DateLabel date={msg.sentAt} key={`date-${group.date}`} />}
               <div
-                className={`flex flex-col gap-1 px-2 pb-4 ${isOwnMessage ? "items-end" : "items-start"}`}
+                className={`flex flex-col px-2 pb-4 ${isOwnMessage ? "items-end" : "items-start"}`}
                 key={`${msg.sentAt}-${msg.username}-${groupIdx}-${idx}`}
               >
                 {/* 아바타와 이름을 위에 배치 */}
@@ -120,7 +120,7 @@ const ChatMessageList = ({
                 )}
                 {/* 메시지 카드 */}
                 <Card
-                  className={`ml-20 min-w-[40%] max-w-[60%] rounded-2xl py-2 ${isOwnMessage ? "self-end" : "self-start"}`}
+                  className={`ml-10 min-w-[40%] max-w-[60%] rounded-2xl py-2 ${isOwnMessage ? "self-end" : "self-start"}`}
                   style={{
                     background: isOwnMessage ? "var(--primary)" : "var(--muted)",
                     color: isOwnMessage ? "var(--primary-foreground)" : "var(--card-foreground)",
