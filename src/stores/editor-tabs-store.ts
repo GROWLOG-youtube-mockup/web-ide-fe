@@ -25,12 +25,18 @@ export const useEditorTabsStore = create<EditorTabsState>()(
 
         openFileInEditor: (filePath: string) => {
           const { openedFiles, treeData } = get()
-          if (treeData) {
-            const fileExists = treeData[filePath] && treeData[filePath].type === "file"
-            if (!fileExists) {
-              console.warn(`❌ 파일이 트리에 존재하지 않습니다: ${filePath}`)
-              return
-            }
+          console.log("[openFileInEditor] filePath:", filePath)
+          console.log("[openFileInEditor] treeData:", treeData)
+          if (!treeData || !treeData[filePath]) {
+            console.warn(`❌ 파일이 트리에 존재하지 않습니다: ${filePath}`)
+            return
+          }
+
+          if (treeData[filePath].type !== "file") {
+            console.warn(
+              `❌ 해당 경로는 파일이 아닙니다: ${filePath}, type: ${treeData[filePath].type}`
+            )
+            return
           }
           if (openedFiles.includes(filePath)) {
             set({ activeFile: filePath })

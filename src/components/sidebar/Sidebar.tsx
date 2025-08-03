@@ -99,13 +99,13 @@ export const Sidebar = ({ projectTitle }: SidebarProps) => {
         <SidebarPanels
           bottomPanels={[
             <SidebarPanel countBadge={memberCount} id="members" key="members" title="members">
-              <Members projectId={projectId || ""} />
+              <Members projectId={projectId} />
             </SidebarPanel>,
           ]}
           tab="share"
           topPanels={[
             <SidebarPanel id="invitations" key="invitations" title="invitations">
-              <Invitations projectId={projectId || ""} />
+              <Invitations projectId={projectId} />
             </SidebarPanel>,
           ]}
         />

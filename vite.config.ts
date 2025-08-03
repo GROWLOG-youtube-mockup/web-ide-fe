@@ -1,12 +1,24 @@
 import path from "node:path"
 import tailwindcss from "@tailwindcss/vite"
 import react from "@vitejs/plugin-react"
+import dotenv from "dotenv"
 import { defineConfig } from "vite"
+
+dotenv.config()
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   define: {
-    global: "globalThis", // 추가
+    global: "globalThis",
+    ...Object.keys(process.env)
+      .filter(key => key.startsWith("VITE_"))
+      .reduce(
+        (env, key) => {
+          env[`import.meta.env.${key}`] = JSON.stringify(process.env[key])
+          return env
+        },
+        {} as Record<string, string>
+      ),
   },
   resolve: {
     alias: {

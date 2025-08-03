@@ -1,7 +1,24 @@
+import { FilesIcon, FolderInputIcon, SearchIcon, SettingsIcon, Share2Icon } from "lucide-react"
+import { useParams } from "react-router-dom"
 import { CodeEditor } from "@/components/ide/CodeEditor"
 import { TopBar } from "@/components/ide/TopBar"
-import { Sidebar } from "@/components/sidebar/Sidebar"
+import { Chats } from "@/components/sidebar/chat/ChatsPanel"
+import { FileExplorerActions } from "@/components/sidebar/file-explorer/FileExplorerActions"
+import { FileExplorer } from "@/components/sidebar/file-explorer/FileExplorerPanel"
+import { SidebarPanel } from "@/components/sidebar/SidebarPanel"
+import { SidebarPanels } from "@/components/sidebar/SidebarPanels"
+import { SidebarTab } from "@/components/sidebar/SidebarTab"
+import { SidebarTabs } from "@/components/sidebar/SidebarTabs"
+import { SearchPanel } from "@/components/sidebar/search/SearchPanel"
+import { Invitations } from "@/components/sidebar/share/InvitationsPanel"
+import { Members } from "@/components/sidebar/share/MembersPanel"
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
+import { useFileTree } from "@/hooks/file-explorer/useFileTree"
+import { useProjectMembers } from "@/hooks/permissions/useProjectMembers"
+
+const PlaceholderPanel = ({ message }: { message: string }) => (
+  <div className="p-4 text-gray-500 text-sm">{message}</div>
+)
 
 /**
  * IDE 전체 레이아웃을 관리하는 최상위 컴포넌트
@@ -12,15 +29,107 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
  */
 export const IdeLayout = () => {
   const projectTitle = "Project Title"
+  const fileTreeData = useFileTree()
+  const { projectId = "" } = useParams<{ projectId: string }>()
+  const { data: members = [] } = useProjectMembers(projectId)
+  const memberCount = members.length
 
   return (
     <div className="flex h-full flex-col">
       <TopBar />
       <main className="flex min-h-0 flex-1">
         <ResizablePanelGroup direction="horizontal">
-          <ResizablePanel defaultSize={35} maxSize={45} minSize={3.5}>
-            <div className="h-full min-w-56">
-              <Sidebar projectTitle={projectTitle} />
+          <SidebarTabs
+            bottomTabs={[<SidebarTab icon={SettingsIcon} id="settings" key="settings" />]}
+            topTabs={[
+              <SidebarTab icon={FilesIcon} id="files" key="files" />,
+              <SidebarTab icon={SearchIcon} id="search" key="search" />,
+              <SidebarTab icon={Share2Icon} id="share" key="share" />,
+              <SidebarTab icon={FolderInputIcon} id="projects" key="projects" />,
+            ]}
+          />
+
+          <ResizablePanel defaultSize={35} maxSize={45} minSize={0}>
+            <div className="flex h-full flex-col">
+              <SidebarPanels
+                bottomPanels={[
+                  <SidebarPanel id="chats" key="chats" title="chats">
+                    <Chats projectId={projectId} />
+                  </SidebarPanel>,
+                ]}
+                tab="files"
+                topPanels={[
+                  <SidebarPanel
+                    actions={
+                      <FileExplorerActions
+                        tree={fileTreeData.tree}
+                        collapseAll={fileTreeData.collapseAll}
+                        expandAll={fileTreeData.expandAll}
+                        startRenaming={fileTreeData.startRenaming}
+                      />
+                    }
+                    id="files"
+                    key="files"
+                    title={projectTitle}
+                  >
+                    {fileTreeData.tree ? (
+                      <FileExplorer tree={fileTreeData.tree} />
+                    ) : (
+                      <PlaceholderPanel message="Project is empty. Create a file or folder." />
+                    )}
+                  </SidebarPanel>,
+                ]}
+              />
+
+              <SidebarPanels
+                tab="search"
+                topPanels={[
+                  <SidebarPanel id="search" key="search" title="Search">
+                    {fileTreeData.tree ? (
+                      <SearchPanel tree={fileTreeData.tree} />
+                    ) : (
+                      <PlaceholderPanel message="Loading file tree..." />
+                    )}
+                  </SidebarPanel>,
+                ]}
+              />
+
+              <SidebarPanels
+                bottomPanels={[
+                  <SidebarPanel countBadge={memberCount} id="members" key="members" title="members">
+                    <Members projectId={projectId} />
+                  </SidebarPanel>,
+                ]}
+                tab="share"
+                topPanels={[
+                  <SidebarPanel id="invitations" key="invitations" title="invitations">
+                    <Invitations projectId={projectId} />
+                  </SidebarPanel>,
+                ]}
+              />
+
+              <SidebarPanels
+                tab="projects"
+                topPanels={[
+                  <SidebarPanel id="projects" key="projects" title="projects">
+                    <PlaceholderPanel message="Projects panel coming soon..." />
+                  </SidebarPanel>,
+                ]}
+                bottomPanels={[
+                  <SidebarPanel id="chats" key="chats" title="chats">
+                    <Chats projectId={projectId} />
+                  </SidebarPanel>,
+                ]}
+              />
+
+              <SidebarPanels
+                tab="settings"
+                topPanels={[
+                  <SidebarPanel id="settings" key="settings" title="settings">
+                    <PlaceholderPanel message="Settings panel coming soon..." />
+                  </SidebarPanel>,
+                ]}
+              />
             </div>
           </ResizablePanel>
 

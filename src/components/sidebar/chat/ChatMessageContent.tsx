@@ -27,7 +27,7 @@ export default function ChatMessageContent({ parts, onCodeLinkClick }: ChatMessa
               key={key}
               type="button"
               onClick={() => handleClick(part.fullPath, part.lineNumber)}
-              className="h-auto px-0 py-0 align-baseline text-blue-500 underline hover:text-blue-400"
+              className="h-auto bg-inherit px-0 py-0 align-baseline text-blue-500 underline hover:bg-inherit hover:text-blue-400"
             >
               {`${part.fileName}:${part.lineNumber}`}
             </Button>
