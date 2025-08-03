@@ -2,6 +2,7 @@ import { useCallback, useRef } from "react"
 import { Separator } from "@/components/ui/separator"
 import { useChatHistory } from "@/hooks/chat/useChatHistory"
 import { useChatSocket } from "@/hooks/chat/useChatSocket"
+import { useLineClickStore } from "@/stores/line-click-store"
 import type { ChatMessage } from "@/types/chat"
 import { toParsedChatMessage } from "@/utils/chat-parser"
 import ChatInput from "./ChatInput"
@@ -33,6 +34,12 @@ export const Chats = ({ projectId }: { projectId: string }) => {
     [sendMessage]
   )
 
+  const { jumpToLineFromChat } = useLineClickStore()
+
+  const handleCodeLinkClick = (filePath: string, lineNumber: number) => {
+    jumpToLineFromChat(filePath, lineNumber)
+  }
+
   // Only scroll to bottom if a new message was sent by the user
   const shouldScrollToBottom = shouldScrollToBottomRef.current
   if (shouldScrollToBottom) {
@@ -54,6 +61,7 @@ export const Chats = ({ projectId }: { projectId: string }) => {
           hasMore={hasMore}
           isFetching={isFetching}
           projectId={projectId}
+          onCodeLinkClick={handleCodeLinkClick}
         />
       )}
       <div className="sticky bottom-0 shrink-0">

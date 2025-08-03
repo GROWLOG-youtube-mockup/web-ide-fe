@@ -1,6 +1,7 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/custom-button"
 import { Input } from "@/components/ui/input"
+import { useLineClickStore } from "@/stores/line-click-store"
 
 interface ChatInputProps {
   onSend: (msg: string) => void
@@ -9,6 +10,14 @@ interface ChatInputProps {
 
 const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
   const [value, setValue] = useState("")
+  const { lastLineClick } = useLineClickStore()
+
+  // 라인 클릭 시 자동 입력
+  useEffect(() => {
+    if (lastLineClick?.codeLinkMessage) {
+      setValue(prev => prev + (prev.trim() ? " " : "") + lastLineClick.codeLinkMessage)
+    }
+  }, [lastLineClick])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
