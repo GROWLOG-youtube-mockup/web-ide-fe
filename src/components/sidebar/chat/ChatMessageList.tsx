@@ -28,6 +28,7 @@ interface ChatMessageListProps {
   hasMore: boolean
   isFetching: boolean
   projectId: string
+  onCodeLinkClick?: (filePath: string, lineNumber: number) => void
 }
 
 const ChatMessageList = ({
@@ -36,6 +37,7 @@ const ChatMessageList = ({
   hasMore,
   isFetching,
   projectId,
+  onCodeLinkClick,
 }: ChatMessageListProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const endRef = useRef<HTMLDivElement>(null)
@@ -95,7 +97,9 @@ const ChatMessageList = ({
             <>
               {showDateLabel && <DateLabel date={msg.sentAt} key={`date-${group.date}`} />}
               <div
-                className={`flex items-start gap-3 px-2 pb-4 ${isOwnMessage ? "flex-row-reverse" : ""}`}
+                className={`flex items-start gap-3 px-2 pb-4 ${
+                  isOwnMessage ? "flex-row-reverse" : ""
+                }`}
                 key={`${msg.sentAt}-${msg.username}-${groupIdx}-${idx}`}
               >
                 <Avatar className="h-10 w-10 rounded-full">
@@ -106,13 +110,23 @@ const ChatMessageList = ({
                   className="min-w-[30%] max-w-[70%] rounded-2xl py-2"
                   style={
                     isOwnMessage
-                      ? { background: "var(--primary)", color: "var(--primary-foreground)" }
-                      : { background: "var(--muted)", color: "var(--card-foreground)" }
+                      ? {
+                          background: "var(--primary)",
+                          color: "var(--primary-foreground)",
+                        }
+                      : {
+                          background: "var(--muted)",
+                          color: "var(--card-foreground)",
+                        }
                   }
                 >
                   <CardContent className="flex flex-col gap-2 px-3 py-1">
                     <div className="text-sm leading-relaxed">
-                      {msg.parts ? <ChatMessageContent parts={msg.parts} /> : msg.content}
+                      {msg.parts ? (
+                        <ChatMessageContent parts={msg.parts} onCodeLinkClick={onCodeLinkClick} />
+                      ) : (
+                        msg.content
+                      )}
                     </div>
                     <div
                       className="mt-1 w-full text-right text-xs"
