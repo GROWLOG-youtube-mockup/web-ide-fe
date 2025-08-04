@@ -13,11 +13,11 @@
 
 # 팀원 소개
 
- profile  | ![img1.png](readmeImage/profile/img1.png)                                                                                   | ![img2.png](readmeImage/profile/img2.png)                                                                             | ![img3.png](readmeImage/profile/img3.jpeg)                                                                       |
------|-------------------------------------------------------------------------------------------------------------------------------|-|-
- name| <p align="center">김태현 </p>                                                                                                  | <p align="center">이승준</p>                                                                                           | <p align="center">이재엽</p>                                                                                     
-Github| <p align="center">[![Github](https://img.shields.io/badge/lamarck009-black?logo=github)](https://github.com/lamarck009)</p> | <p align="center">[![Github](https://img.shields.io/badge/sjoon627-black?logo=github)](https://github.com/sjoon627)</p> | <p align="center">[![Github](https://img.shields.io/badge/jaeyeopme-black?logo=github)](https://github.com/jaeyeopme)</p> |
-Project Role| <p align="center">코드에디터, 탭 기능, 프로젝트 초대 구현</p>                                                                   | <p align="center">계정관련, 메인화면 구현</p>                                                                         | <p align="center">사이드바, 채팅 기능 구현</p>                                                              
+|![profile1](https://avatars.githubusercontent.com/u/203277225?v=4)                                                                                   | ![profile2](https://avatars.githubusercontent.com/u/48435096?v=4)                                                                            | ![profile3](https://avatars.githubusercontent.com/u/67671991?v=4)                                                                       |
+-----|-|-
+|<p align="center">김태현 </p>                                                                                                  | <p align="center">이승준</p>                                                                                           | <p align="center">이재엽</p>                                                                                     
+|<p align="center">[![Github](https://img.shields.io/badge/lamarck009-black?logo=github)](https://github.com/lamarck009)</p> | <p align="center">[![Github](https://img.shields.io/badge/sjoon627-black?logo=github)](https://github.com/sjoon627)</p> | <p align="center">[![Github](https://img.shields.io/badge/jaeyeopme-black?logo=github)](https://github.com/jaeyeopme)</p> |
+|<p align="center">코드에디터, 탭 기능, 프로젝트 초대 구현</p>                                                                   | <p align="center">계정관련, 메인화면 구현</p>                                                                         | <p align="center">사이드바, 채팅 기능 구현</p>                                                              
 
 
 
@@ -68,16 +68,20 @@ Project Role| <p align="center">코드에디터, 탭 기능, 프로젝트 초대
 
 ## 시연 영상
 ### 사용자 인증
-![signup](https://github.com/user-attachments/assets/2e22da9f-b194-41a4-9beb-cadef6d3d7d5)
+![signup_cropped](https://github.com/user-attachments/assets/bd05662e-2897-4d11-a7d4-a6307e192357)
+
 
 ### 프로젝트 생성
-![create](https://github.com/user-attachments/assets/2f6e6e5c-a43d-4cc2-84d7-d9248e268eac)
+![create_cropped](https://github.com/user-attachments/assets/d5229622-bfcb-4ffa-a3ef-ca243abe6500)
+
 
 ### 코드 편집
-![edit](https://github.com/user-attachments/assets/a2d1a2d4-92c3-4816-8c42-155bb14f5053)
+![edit_cropped](https://github.com/user-attachments/assets/f2230aa6-01ef-4a0e-922f-fb772ccdb235)
+
 
 ### 프로젝트 초대
-![invite](https://github.com/user-attachments/assets/8bb9111e-1ca8-4815-aa0b-6de5ffc8c36f)
+![invite_cropped](https://github.com/user-attachments/assets/52d0401f-588e-4558-969c-f7305c4125c0)
+
 
 ### 채팅
-![chat](https://github.com/user-attachments/assets/97ba2730-4294-4374-8aba-20aefe42c96e)
+![chat_cropped](https://github.com/user-attachments/assets/970be362-d57b-4981-8099-00cb9f8001ec)
