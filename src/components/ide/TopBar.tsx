@@ -1,5 +1,5 @@
+import { LogOutIcon } from "lucide-react"
 import { useNavigate, useParams } from "react-router-dom"
-import { FigmaIcons, LucideIcons } from "@/assets/icons"
 import LogoSvg from "@/assets/logo.svg"
 import { ProjectAvatars } from "@/components/project-list/ProjectAvatars"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -11,7 +11,6 @@ import { useParticipantsStore } from "@/stores/participants-store"
 import { useUserStore } from "@/stores/user-store"
 
 export const TopBar = () => {
-  const LogOutIcon = LucideIcons.logOut
   const navigate = useNavigate()
   const { projectId } = useParams<{ projectId: string }>()
   const { userInfo } = useUserStore()
@@ -79,7 +78,7 @@ export const TopBar = () => {
                     userId: Number(member.userId),
                     name: member.name,
                     role: member.role,
-                    profileImage: member.profileImageUrl || FigmaIcons.avatar,
+                    profileImage: member.profileImageUrl,
                   }))}
                 projectId={projectId}
                 size="md"
@@ -91,7 +90,7 @@ export const TopBar = () => {
             >
               <AvatarImage
                 alt={userInfo?.name ? `${userInfo.name} 아바타` : "현재 사용자 아바타"}
-                src={userInfo?.profileImage || FigmaIcons.avatar}
+                src={userInfo?.profileImage}
               />
               <AvatarFallback
                 className="bg-zinc-200 font-medium text-zinc-700"

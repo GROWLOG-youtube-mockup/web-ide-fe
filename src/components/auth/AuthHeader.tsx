@@ -1,4 +1,4 @@
-import { dividerSvg } from "@/assets/icons"
+import { Separator } from "@/components/ui/separator"
 import { AUTH_LAYOUT, AUTH_STYLES } from "@/constants/auth-styles"
 
 interface AuthHeaderProps {
@@ -17,7 +17,7 @@ export function AuthHeader({ title, subtitle }: AuthHeaderProps) {
 
       {/* Divider */}
       <div className={AUTH_LAYOUT.divider}>
-        <img alt="divider" className="h-px w-full" src={dividerSvg} />
+        <Separator />
       </div>
     </>
   )

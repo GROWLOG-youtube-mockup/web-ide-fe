@@ -1,5 +1,5 @@
+import { FileTextIcon, XIcon } from "lucide-react"
 import { useState } from "react"
-import { ICON_SIZES, LucideIcons } from "@/assets/icons"
 import { WithContextMenu } from "@/components/common/WithContextMenu"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/custom-tabs"
 import { useTabContextMenu } from "@/hooks/editor/useTabContextMenu"
@@ -13,7 +13,7 @@ export const TabBar = () => {
   )
 
   const iconStyles = cn(
-    ICON_SIZES.sm,
+    "w-4 h-4",
     "text-[var(--tab-foreground)] transition-colors hover:text-blue-400"
   )
 
@@ -47,9 +47,7 @@ export const TabBar = () => {
             <div className="relative flex" data-filepath={filePath} key={filePath}>
               <TabsTrigger title={filePath} value={filePath} variant="editor">
                 <div className="flex min-w-0 flex-1 items-center gap-[5px]">
-                  <LucideIcons.fileText
-                    className={`${ICON_SIZES.sm} text-[var(--tab-foreground)]`}
-                  />
+                  <FileTextIcon className={`h-4 w-4 text-[var(--tab-foreground)]`} />
                   <span className="truncate font-medium text-[var(--tab-foreground)]/80 text-sm">
                     {getFileName(filePath)}
                   </span>
@@ -64,7 +62,7 @@ export const TabBar = () => {
                 }}
                 type="button"
               >
-                <LucideIcons.x className={iconStyles} />
+                <XIcon className={iconStyles} />
               </button>
             </div>
           ))}
