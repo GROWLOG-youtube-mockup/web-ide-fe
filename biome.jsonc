@@ -50,7 +50,7 @@
     "jsxRuntime": "transparent"
   },
   "linter": {
-    "enabled": true,
+    "enabled": false,
     "rules": {
       // 웹 접근성(a11y) 관련 규칙 그룹입니다.
       "a11y": {

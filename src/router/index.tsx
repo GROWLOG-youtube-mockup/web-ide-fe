@@ -1,13 +1,13 @@
 import { createBrowserRouter } from "react-router-dom"
-import { AuthRoute, ProtectedRoute } from "@/components/auth/ProtectedRoute"
-import { DevNavigationPage } from "@/pages/DevNavigationPage"
-import { ErrorPage } from "@/pages/ErrorPage"
-import { IdePage } from "@/pages/IdePage"
-import LandingPage from "@/pages/LandingPage"
-import LoginPage from "@/pages/LoginPage"
-import ProfileEditPage from "@/pages/ProfileEditPage"
-import ProjectListPage from "@/pages/ProjectListPage"
-import SignUpPage from "@/pages/SignUpPage"
+import { DevNavigationPage } from "@/DevNavigationPage"
+import { ErrorPage } from "@/ErrorPage"
+import { IdePage } from "@/editor/IdePage"
+import LandingPage from "@/LandingPage"
+import ProjectListPage from "@/main/ProjectListPage"
+import { AuthRoute, ProtectedRoute } from "@/profile/auth/ProtectedRoute"
+import LoginPage from "@/profile/LoginPage"
+import ProfileEditPage from "@/profile/ProfileEditPage"
+import SignUpPage from "@/profile/SignUpPage"
 
 export const router = createBrowserRouter([
   // 개발용 네비게이션 (임시)
