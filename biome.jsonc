@@ -52,6 +52,7 @@
   "linter": {
     "enabled": false,
     "rules": {
+      "recommended": true,
       // 웹 접근성(a11y) 관련 규칙 그룹입니다.
       "a11y": {
         // 이미지 태그에 'alt' 속성을 사용하도록 강제합니다.
@@ -86,18 +87,6 @@
         "useExhaustiveDependencies": "error"
       },
       // 실험적이거나 새로운 규칙들의 그룹입니다.
-      "nursery": {
-        // 클래스 이름을 자동으로 정렬하도록 권장합니다. (주로 Tailwind CSS와 함께 사용)
-        "useSortedClasses": {
-          "fix": "safe",
-          "level": "warn",
-          // 'clsx' 함수를 사용하는 경우에도 정렬하도록 설정합니다.
-          "options": {
-            "functions": ["clsx"]
-          }
-        }
-      },
-      "recommended": true,
       // 코드 스타일에 관련된 규칙 그룹입니다.
       "style": {
         // 불필요한 else 구문을 사용하지 않도록 경고합니다.
@@ -156,76 +145,11 @@
     {
       // 마크다운 파일은 린트와 포맷터 모두 비활성화
       "includes": ["**/*.md"],
-      "linter": { "enabled": false },
-      "formatter": { "enabled": false }
-    },
-    {
-      // 1. 컴포넌트는 'kebab-case' 또는 'PascalCase'
-      "includes": ["src/components/**/*.tsx"],
-      "linter": {
-        "rules": {
-          "style": {
-            "useFilenamingConvention": {
-              "level": "error",
-              "options": {
-                "filenameCases": ["kebab-case", "PascalCase"]
-              }
-            }
-          }
-        }
-      }
-    },
-    {
-      // 2. 페이지는 'PascalCase'
-      "includes": ["src/pages/**/*.tsx"],
-      "linter": {
-        "rules": {
-          "style": {
-            "useFilenamingConvention": {
-              "level": "error",
-              "options": {
-                "filenameCases": ["PascalCase"]
-              }
-            }
-          }
-        }
-      }
-    },
-    {
-      // 3. 훅은 'camelCase'
-      "includes": ["src/hooks/**/*.ts", "src/hooks/**/*.tsx"],
-      "linter": {
-        "rules": {
-          "style": {
-            "useFilenamingConvention": {
-              "level": "error",
-              "options": {
-                "filenameCases": ["camelCase"]
-              }
-            }
-          }
-        }
-      }
-    },
-    {
-      // 4. UI 컴포넌트는 린트와 포맷터 모두 비활성화 (외부 라이브러리 호환성)
-      "includes": ["src/components/ui/**/*.ts", "src/components/ui/**/*.tsx"],
       "linter": {
         "enabled": false
       },
       "formatter": {
         "enabled": false
-      }
-    },
-    {
-      // 5. shadcn/ui 자동 생성 훅 파일 네이밍 컨벤션만 예외 처리
-      "includes": ["src/hooks/use-mobile.ts"],
-      "linter": {
-        "rules": {
-          "style": {
-            "useFilenamingConvention": "off"
-          }
-        }
       }
     }
   ],
