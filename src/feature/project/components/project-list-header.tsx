@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom"
 import { ProjectFormDialog } from "@/feature/project/components/project-form-dialog"
 import { useProjectStore } from "@/feature/project/stores/project-store"
 import { useUserStore } from "@/feature/user/stores/user-store"
+import { PATHS } from "@/routes"
 import { projectApi } from "@/shared/api/project-api"
 import { Button } from "@/shared/components/custom-button"
 import { Avatar, AvatarImage } from "@/shared/ui/avatar"
@@ -21,7 +22,7 @@ export const ProjectListHeader = () => {
   // 사용자 정보는 로그인 시 이미 가져왔으므로 추가 호출 불필요
 
   const handleProfileClick = () => {
-    navigate("/profile/edit")
+    navigate(PATHS.profile)
   }
 
   const handleCreateConfirm = async (data: { name: string; description: string }) => {

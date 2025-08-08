@@ -6,6 +6,7 @@ import { ResetPassword } from "@/feature/user/components/reset-password"
 import { useAuthForm } from "@/feature/user/hooks/use-auth-form"
 import { loginFormSchema } from "@/feature/user/lib/auth-schemas"
 import { useUserStore } from "@/feature/user/stores/user-store"
+import { PATHS } from "@/routes"
 import { AUTH_STYLES } from "@/shared/constants/auth-styles"
 import type { LoginFormData } from "@/shared/types/auth"
 import { useToast } from "@/widgets/toast-context"
@@ -44,7 +45,7 @@ export const Page = () => {
       <span className="font-medium">Don't have an account?</span>
       <button
         className="cursor-pointer border-none bg-transparent p-0 font-semibold underline"
-        onClick={() => navigate("/signup")}
+        onClick={() => navigate(PATHS.signup)}
         type="button"
       >
         Sign Up

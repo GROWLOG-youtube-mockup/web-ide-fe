@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useUserStore } from "@/feature/user/stores/user-store"
+import { PATHS } from "@/routes"
 
 export function useAuthValidation() {
   const navigate = useNavigate()
@@ -12,7 +13,7 @@ export function useAuthValidation() {
     // 토큰이 없거나 사용자 정보가 없으면 로그아웃 처리 후 로그인 페이지로 이동
     if (!token || !userInfo) {
       logoutUser()
-      navigate("/login")
+      navigate(PATHS.signin)
       return
     }
 
@@ -23,12 +24,12 @@ export function useAuthValidation() {
 
       if (payload.exp && payload.exp < currentTime) {
         logoutUser()
-        navigate("/login")
+        navigate(PATHS.signin)
       }
     } catch (_error) {
       // 토큰 파싱 실패 시 로그아웃
       logoutUser()
-      navigate("/login")
+      navigate(PATHS.signin)
     }
   }, [userInfo, navigate, logoutUser])
 

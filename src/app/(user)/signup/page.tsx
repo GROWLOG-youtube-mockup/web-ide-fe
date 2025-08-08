@@ -7,6 +7,7 @@ import { ProfileAvatar } from "@/feature/user/components/profile-avatar"
 import { useAuthForm } from "@/feature/user/hooks/use-auth-form"
 import { signUpFormSchema } from "@/feature/user/lib/auth-schemas"
 import { useUserStore } from "@/feature/user/stores/user-store"
+import { PATHS } from "@/routes"
 import { signUp } from "@/shared/api/users-api"
 import { AUTH_STYLES } from "@/shared/constants/auth-styles"
 import type { SignUpFormData } from "@/shared/types/auth"
@@ -71,7 +72,7 @@ export const Page = () => {
             title: "Sign up was successful, but the automatic login failed",
             duration: 4000,
           })
-          navigate("/login")
+          navigate(PATHS.signin)
         }
       } else {
         addToast({
@@ -92,7 +93,7 @@ export const Page = () => {
   const footer = (
     <div className={AUTH_STYLES.link}>
       <span className="font-medium">Already have an account?</span>
-      <Link className="ml-1 cursor-pointer font-semibold underline" to="/login">
+      <Link className="ml-1 cursor-pointer font-semibold underline" to={PATHS.signin}>
         Sign In
       </Link>
     </div>

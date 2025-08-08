@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import logoSvg from "@/assets/logo.svg"
 import logoWhiteSvg from "@/assets/logo-white.svg"
+import { PATHS } from "@/routes"
 import { Button } from "@/shared/components/custom-button"
 
 export const Page = () => {
@@ -43,7 +44,7 @@ export const Page = () => {
 
           {/* 중앙 정렬된 버튼들 */}
           <div className="flex gap-2">
-            <Link to="/signup">
+            <Link to={PATHS.signup}>
               <div className="w-[123px] p-2.5">
                 <Button
                   className="w-[124px] rounded-[20px] bg-foreground px-4 py-2 font-semibold text-background hover:bg-foreground/90"
@@ -53,7 +54,7 @@ export const Page = () => {
                 </Button>
               </div>
             </Link>
-            <Link to="/login">
+            <Link to={PATHS.signin}>
               <div className="w-[123px] p-2.5">
                 <Button
                   className="w-[124px] rounded-[20px] border-foreground/80 px-4 py-2 font-semibold text-foreground hover:bg-foreground/10"

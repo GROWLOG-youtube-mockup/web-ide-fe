@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom"
+import { PATHS } from "@/routes"
 
 export function Page() {
   const pages = [
-    { name: "로그인", path: "/login" },
-    { name: "회원가입", path: "/signup" },
-    { name: "프로필 수정", path: "/(user)/edit" },
-    { name: "프로젝트 리스트", path: "/projects" },
-    { name: "IDE", path: "/ide" },
+    { name: "로그인", path: PATHS.signin },
+    { name: "회원가입", path: PATHS.signup },
+    { name: "프로필 수정", path: PATHS.profile },
+    { name: "프로젝트 리스트", path: PATHS.projects },
+    { name: "IDE", path: PATHS.editor },
   ]
 
   return (

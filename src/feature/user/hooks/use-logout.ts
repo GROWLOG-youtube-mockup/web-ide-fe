@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import { useUserStore } from "@/feature/user/stores/user-store"
+import { PATHS } from "@/routes"
 import { useToast } from "@/widgets/toast-context"
 
 export function useLogout() {
@@ -18,7 +19,7 @@ export function useLogout() {
       })
     }
 
-    navigate("/login")
+    navigate(PATHS.signin, { replace: true })
   }
 
   return { logout }

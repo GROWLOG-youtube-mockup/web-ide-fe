@@ -7,6 +7,7 @@ import { useFileTree } from "@/feature/file-explorer/hooks/use-file-tree"
 import { useProjectMembers } from "@/feature/members/stores/use-project-members"
 import { ProjectAvatars } from "@/feature/project/components/project-avatars"
 import { useUserStore } from "@/feature/user/stores/user-store"
+import { PATHS } from "@/routes"
 import { Button } from "@/shared/components/custom-button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar"
 
@@ -32,11 +33,11 @@ export const TopBar = () => {
   const shouldShowAvatars = onlineParticipants.length >= 2
 
   const handleAvatarClick = () => {
-    navigate("/profile/edit")
+    navigate(PATHS.profile)
   }
 
   const handleExitProject = () => {
-    navigate("/projects")
+    navigate(PATHS.projects)
   }
 
   // 사용자 이름의 첫 글자들로 fallback 생성 (한글/영문 모두 두 글자)

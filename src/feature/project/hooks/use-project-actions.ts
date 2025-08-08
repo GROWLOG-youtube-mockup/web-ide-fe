@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useProjectStore } from "@/feature/project/stores/project-store"
+import { PATHS } from "@/routes"
 import { projectApi } from "@/shared/api/project-api"
 import type { Project } from "@/shared/types/project"
 import { useToast } from "@/widgets/toast-context"
@@ -32,7 +33,7 @@ export function useProjectActions({ project, onToggle, onLeave }: UseProjectActi
 
   // 핸들러 함수들
   const handleProjectClick = () => {
-    navigate(`/projects/${project.id}/ide`)
+    navigate(`${PATHS.projects}/${project.id}/ide`)
   }
 
   const handleToggleClick = () => setIsToggleDialogOpen(true)
