@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { useUserStore } from "@/feature/user/stores/user-store"
+import { useUserStore } from "@/entities/user/model/user-store.ts"
 
 /**
  * 협업 에디터용 사용자 정보 초기화 훅

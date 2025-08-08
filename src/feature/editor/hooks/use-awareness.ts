@@ -1,6 +1,6 @@
 import type { getYjsProviderForRoom } from "@liveblocks/yjs"
 import { useEffect } from "react"
-import { useUserStore } from "@/feature/user/stores/user-store"
+import { useUserStore } from "@/entities/user/model/user-store.ts"
 import { useRoom } from "@/liveblocks.config"
 
 /**

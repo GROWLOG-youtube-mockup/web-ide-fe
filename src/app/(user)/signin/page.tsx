@@ -1,14 +1,15 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { AuthForm } from "@/feature/user/components/auth-form"
-import { AuthFormField } from "@/feature/user/components/auth-form-field"
-import { ResetPassword } from "@/feature/user/components/reset-password"
-import { useAuthForm } from "@/feature/user/hooks/use-auth-form"
+import { useUserStore } from "@/entities/user/model/user-store.ts"
+import { useAuthForm } from "@/feature/user/auth/hooks/use-auth-form.ts"
+import { AuthForm } from "@/feature/user/auth/ui/auth-form.tsx"
+import { AuthFormField } from "@/feature/user/auth/ui/auth-form-field.tsx"
 import { loginFormSchema } from "@/feature/user/lib/auth-schemas"
-import { useUserStore } from "@/feature/user/stores/user-store"
+import { ResetPassword } from "@/feature/user/password/ui/reset-password.tsx"
+import { PATHS } from "@/routes"
+import { useToast } from "@/shared/components/toast-context.tsx"
 import { AUTH_STYLES } from "@/shared/constants/auth-styles"
 import type { LoginFormData } from "@/shared/types/auth"
-import { useToast } from "@/widgets/toast-context"
 
 export const Page = () => {
   const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false)
@@ -44,7 +45,7 @@ export const Page = () => {
       <span className="font-medium">Don't have an account?</span>
       <button
         className="cursor-pointer border-none bg-transparent p-0 font-semibold underline"
-        onClick={() => navigate("/signup")}
+        onClick={() => navigate(PATHS.signup)}
         type="button"
       >
         Sign Up

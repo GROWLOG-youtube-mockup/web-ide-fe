@@ -1,6 +1,6 @@
 import type { ItemInstance } from "@headless-tree/core"
 import { useCallback } from "react"
-import { useEditorTabsStore } from "@/feature/editor/stores/editor-tabs-store"
+import { useEditorTabsStore } from "@/feature/editor/model/editor-tabs-store"
 import type { FileData } from "@/shared/types/file-explorer"
 
 interface UseTreeNodeHandlersProps {

@@ -1,4 +1,4 @@
-import type { ChatMessage, ChatMessagePart, ParsedChatMessage } from "@/shared/types/chat"
+import type { ChatMessage, ChatMessagePart, ParsedChatMessage } from "@/shared/types/chat.ts"
 
 // 경로에서 :라인번호를 제거하고, 파일명만 추출하는 유틸
 const extractPathAndFileName = (rawPath: string) => {

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { cn } from "@/shared/utils/utils"
+import { cn } from "@/shared/utils/utils.ts"
 
 interface CustomCollapsibleProps {
   className?: string

@@ -1,9 +1,9 @@
 import { getYjsProviderForRoom } from "@liveblocks/yjs"
 import type { editor } from "monaco-editor"
 import { useCallback, useMemo, useState } from "react"
+import { useLineSharing } from "@/app/editor/hook/use-line-sharing.ts"
 import { useAwareness } from "@/feature/editor/hooks/use-awareness"
 import { useUserInitialization } from "@/feature/editor/hooks/use-initialization"
-import { useLineSharing } from "@/feature/editor/hooks/use-line-sharing"
 import { useMonacoBinding } from "@/feature/editor/hooks/use-monaco-binding"
 import { useRoom } from "@/liveblocks.config"
 

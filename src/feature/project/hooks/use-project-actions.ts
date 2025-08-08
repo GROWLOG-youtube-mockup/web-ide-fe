@@ -1,9 +1,10 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useProjectStore } from "@/feature/project/stores/project-store"
-import { projectApi } from "@/shared/api/project-api"
+import { useProjectStore } from "@/entities/project/model/project-store.ts"
+import { PATHS } from "@/routes"
+import { useToast } from "@/shared/components/toast-context.tsx"
 import type { Project } from "@/shared/types/project"
-import { useToast } from "@/widgets/toast-context"
+import { projectApi } from "../../../entities/project/api/project-api.ts"
 
 // 프로젝트 폼 데이터 타입
 type ProjectFormData = {
@@ -32,7 +33,7 @@ export function useProjectActions({ project, onToggle, onLeave }: UseProjectActi
 
   // 핸들러 함수들
   const handleProjectClick = () => {
-    navigate(`/projects/${project.id}/ide`)
+    navigate(`${PATHS.projects}/${project.id}/ide`)
   }
 
   const handleToggleClick = () => setIsToggleDialogOpen(true)

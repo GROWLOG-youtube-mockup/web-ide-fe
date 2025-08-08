@@ -1,5 +1,5 @@
 // 프로젝트 관련 스타일 상수
-import { AUTH_STYLES } from "@/shared/constants/auth-styles"
+import { AUTH_STYLES } from "@/shared/constants/auth-styles.ts"
 
 export const PROJECT_STYLES = {
   // 폼 레이아웃

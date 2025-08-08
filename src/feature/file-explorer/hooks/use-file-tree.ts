@@ -13,11 +13,11 @@ import { Client } from "@stomp/stompjs"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useParams } from "react-router-dom"
 import SockJs from "sockjs-client"
-import { useEditorTabsStore } from "@/feature/editor/stores/editor-tabs-store"
-import { useFileTreeStore } from "@/feature/file-explorer/stores/file-tree-store"
-import { createFileSystemService } from "@/shared/api/file-system-api"
+import { useFileTreeStore } from "@/entities/file/model/file-tree-store.ts"
+import { useEditorTabsStore } from "@/feature/editor/model/editor-tabs-store"
 import type { TreeNodeDto, WebSocketMessage } from "@/shared/types/api"
 import type { FileData } from "@/shared/types/file-explorer"
+import { createFileSystemService } from "../../../entities/project/api/file-system-api.ts"
 
 const convertTreeNodeDtoToFileData = (nodes: TreeNodeDto[]): Record<string, FileData> => {
   const result: Record<string, FileData> = {}

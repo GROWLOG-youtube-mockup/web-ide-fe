@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react"
 import { useParams } from "react-router-dom" // 추가
-import { createFileSystemService } from "@/shared/api/file-system-api" // 변경
+import { createFileSystemService } from "../../../entities/project/api/file-system-api.ts" // 변경
 
 export function useFileOperations() {
   const { projectId } = useParams<{ projectId: string }>() // 추가

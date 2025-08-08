@@ -1,8 +1,9 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useUserStore } from "@/feature/user/stores/user-store"
-import { deleteAccount } from "@/shared/api/users-api"
-import { useToast } from "@/widgets/toast-context"
+import { useUserStore } from "@/entities/user/model/user-store.ts"
+import { PATHS } from "@/routes"
+import { useToast } from "@/shared/components/toast-context.tsx"
+import { deleteAccount } from "../../../entities/user/api/users-api.ts"
 
 export function useDeleteAccount() {
   const [isDeleting, setIsDeleting] = useState(false)
@@ -21,7 +22,7 @@ export function useDeleteAccount() {
       await deleteAccount(password)
       addToast({ type: "success", title: "Your account has been deleted successfully." })
       logoutUser()
-      navigate("/login")
+      navigate(PATHS.signin)
       return true // 성공 시 true 반환
     } catch (error) {
       console.error("Account deletion failed:", error)

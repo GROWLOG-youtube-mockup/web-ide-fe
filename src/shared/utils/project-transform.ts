@@ -1,5 +1,5 @@
-import type { ProjectResponse } from "@/shared/types/api"
-import type { Project } from "@/shared/types/project"
+import type { ProjectResponse } from "@/shared/types/api.ts"
+import type { Project } from "@/shared/types/project.ts"
 
 /**
  * API 응답 데이터를 클라이언트 Project 타입으로 변환

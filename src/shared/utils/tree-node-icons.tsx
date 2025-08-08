@@ -1,6 +1,6 @@
 import { ChevronRight, File, Folder, FolderOpen } from "lucide-react"
-import { ICON_STYLES, TREE_STYLES } from "@/shared/constants/file-explorer"
-import { cn } from "@/shared/utils/utils"
+import { ICON_STYLES, TREE_STYLES } from "@/shared/constants/file-explorer.ts"
+import { cn } from "@/shared/utils/utils.ts"
 
 export const renderExpandIcon = (isFolder: boolean, isExpanded: boolean) => {
   if (!isFolder) {

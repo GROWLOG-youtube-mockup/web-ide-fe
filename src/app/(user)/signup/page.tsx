@@ -1,17 +1,18 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { AuthForm } from "@/feature/user/components/auth-form"
-import { AuthFormField } from "@/feature/user/components/auth-form-field"
-import { EmailVerify } from "@/feature/user/components/email-verify"
-import { ProfileAvatar } from "@/feature/user/components/profile-avatar"
-import { useAuthForm } from "@/feature/user/hooks/use-auth-form"
+import { useUserStore } from "@/entities/user/model/user-store.ts"
+import { useAuthForm } from "@/feature/user/auth/hooks/use-auth-form.ts"
+import { AuthForm } from "@/feature/user/auth/ui/auth-form.tsx"
+import { AuthFormField } from "@/feature/user/auth/ui/auth-form-field.tsx"
+import { EmailVerify } from "@/feature/user/email/ui/email-verify.tsx"
 import { signUpFormSchema } from "@/feature/user/lib/auth-schemas"
-import { useUserStore } from "@/feature/user/stores/user-store"
-import { signUp } from "@/shared/api/users-api"
+import { ProfileAvatar } from "@/feature/user/profile/ui/profile-avatar.tsx"
+import { PATHS } from "@/routes"
+import { useToast } from "@/shared/components/toast-context.tsx"
 import { AUTH_STYLES } from "@/shared/constants/auth-styles"
 import type { SignUpFormData } from "@/shared/types/auth"
 import { savePendingProfileImage } from "@/shared/utils/pending-profile-image"
-import { useToast } from "@/widgets/toast-context"
+import { signUp } from "../../../entities/user/api/users-api.ts"
 
 export const Page = () => {
   const navigate = useNavigate()
@@ -71,7 +72,7 @@ export const Page = () => {
             title: "Sign up was successful, but the automatic login failed",
             duration: 4000,
           })
-          navigate("/login")
+          navigate(PATHS.signin)
         }
       } else {
         addToast({
@@ -92,7 +93,7 @@ export const Page = () => {
   const footer = (
     <div className={AUTH_STYLES.link}>
       <span className="font-medium">Already have an account?</span>
-      <Link className="ml-1 cursor-pointer font-semibold underline" to="/login">
+      <Link className="ml-1 cursor-pointer font-semibold underline" to={PATHS.signin}>
         Sign In
       </Link>
     </div>

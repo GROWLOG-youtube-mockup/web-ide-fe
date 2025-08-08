@@ -1,4 +1,5 @@
 import axios from "axios"
+import { PATHS } from "@/routes"
 
 const apiClient = axios.create({
   // biome-ignore lint/style/useNamingConvention: axios requires baseURL property name
@@ -30,7 +31,7 @@ apiClient.interceptors.response.use(
       localStorage.removeItem("accessToken")
       // 현재 URL을 저장하여 로그인 후 다시 돌아갈 수 있도록 함
       const currentPath = window.location.pathname
-      window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`
+      window.location.href = `${PATHS.signin}?redirect=${encodeURIComponent(currentPath)}`
     }
     return Promise.reject(error)
   }

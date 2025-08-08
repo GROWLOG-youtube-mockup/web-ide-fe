@@ -9,12 +9,22 @@ import { Page } from "@/app/page"
 import { Page as ProjectPage } from "@/app/project/[projectId]/page"
 import { AuthRoute, ProtectedRoute } from "@/routes/protected-route"
 
+export const PATHS = {
+  home: "/",
+  signin: "/signin",
+  signup: "/signup",
+  profile: "/profile",
+  dev: "/dev",
+  projects: "/projects",
+  editor: "projects/:projectId/ide",
+} as const
+
 export const router = createBrowserRouter([
   // 개발용 네비게이션 (임시)
   {
     element: <DevPage />,
     errorElement: <Error />,
-    path: "/dev",
+    path: PATHS.dev,
   },
   // 인증이 필요한 페이지들
   {
@@ -23,15 +33,15 @@ export const router = createBrowserRouter([
     children: [
       {
         element: <ProjectPage />,
-        path: "/projects",
+        path: PATHS.projects,
       },
       {
         element: <EditorPage />,
-        path: "projects/:projectId/ide",
+        path: PATHS.editor,
       },
       {
         element: <ProfilePage />,
-        path: "/profile",
+        path: PATHS.profile,
       },
     ],
   },
@@ -41,15 +51,15 @@ export const router = createBrowserRouter([
     children: [
       {
         element: <Page />,
-        path: "/",
+        path: PATHS.home,
       },
       {
         element: <SigninPage />,
-        path: "/signin",
+        path: PATHS.signin,
       },
       {
         element: <SignupPage />,
-        path: "/signup",
+        path: PATHS.signup,
       },
     ],
   },

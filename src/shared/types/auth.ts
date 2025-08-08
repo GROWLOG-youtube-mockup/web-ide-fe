@@ -4,7 +4,7 @@ import type {
   loginFormSchema,
   profileEditFormSchema,
   signUpFormSchema,
-} from "@/feature/user/lib/auth-schemas"
+} from "@/feature/user/lib/auth-schemas.ts"
 
 // Zod 스키마에서 타입 추출
 export type LoginFormData = z.infer<typeof loginFormSchema>

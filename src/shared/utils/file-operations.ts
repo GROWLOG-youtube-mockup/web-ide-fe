@@ -3,7 +3,7 @@
  */
 
 import type { ItemInstance, TreeInstance } from "@headless-tree/core"
-import type { FileData } from "@/shared/types/file-explorer"
+import type { FileData } from "@/shared/types/file-explorer.ts"
 
 /**
  * 파일 경로에서 부모 디렉토리 경로를 반환합니다

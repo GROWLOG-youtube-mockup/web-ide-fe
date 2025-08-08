@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useLineClickStore } from "@/feature/editor/stores/line-click-store"
+import { useLineClickStore } from "@/entities/chat/model/line-click-store.ts"
 import { Button } from "@/shared/components/custom-button"
 import { Input } from "@/shared/ui/input"
 

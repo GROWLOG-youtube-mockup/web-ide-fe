@@ -1,7 +1,7 @@
 import * as TabsPrimitive from "@radix-ui/react-tabs"
 import { cva, type VariantProps } from "class-variance-authority"
 import * as React from "react"
-import { cn } from "@/shared/utils/utils"
+import { cn } from "@/shared/utils/utils.ts"
 
 const tabsListVariants = cva("inline-flex items-center justify-center", {
   variants: {

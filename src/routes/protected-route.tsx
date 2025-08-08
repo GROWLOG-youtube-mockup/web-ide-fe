@@ -1,5 +1,6 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom"
-import { useUserStore } from "@/feature/user/stores/user-store"
+import { useUserStore } from "@/entities/user/model/user-store.ts"
+import { PATHS } from "@/routes"
 
 export const ProtectedRoute = () => {
   const { userInfo, isLoading } = useUserStore()
@@ -30,7 +31,7 @@ export function AuthRoute() {
   const token = localStorage.getItem("accessToken")
 
   if (token && userInfo) {
-    return <Navigate replace to="/projects" />
+    return <Navigate replace to={PATHS.projects} />
   }
 
   return <Outlet />

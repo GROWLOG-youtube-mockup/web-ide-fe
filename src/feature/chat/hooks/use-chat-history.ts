@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import { useChatStore } from "@/feature/chat/stores/chat-store"
-import { chatService } from "@/shared/api/chat-service"
+import { useChatStore } from "@/entities/chat/model/chat-store.ts"
 import type { ChatMessage } from "@/shared/types/chat"
+import { chatService } from "../../../entities/chat/api/chat-service.ts"
 
 export function useChatHistory(projectId: string, pageSize = 30) {
   const { setMessages, getMessages } = useChatStore()
@@ -35,7 +35,7 @@ export function useChatHistory(projectId: string, pageSize = 30) {
         }
       })
       .catch(() => {
-        setError("Failed to load components history")
+        setError("Failed to load ui history")
       })
       .finally(() => setLoading(false))
   }, [projectId, pageSize, projectMessages.length, setMessages])
@@ -56,7 +56,7 @@ export function useChatHistory(projectId: string, pageSize = 30) {
         }
       })
       .catch(() => {
-        setError("Failed to load more components history")
+        setError("Failed to load more ui history")
       })
       .finally(() => setIsFetching(false))
   }

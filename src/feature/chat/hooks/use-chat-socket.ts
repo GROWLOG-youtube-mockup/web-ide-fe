@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
-import { chatService } from "@/shared/api/chat-service"
-import { ApiChatSocketClient } from "@/shared/api/chat-socket-api"
 import type { ChatMessage } from "@/shared/types/chat"
+import { chatService } from "../../../entities/chat/api/chat-service.ts"
+import { ApiChatSocketClient } from "../../../entities/chat/api/chat-socket-api.ts"
 
 export interface UseChatSocketReturn {
   connected: boolean
